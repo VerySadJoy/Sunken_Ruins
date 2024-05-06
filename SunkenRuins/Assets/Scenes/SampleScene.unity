@@ -171,6 +171,7 @@ GameObject:
   - component: {fileID: 329036046}
   - component: {fileID: 329036047}
   - component: {fileID: 329036048}
+  - component: {fileID: 329036049}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -284,10 +285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ac745200a2d34e4caea49e8e107bdaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxMoveSpeed: 2
-  turnAcceleration: 60
-  moveAcceleration: 30
-  moveDecceleration: 50
   cameraFollowTarget: {fileID: 418955423}
   cameraLookAheadDistance: 1
 --- !u!61 &329036048
@@ -335,6 +332,28 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &329036049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 329036043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11f36e83595ecca48890578c8c340ed6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerMaxHealth: 100
+  playerCurrentHealth: 0
+  playerMaxEnergy: 100
+  playerCurrentEnergy: 0
+  healthDecreaseRate: 5
+  initialMoveSpeed: 5
+  boostMoveSpeed: 0
+  turnAcceleration: 60
+  moveAcceleration: 30
+  moveDecceleration: 50
 --- !u!1 &418955423
 GameObject:
   m_ObjectHideFlags: 0
