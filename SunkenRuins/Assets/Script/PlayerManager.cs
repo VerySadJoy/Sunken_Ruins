@@ -91,8 +91,7 @@ namespace SunkenRuins {
             Vector2 newPosition = transform.position;
 
             // 바라보는 방향으로 look ahead
-            //newPosition.x += isFacingRight ? cameraLookAheadDistance : -cameraLookAheadDistance;
-            Debug.Log(newPosition);
+            newPosition.x += isFacingRight ? cameraLookAheadDistance : -cameraLookAheadDistance;
             cameraFollowTarget.transform.position = newPosition;
         }
     }
