@@ -243,7 +243,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.66, y: 0.66, z: 0.66}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 1357147442}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &329036046
@@ -349,8 +350,9 @@ MonoBehaviour:
   playerMaxEnergy: 100
   playerCurrentEnergy: 0
   healthDecreaseRate: 5
+  energyDecreaseRate: 5
   initialMoveSpeed: 5
-  boostMoveSpeed: 0
+  boostMoveSpeed: 10
   turnAcceleration: 60
   moveAcceleration: 30
   moveDecceleration: 50
@@ -734,13 +736,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1357147440}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -15.151515}
+  m_LocalScale: {x: 1.5151515, y: 1.5151515, z: 1.5151515}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1533338244}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 329036045}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1452804881
 GameObject:
@@ -1310,6 +1312,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 418955424}
-  - {fileID: 1357147442}
   - {fileID: 329036045}
   - {fileID: 3879808}

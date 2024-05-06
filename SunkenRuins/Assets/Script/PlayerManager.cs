@@ -1,31 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 namespace SunkenRuins {
     public class PlayerManager : MonoBehaviour {
         [Header("Follow Camera Target")]
-        // Cinemachine Virtual Camera의 Follow로 등록된 오브젝트를 지정해줘야 함!
-        // 새로운 높이의 플랫폼에 착지하기 전까지 카메라의 y축 좌표를 일정하게 유지하는 용도.
         [SerializeField] private GameObject cameraFollowTarget;
         // 바라보는 방향으로 얼마나 앞에 있는 지점을 카메라가 추적할 것인지
         [SerializeField, Range(0f, 2f)] private float cameraLookAheadDistance = 1f;
+        [SerializeField]private float zoomSpeed = 2f;
 
         //Component
         private Rigidbody2D rb;
         private SpriteRenderer spriteRenderer;
         private PlayerStat playerStat;
+        private CinemachineVirtualCamera virtualCamera;
+        private float defaultOrthographicSize;
 
         private PlayerControl playerControl; // Input System
         private bool isFacingRight = true;
+        
 
         private void Awake() {
-            playerControl = new PlayerControl();
-            playerControl.Player.Enable();
-
             rb = GetComponent<Rigidbody2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
             playerStat = GetComponent<PlayerStat>();
+            virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+            defaultOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
+        }
+
+        private void OnEnable() {
+            playerControl = new PlayerControl();
+            playerControl.Player.Enable();
+        }
+        
+        private void FixedUpdate() {
+            HandleMoveInput();
+
+            UpdateCameraFollowTarget();
         }
 
         public void SetInputEnabled(bool enable) { // 컷신이나 뭐할때 Input 죽이는 용
@@ -40,8 +53,8 @@ namespace SunkenRuins {
         private void HandleMoveInput() {
             Vector2 moveInput = playerControl.Player.Move.ReadValue<Vector2>();
             // 원하는 속도를 계산
-            float desiredVelocityX = playerStat.initialMoveSpeed * moveInput.x;
-            float desiredVelocityY = playerStat.initialMoveSpeed * moveInput.y;
+            float desiredVelocityX = isBoosting(moveInput) ? playerStat.boostMoveSpeed * moveInput.x : playerStat.initialMoveSpeed * moveInput.x;
+            float desiredVelocityY = isBoosting(moveInput) ? playerStat.boostMoveSpeed * moveInput.y : playerStat.initialMoveSpeed * moveInput.y;
 
             // 방향 전환 여부에 따라 다른 가속도 사용
             float accelerationX = ChooseAcceleration(moveInput.x, desiredVelocityX);
@@ -51,13 +64,8 @@ namespace SunkenRuins {
             float updatedVelocityX = Mathf.MoveTowards(rb.velocity.x, desiredVelocityX, accelerationX * Time.deltaTime);
             float updatedVelocityY = Mathf.MoveTowards(rb.velocity.y, desiredVelocityY, accelerationY * Time.deltaTime);
             rb.velocity = new Vector2(updatedVelocityX, updatedVelocityY);
+            HandleBoost(moveInput);
             UpdateFacingDirection(moveInput.x);
-        }
-
-        private void FixedUpdate() {
-            HandleMoveInput();
-
-            UpdateCameraFollowTarget();
         }
 
         private void UpdateFacingDirection(float moveInputX) {
@@ -89,6 +97,23 @@ namespace SunkenRuins {
             // 바라보는 방향으로 look ahead
             newPosition.x += isFacingRight ? cameraLookAheadDistance : -cameraLookAheadDistance;
             cameraFollowTarget.transform.position = newPosition;
+        }
+
+        private void HandleBoost(Vector2 moveInput) { //쓰읍 살짝 짜치네요
+            if (playerStat.playerCurrentEnergy <= 0) {
+                return;
+            }
+            if (isBoosting(moveInput)) {
+                playerStat.playerCurrentEnergy -= playerStat.energyDecreaseRate * Time.deltaTime;
+                virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize * 2f, zoomSpeed * Time.deltaTime); //Zoom Out
+            }
+            else {
+                virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize, zoomSpeed * Time.deltaTime);; //Zoom In
+            }
+        }
+
+        private bool isBoosting(Vector2 moveInput) { // Boost Condition 확인하는 함수
+            return playerControl.Player.Boost.IsPressed() && moveInput.magnitude > 0 && playerStat.playerCurrentEnergy > 0;
         }
     }
 }
