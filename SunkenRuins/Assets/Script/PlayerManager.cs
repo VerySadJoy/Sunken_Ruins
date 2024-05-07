@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System;
 
 namespace SunkenRuins {
     public class PlayerManager : MonoBehaviour {
+        public event EventHandler OnItemInteractAction;
+
         [Header("Follow Camera Target")]
         [SerializeField] private GameObject cameraFollowTarget;
         // 바라보는 방향으로 얼마나 앞에 있는 지점을 카메라가 추적할 것인지
@@ -18,7 +21,7 @@ namespace SunkenRuins {
         private CinemachineVirtualCamera virtualCamera;
         private float defaultOrthographicSize;
 
-        private PlayerControl playerControl; // Input System
+        // private PlayerControl playerControl; // Input System
         private bool isFacingRight = true;
         
 
@@ -30,11 +33,16 @@ namespace SunkenRuins {
             defaultOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
         }
 
+        private void ItemInteract_performed(object sender, EventArgs e)
+        {
+            OnItemInteractAction?.Invoke(this, EventArgs.Empty);
+        }
+
         private void OnEnable() {
             playerControl = new PlayerControl();
             playerControl.Player.Enable();
         }
-        
+
         private void FixedUpdate() {
             HandleMoveInput();
 
@@ -94,7 +102,7 @@ namespace SunkenRuins {
         private void UpdateCameraFollowTarget() {
             Vector2 newPosition = transform.position;
 
-            // 바라보는 방향으로 look ahead
+            바라보는 방향으로 look ahead
             newPosition.x += isFacingRight ? cameraLookAheadDistance : -cameraLookAheadDistance;
             cameraFollowTarget.transform.position = newPosition;
         }
