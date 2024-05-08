@@ -18,7 +18,6 @@ namespace SunkenRuins {
         private PlayerStat playerStat;
         private CinemachineVirtualCamera virtualCamera;
         private float defaultOrthographicSize;
-
         private PlayerControl playerControl; // Input System
         private bool isFacingRight = true;
         
@@ -140,15 +139,6 @@ namespace SunkenRuins {
 
         private bool isBoosting(Vector2 moveInput) { // Boost Condition 확인하는 함수
             return playerControl.Player.Boost.IsPressed() && moveInput.magnitude > 0 && playerStat.playerCurrentEnergy > 0;
-        }
-
-        
-        private void playerManager_OnItemInteractAction(object sender, EventArgs e)
-        {
-            // HealthPotion과 상호작용했을 때 <-- 이걸 EventArgs의 ItemSO로부터 가져온 enum ItemType으로 Switch를 써서 알 수 있나요?
-            // sender object를 Item으로 하면 되지 않을까
-            int healAmount = 0; // EventArgs로부터 healAmount를 받을 수 있나요? 넹
-            playerStat.Heal(healAmount);
         }
     }
 }
