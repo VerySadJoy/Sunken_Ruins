@@ -6,8 +6,6 @@ using System;
 
 namespace SunkenRuins {
     public class PlayerManager : MonoBehaviour {
-        public event EventHandler OnItemInteractAction;
-
         [Header("Follow Camera Target")]
         [SerializeField] private GameObject cameraFollowTarget;
         // 바라보는 방향으로 얼마나 앞에 있는 지점을 카메라가 추적할 것인지
@@ -21,7 +19,7 @@ namespace SunkenRuins {
         private CinemachineVirtualCamera virtualCamera;
         private float defaultOrthographicSize;
 
-        // private PlayerControl playerControl; // Input System
+        private PlayerControl playerControl; // Input System
         private bool isFacingRight = true;
         
 
@@ -33,9 +31,29 @@ namespace SunkenRuins {
             defaultOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
         }
 
-        private void ItemInteract_performed(object sender, EventArgs e)
-        {
-            OnItemInteractAction?.Invoke(this, EventArgs.Empty);
+        private void OnTriggerEnter2D(Collider2D other) { // 임시 처리
+            //소신발언
+            //충돌로만 Item 획득이 가능하면 굳이 EventHandler 써야할 이유가 있는지?
+            if (other.gameObject.layer == LayerMask.NameToLayer("Item")) { //Item 획득
+                ItemSO itemSO = other.gameObject.GetComponent<Item>().GetItemSO();
+                if (itemSO != null) {
+                    switch (itemSO.itemType) {
+                        case ItemType.HealthPotion:
+                            playerStat.Heal(100);
+                            break;
+                        case ItemType.PowerBattery:
+                            playerStat.RestoreEnergy(100f);
+                            break;
+                        case ItemType.BubbleShield:
+                            // TODO: 버블 뭐시기 만들기
+                            break;
+                        default:
+                            Debug.LogError("이거 나오면 안됨");
+                            break;
+                    }
+                }
+                Destroy(other.gameObject); //아이템 삭제
+            }
         }
 
         private void OnEnable() {
@@ -102,7 +120,7 @@ namespace SunkenRuins {
         private void UpdateCameraFollowTarget() {
             Vector2 newPosition = transform.position;
 
-            바라보는 방향으로 look ahead
+            // 바라보는 방향으로 look ahead
             newPosition.x += isFacingRight ? cameraLookAheadDistance : -cameraLookAheadDistance;
             cameraFollowTarget.transform.position = newPosition;
         }
@@ -122,6 +140,15 @@ namespace SunkenRuins {
 
         private bool isBoosting(Vector2 moveInput) { // Boost Condition 확인하는 함수
             return playerControl.Player.Boost.IsPressed() && moveInput.magnitude > 0 && playerStat.playerCurrentEnergy > 0;
+        }
+
+        
+        private void playerManager_OnItemInteractAction(object sender, EventArgs e)
+        {
+            // HealthPotion과 상호작용했을 때 <-- 이걸 EventArgs의 ItemSO로부터 가져온 enum ItemType으로 Switch를 써서 알 수 있나요?
+            // sender object를 Item으로 하면 되지 않을까
+            int healAmount = 0; // EventArgs로부터 healAmount를 받을 수 있나요? 넹
+            playerStat.Heal(healAmount);
         }
     }
 }
