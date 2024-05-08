@@ -37,18 +37,43 @@ namespace SunkenRuins {
             // 2. 사망 UI
         }
 
-        public void Heal(int healAmount){
+        public void RestoreHealth(int healAmount){
             playerCurrentHealth += healAmount;
-            Debug.Log("회복");
+            Debug.Log("체력 회복");
             playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
             // TODO:
-            // 1. 회복 모션
-            // 2. 회복 UI
+            // 1. 체력 회복 모션
+            // 2. 체력 회복 UI
         }
 
         public void RestoreEnergy(float energyAmount){
             playerCurrentEnergy += energyAmount;
+            Debug.Log("에너지 회복");
             playerCurrentEnergy = Mathf.Clamp(playerCurrentEnergy, 0, playerMaxEnergy);
+            // TODO:
+            // 1. 에너지 회복 모션
+            // 2. 에너지 회복 UI
+        }
+
+        public void BeInvincible(int invincibleTime){
+            StartCoroutine(beInvincibleOverInvincibleTime(invincibleTime));
+        }
+
+        private System.Collections.IEnumerator beInvincibleOverInvincibleTime(int invincibleTime) {
+            // Player의 BoxCollider를 가져와서 끈다 <-- 이거 안 좋은 구조 같은데 의견 부탁해요...
+            BoxCollider2D tempPlayerCollider = this.GetComponent<BoxCollider2D>();
+            
+            Debug.Log("무적 시작");
+            tempPlayerCollider.enabled = false;
+            yield return new WaitForSeconds(invincibleTime); // 인자로 받은 무적 시간이 끝나면
+
+            // Player의 BoxCollider를 다시 켠다
+            Debug.Log("무적 풀림");
+            tempPlayerCollider.enabled = true;
+            
+            // TODO:
+            // 1. 무적 모션, 효과
+            // 2. 무적 UI
         }
     }
 }

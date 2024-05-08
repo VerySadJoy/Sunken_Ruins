@@ -38,13 +38,13 @@ namespace SunkenRuins {
                 if (itemSO != null) {
                     switch (itemSO.itemType) {
                         case ItemType.HealthPotion:
-                            playerStat.Heal(100);
+                            playerStat.RestoreHealth(100);
                             break;
                         case ItemType.PowerBattery:
                             playerStat.RestoreEnergy(100f);
                             break;
                         case ItemType.BubbleShield:
-                            // TODO: 버블 뭐시기 만들기
+                            playerStat.BeInvincible(2); // 일단은 하드코딩으로 invincibleTime 인자로 받음
                             break;
                         default:
                             Debug.LogError("이거 나오면 안됨");
