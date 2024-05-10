@@ -3,13 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SunkenRuins {
-    public enum ItemType
-    {
-        HealthPotion,
-        PowerBattery,
-        BubbleShield,
-    }
-
+    
     [CreateAssetMenu(menuName = "ScriptableObjects/ItemScriptableObject")]
     public class ItemSO : ScriptableObject
     {
