@@ -549,7 +549,8 @@ GameObject:
   - component: {fileID: 948761156}
   - component: {fileID: 948761157}
   - component: {fileID: 948761158}
-  m_Layer: 0
+  - component: {fileID: 948761159}
+  m_Layer: 8
   m_Name: TempMonster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -587,7 +588,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -628,7 +629,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -659,6 +660,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c3331c9bfd7a9468b947a0dc2d0b52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &948761159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948761154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d611bd8a15fa8740a756a7d5c72eddd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterMaxHealth: 100
+  monsterCurrentHealth: 100
+  initialMoveSpeed: 5
+  turnAcceleration: 60
+  moveAcceleration: 30
+  moveDecceleration: 50
 --- !u!1 &1357147440
 GameObject:
   m_ObjectHideFlags: 0

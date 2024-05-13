@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SunkenRuins {
-    public class PlayerStat : MonoBehaviour {
+    public class PlayerStat : MonoBehaviour, IDamageable {
         [Header("Stat")]
         public int playerMaxHealth;
         public int playerCurrentHealth;
@@ -12,6 +12,7 @@ namespace SunkenRuins {
         public float playerCurrentEnergy;
         public int healthDecreaseRate;
         public float energyDecreaseRate;
+        public TeamType teamType { get; set; }
 
         [Header("Movement")]
         public float initialMoveSpeed = 5f; //부스트 미사용 최고 이동속도
@@ -21,6 +22,7 @@ namespace SunkenRuins {
         public float moveDecceleration = 50f;
 
         private void Start() {
+            teamType = TeamType.Player;
             playerCurrentHealth = playerMaxHealth;
             playerCurrentEnergy = playerMaxEnergy;
             StartCoroutine(DecreaseHealthOverTime());
@@ -74,6 +76,16 @@ namespace SunkenRuins {
             // TODO:
             // 1. 무적 모션, 효과
             // 2. 무적 UI
+        }
+
+        public void Damage(TeamType other)
+        {
+            if(other == TeamType.Monster) Debug.Log("플레이어가 피해를 입습니다.");
+
+            // TODO:
+            // 1. 데미지 모션, 효과
+            // 2. 입고 무적 판정
+            // 3. 데미지 입는 float OR int값 설정
         }
     }
 }

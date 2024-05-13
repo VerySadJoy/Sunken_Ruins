@@ -20,7 +20,10 @@ namespace SunkenRuins {
         private float defaultOrthographicSize;
         private PlayerControl playerControl; // Input System
         private bool isFacingRight = true;
-        
+
+        // Layermask String
+        private const string itemLayerString = "Item";
+        private const string monsterLayerString = "Monster";
 
         private void Awake() {
             rb = GetComponent<Rigidbody2D>();
@@ -33,7 +36,7 @@ namespace SunkenRuins {
         private void OnTriggerEnter2D(Collider2D other) { // 임시 처리
             //소신발언
             //충돌로만 Item 획득이 가능하면 굳이 EventHandler 써야할 이유가 있는지?
-            if (other.gameObject.layer == LayerMask.NameToLayer("Item")) { //Item 획득
+            if (other.gameObject.layer == LayerMask.NameToLayer(itemLayerString)) { //Item 획득
                 ItemSO itemSO = other.gameObject.GetComponent<Item>().GetItemSO();
                 if (itemSO != null) {
                     switch (itemSO.itemType) {
@@ -52,6 +55,11 @@ namespace SunkenRuins {
                     }
                 }
                 Destroy(other.gameObject); //아이템 삭제
+            }
+            else if (other.gameObject.layer == LayerMask.NameToLayer(monsterLayerString))
+            {
+                MonsterStat monsterStat = other.gameObject.GetComponent<MonsterStat>();
+                playerStat.Damage(monsterStat.teamType);
             }
         }
 
