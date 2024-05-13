@@ -21,6 +21,9 @@ namespace SunkenRuins {
         public float moveAcceleration = 30f;
         public float moveDecceleration = 50f;
 
+        //Bool
+        private bool isInvincible = false;
+
         private void Start() {
             teamType = TeamType.Player;
             playerCurrentHealth = playerMaxHealth;
@@ -30,8 +33,13 @@ namespace SunkenRuins {
 
         private System.Collections.IEnumerator DecreaseHealthOverTime() {
             while (playerCurrentHealth > 0) {
-                yield return new WaitForSeconds(1f);
-                playerCurrentHealth -= healthDecreaseRate;
+                if (!isInvincible) {
+                    yield return new WaitForSeconds(1f);
+                    playerCurrentHealth -= healthDecreaseRate;
+                }
+                else {
+                    yield return null;
+                }
             }
             Debug.Log("끼엑 사망");
             // TODO:
@@ -58,6 +66,7 @@ namespace SunkenRuins {
         }
 
         public void BeInvincible(int invincibleTime){
+            isInvincible = true;
             StartCoroutine(beInvincibleOverInvincibleTime(invincibleTime));
         }
 
@@ -70,6 +79,7 @@ namespace SunkenRuins {
             yield return new WaitForSeconds(invincibleTime); // 인자로 받은 무적 시간이 끝나면
 
             // Player의 BoxCollider를 다시 켠다
+            isInvincible = false;
             Debug.Log("무적 풀림");
             tempPlayerCollider.enabled = true;
             
