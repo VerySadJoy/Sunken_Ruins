@@ -23,7 +23,7 @@ namespace SunkenRuins {
 
         // Layermask String
         private const string itemLayerString = "Item";
-        private const string monsterLayerString = "Monster";
+        private const string enemyLayerString = "Enemy";
 
         private void Awake() {
             rb = GetComponent<Rigidbody2D>();
@@ -56,9 +56,9 @@ namespace SunkenRuins {
                 }
                 Destroy(other.gameObject); //아이템 삭제
             }
-            else if (other.gameObject.layer == LayerMask.NameToLayer(monsterLayerString))
+            else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString))
             {
-                MonsterStat monsterStat = other.gameObject.GetComponent<MonsterStat>();
+                EnemyStat monsterStat = other.gameObject.GetComponent<EnemyStat>();
                 playerStat.Damage(monsterStat.teamType);
             }
         }

@@ -4,18 +4,24 @@ using UnityEngine;
 
 namespace SunkenRuins
 {
-    public class MonsterStat : MonoBehaviour, IDamageable
+    public class EnemyStat : MonoBehaviour, IDamageable
     {
         [Header("Stat")]
         public int monsterMaxHealth;
         public int monsterCurrentHealth;
 
         [Header("Movement")]
-        public float initialMoveSpeed = 5f;
+        public float objectMoveSpeed = 5f;
+        // 일단 가오리Stat 따로 상속받아서 만들지는 않았어
+        // 다른 애들 만들면서 생각해도 될 듯?
+        public float dashMoveSpeed = 10f; // 이동 속도가 즉시 변경된다 해서 그냥 변수로 보관함
         public float turnAcceleration = 60f;
         public float moveAcceleration = 30f;
         public float moveDecceleration = 50f;
         public TeamType teamType { get; set; }
+
+        [Header("Time")]
+        public float dashContinueTime = 2f;
 
         private void Start()
         {
