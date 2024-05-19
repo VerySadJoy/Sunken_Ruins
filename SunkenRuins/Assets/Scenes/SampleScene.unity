@@ -370,7 +370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerMaxHealth: 100
   playerCurrentHealth: 0
-  playerMaxEnergy: 100
+  playerMaxEnergy: 300
   playerCurrentEnergy: 0
   healthDecreaseRate: 5
   energyDecreaseRate: 5
@@ -937,11 +937,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8962237979625893998, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.2
+      value: -4.79
       objectReference: {fileID: 0}
     - target: {fileID: 8962237979625893998, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.47
+      value: -13.73
       objectReference: {fileID: 0}
     - target: {fileID: 8962237979625893998, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       propertyPath: m_LocalPosition.z

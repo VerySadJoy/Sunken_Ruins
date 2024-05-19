@@ -46,6 +46,15 @@ namespace SunkenRuins
                     ""processors"": """",
                     ""interactions"": ""Hold(duration=0.001)"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Mouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""1b421f6f-cdcf-447a-b628-f9ce8828483d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -114,6 +123,17 @@ namespace SunkenRuins
                     ""action"": ""Boost"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ddd0ec25-db63-4090-a2f8-5ff65cc5cf37"",
+                    ""path"": ""<Mouse>/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -124,6 +144,7 @@ namespace SunkenRuins
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
+            m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -187,12 +208,14 @@ namespace SunkenRuins
         private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Boost;
+        private readonly InputAction m_Player_Mouse;
         public struct PlayerActions
         {
             private @PlayerControl m_Wrapper;
             public PlayerActions(@PlayerControl wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_Player_Move;
             public InputAction @Boost => m_Wrapper.m_Player_Boost;
+            public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -208,6 +231,9 @@ namespace SunkenRuins
                 @Boost.started += instance.OnBoost;
                 @Boost.performed += instance.OnBoost;
                 @Boost.canceled += instance.OnBoost;
+                @Mouse.started += instance.OnMouse;
+                @Mouse.performed += instance.OnMouse;
+                @Mouse.canceled += instance.OnMouse;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -218,6 +244,9 @@ namespace SunkenRuins
                 @Boost.started -= instance.OnBoost;
                 @Boost.performed -= instance.OnBoost;
                 @Boost.canceled -= instance.OnBoost;
+                @Mouse.started -= instance.OnMouse;
+                @Mouse.performed -= instance.OnMouse;
+                @Mouse.canceled -= instance.OnMouse;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -239,6 +268,7 @@ namespace SunkenRuins
         {
             void OnMove(InputAction.CallbackContext context);
             void OnBoost(InputAction.CallbackContext context);
+            void OnMouse(InputAction.CallbackContext context);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Cinemachine;
 using System;
 
@@ -24,6 +25,13 @@ namespace SunkenRuins {
         // Layermask String
         private const string itemLayerString = "Item";
         private const string enemyLayerString = "Enemy";
+
+        //Boost
+        private bool isBoosting = false;
+        private bool isBoostPreparing = false;
+        private float lastBoostTime = 0f;
+        private float boostCooldown = 1f;
+        private float boostDuration = 0.5f;
 
         private void Awake() {
             rb = GetComponent<Rigidbody2D>();
@@ -70,8 +78,79 @@ namespace SunkenRuins {
 
         private void FixedUpdate() {
             HandleMoveInput();
-
+            BoostInput();
             UpdateCameraFollowTarget();
+        }
+
+        private void BoostInput() {
+            float boostInput = playerControl.Player.Mouse.ReadValue<float>();
+            
+            if (boostInput > 0 && playerStat.playerCurrentEnergy > 0 && !isBoosting && Time.time > lastBoostTime + boostCooldown) {
+                PrepareBoost();
+            }
+            if (boostInput == 0 && isBoostPreparing) {
+                ExecuteBoost();
+            }
+            if (Input.GetKeyDown(KeyCode.E) && isBoostPreparing) { //이거 나중에 Input System으로 수정해야함
+                CancelBoost();
+            }
+            
+        }
+
+        private void PrepareBoost() {
+            isBoostPreparing = true;
+            Time.timeScale = 0.5f;
+
+            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize, zoomSpeed * Time.deltaTime);; //Zoom In
+            //TODO:
+            // UI 보이기
+            Debug.Log("준비");
+        }
+
+        private void ExecuteBoost() {
+            isBoostPreparing = false;
+            isBoosting = true;
+            lastBoostTime = Time.time;
+            playerStat.playerCurrentEnergy--;
+
+            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize * 2f, zoomSpeed * Time.deltaTime); //Zoom Out
+            Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
+            Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
+            float boostSpeed = 10f; //TODO: Zone System에 따른 스피드의 변경
+            StartCoroutine(BoostMovement(boostDirection, boostSpeed));
+        }
+
+        private IEnumerator BoostMovement(Vector2 direction, float speed) {
+            float elapsed = 0f;
+            while (elapsed < boostDuration) {
+                float moveStep = speed * Time.deltaTime;
+                transform.Translate(direction * moveStep, Space.World);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+            elapsed = 0f;
+            Vector2 initialVelocity = direction * speed;
+
+            while (elapsed < boostDuration)
+            {
+                float t = elapsed / boostDuration;
+                Vector2 velocity = Vector2.Lerp(initialVelocity, Vector2.zero, t);
+                transform.Translate(velocity * Time.deltaTime, Space.World);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            isBoosting = false;
+        }
+
+        private void CancelBoost() {
+            isBoostPreparing = false;
+            Time.timeScale = 1f;
+
+            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize * 2f, zoomSpeed * Time.deltaTime); //Zoom Out
+            //TODO:
+            //UI 가리기
+            Debug.Log("취소");
         }
 
         public void SetInputEnabled(bool enable) { // 컷신이나 뭐할때 Input 죽이는 용
@@ -86,8 +165,8 @@ namespace SunkenRuins {
         private void HandleMoveInput() {
             Vector2 moveInput = playerControl.Player.Move.ReadValue<Vector2>();
             // 원하는 속도를 계산
-            float desiredVelocityX = isBoosting(moveInput) ? playerStat.boostMoveSpeed * moveInput.x : playerStat.initialMoveSpeed * moveInput.x;
-            float desiredVelocityY = isBoosting(moveInput) ? playerStat.boostMoveSpeed * moveInput.y : playerStat.initialMoveSpeed * moveInput.y;
+            float desiredVelocityX = playerStat.initialMoveSpeed * moveInput.x;
+            float desiredVelocityY = playerStat.initialMoveSpeed * moveInput.y;
 
             // 방향 전환 여부에 따라 다른 가속도 사용
             float accelerationX = ChooseAcceleration(moveInput.x, desiredVelocityX);
@@ -97,7 +176,7 @@ namespace SunkenRuins {
             float updatedVelocityX = Mathf.MoveTowards(rb.velocity.x, desiredVelocityX, accelerationX * Time.deltaTime);
             float updatedVelocityY = Mathf.MoveTowards(rb.velocity.y, desiredVelocityY, accelerationY * Time.deltaTime);
             rb.velocity = new Vector2(updatedVelocityX, updatedVelocityY);
-            HandleBoost(moveInput);
+            //HandleBoost(moveInput);
             UpdateFacingDirection(moveInput.x);
         }
 
@@ -132,22 +211,22 @@ namespace SunkenRuins {
             cameraFollowTarget.transform.position = newPosition;
         }
 
-        private void HandleBoost(Vector2 moveInput) { //쓰읍 살짝 짜치네요
-            if (playerStat.playerCurrentEnergy <= 0) {
-                return;
-            }
-            if (isBoosting(moveInput)) {
-                playerStat.playerCurrentEnergy -= playerStat.energyDecreaseRate * Time.deltaTime;
-                virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize * 2f, zoomSpeed * Time.deltaTime); //Zoom Out
-            }
-            else {
-                virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize, zoomSpeed * Time.deltaTime);; //Zoom In
-            }
-        }
+        // private void HandleBoost(Vector2 moveInput) { //쓰읍 살짝 짜치네요
+        //     if (playerStat.playerCurrentEnergy <= 0) {
+        //         return;
+        //     }
+        //     if (isBoosting(moveInput)) {
+        //         playerStat.playerCurrentEnergy -= playerStat.energyDecreaseRate * Time.deltaTime;
+        //         virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize * 2f, zoomSpeed * Time.deltaTime); //Zoom Out
+        //     }
+        //     else {
+        //         virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize, zoomSpeed * Time.deltaTime);; //Zoom In
+        //     }
+        // }
 
-        private bool isBoosting(Vector2 moveInput) { // Boost Condition 확인하는 함수
-            return playerControl.Player.Boost.IsPressed() && moveInput.magnitude > 0 && playerStat.playerCurrentEnergy > 0;
-        }
+        // private bool isBoosting(Vector2 moveInput) { // Boost Condition 확인하는 함수
+        //     return playerControl.Player.Boost.IsPressed() && moveInput.magnitude > 0 && playerStat.playerCurrentEnergy > 0;
+        // }
     }
 }
 
