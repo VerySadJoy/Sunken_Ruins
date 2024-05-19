@@ -57,7 +57,6 @@ namespace SunkenRuins
                 UpdateFacingDirection(dirToPlayerNormalized.x); // 왼쪽 오른쪽 바라보는 방향 설정
                 rb.velocity = dirToPlayerNormalized * enemyStat.dashMoveSpeed; // 대시 속도로 변경
                 timer += Time.deltaTime; // 타이머 시간 증가
-                Debug.Log("hi");
                 if (timer >= enemyStat.dashContinueTime) {
                     Debug.Log("플레이어 추적 중단");
                     rb.velocity = Vector2.zero; // idle 상태를 속도 0으로 설정

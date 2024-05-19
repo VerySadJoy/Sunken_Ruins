@@ -196,7 +196,7 @@ GameObject:
   - component: {fileID: 329036049}
   m_Layer: 9
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -987,7 +987,7 @@ PrefabInstance:
       addedObject: {fileID: 2101442562}
     - targetCorrespondingSourceObject: {fileID: 2623653881379105391, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2101442559}
+      addedObject: {fileID: 2101442569}
     - targetCorrespondingSourceObject: {fileID: 1562100769972250148, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2101442561}
@@ -1018,20 +1018,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3912614460237088990, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
   m_PrefabInstance: {fileID: 2101442554}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2101442559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2101442555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37c3331c9bfd7a9468b947a0dc2d0b52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triangleDetection: {fileID: 2101442561}
-  circleDetection: {fileID: 2101442560}
 --- !u!114 &2101442560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1111,6 +1097,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2101442569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101442555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e97c6396ddc94c046aa93e8974a31b7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectRadius: 10
+  attackRadius: 5
+  engulfTime: 3
+  engulfDelayTime: 5
+  attackCoolTime: 1
+  damagePerAttack: 10
+  totalKeyAmount: 10
 --- !u!1001 &2143018078
 PrefabInstance:
   m_ObjectHideFlags: 0
