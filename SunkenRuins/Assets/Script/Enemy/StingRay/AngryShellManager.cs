@@ -65,22 +65,24 @@ namespace SunkenRuins {
             int playerHealth = player.GetComponent<PlayerStat>().playerCurrentHealth;
             if (playerHealth != null) {
                 playerHealth -= damagePerAttack;
-                Debug.Log("이따이");
+                Debug.Log("조개한테 데미지를 입음");
+                Invoke(nameof(ResetAttack), engulfDelayTime); // 이 시간 동안 공격 금지
             }
             if (Input.anyKeyDown) {
                 keyPressCount++;
             }
-
             if (keyPressCount >= totalKeyAmount) {
                 StopEngulf();
             }
         }
 
         private void StopEngulf() {
+            Debug.Log("클릭 많이 해서 공격 못 함");
+
             isEngulfing = false;
             keyPressCount = 0;
             canAttack = false;
-            Invoke(nameof(ResetAttack), engulfDelayTime);
+            Invoke(nameof(ResetAttack), engulfDelayTime); // 이 시간 동안 공격 금지
         }
 
         private void ResetAttack() {

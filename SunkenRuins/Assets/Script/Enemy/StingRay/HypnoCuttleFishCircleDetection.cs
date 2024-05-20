@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SunkenRuins
 {
-    public class CircleDetection : MonoBehaviour
+    public class HypnoCuttleFishCircleDetection : MonoBehaviour
     {
         // Detection Event <--> EnemyManager
         public event EventHandler<PlayerDetectionEventArgs> OnPlayerDetection;
@@ -47,8 +46,8 @@ namespace SunkenRuins
             {
                 // Player을 향하는 벡터 구하기
                 Vector2 dirToPlayerNormalized = (other.gameObject.transform.position - transform.position).normalized;
-
                 RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, dirToPlayerNormalized, rayCastDistance, playerLayerMask);
+            
                 if (raycastHit2D)
                 {
                     Debug.Log("원: 플레이어 감지!");

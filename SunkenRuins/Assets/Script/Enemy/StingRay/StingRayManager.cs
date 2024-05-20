@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SunkenRuins
@@ -11,10 +13,12 @@ namespace SunkenRuins
         // 삼각형 감지 범위랑 동그라미 감지 범위 컴포넌트로 받기
         [SerializeField] private TriangleDetection triangleDetection;
         [SerializeField] private CircleDetection circleDetection;
+        [SerializeField] private ElectricAttack electricAttack;
 
         // Component
         private bool isChasingPlayer { get { return player != null; } }
         private bool isDashDelayTime = false;
+        private bool isPrepareAttack;
         private Vector3 initialPosition;
         [SerializeField] private StingRayStat stingRayStat;
 
@@ -22,9 +26,10 @@ namespace SunkenRuins
         {
             base.Start();
             triangleDetection.OnPlayerDetection += OnPlayerDetection_MoveTowardsPlayer;
-            circleDetection.OnPlayerDetection += OnPlayerDetection_MoveTowardsPlayer;
+            circleDetection.OnPlayerDetection += OnPlayerDetection_PrepareAttack;
             initialPosition = transform.position;
         }
+
 
         private void Update()
         {
@@ -32,17 +37,34 @@ namespace SunkenRuins
             {
                 Vector2 dirToPlayerNormalized = (player.position - transform.position).normalized; // 플레이어를 향한 단위 벡터
                 UpdateFacingDirection(dirToPlayerNormalized.x); // 왼쪽 오른쪽 바라보는 방향 설정
-                rb.velocity = dirToPlayerNormalized * stingRayStat.dashMoveSpeed; // 대시 속도로 변경
-                timer += Time.deltaTime; // 타이머 시간 증가
 
-                // 추격에 주어진 시간이 다하면
-                if (timer >= stingRayStat.dashContinueTime)
+                // 속도를 줄여 공격해야 한다면
+                if (isPrepareAttack)
                 {
-                    Debug.Log("플레이어 추적 중단");
+                    // Vector2 absVelocity = new Vector2(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y));
+                    rb.velocity = Vector2.zero; // 일단 바로 중지하는 매커니즘
+                    
+                    // 공격 애니메이션
+                    electricAttack.Attack();
 
-                    // 플레이어와 반대방향으로 이동함
+                    // fullChargeTime이 지났을 때
                     StartCoroutine(returnDuringDashDelayTime(dirToPlayerNormalized));
                 }
+                else // 그저 쫓아가는 것이면
+                {
+                    rb.velocity = dirToPlayerNormalized * stingRayStat.dashMoveSpeed; // 대시 속도로 변경
+
+                    // 추격에 주어진 시간이 다하면
+                    if (timer >= stingRayStat.dashContinueTime)
+                    {
+                        Debug.Log("플레이어 추적 중단");
+
+                        // 플레이어와 반대방향으로 이동함
+                        StartCoroutine(returnDuringDashDelayTime(dirToPlayerNormalized));
+                    }
+                }
+
+                timer += Time.deltaTime; // 타이머 시간 증가
             }
             else if (!isDashDelayTime)
             {
@@ -78,6 +100,28 @@ namespace SunkenRuins
 
             // 속도 설정
             rb.velocity = new Vector2(stingRayStat.initialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
+        }
+
+        private void OnPlayerDetection_MoveTowardsPlayer(object sender, PlayerDetectionEventArgs e)
+        {
+            Debug.Log("플레이어를 향해 이동 중");
+
+            // EventArgs e에 플레이어 매니저 클래스를 받는다
+            player = e._player;
+
+            // 타이머 재시작
+            timer = 0f;
+        }
+
+        protected void OnPlayerDetection_PrepareAttack(object sender, PlayerDetectionEventArgs e)
+        {
+            Debug.Log("플레이어 공격 준비");
+
+            // EventArgs e에 플레이어 매니저 클래스를 받는다
+            player = e._player;
+
+            // 타이머 재시작
+            timer = 0f;
         }
     }
 }

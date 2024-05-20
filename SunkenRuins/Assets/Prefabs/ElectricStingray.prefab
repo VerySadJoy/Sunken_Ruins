@@ -94,6 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8058490809298561124}
   - component: {fileID: 8771566554484976155}
+  - component: {fileID: 1475772976682666745}
   m_Layer: 0
   m_Name: triangle_detect_1
   m_TagString: Untagged
@@ -145,7 +146,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.5, y: 0}
@@ -164,6 +165,22 @@ PolygonCollider2D:
       - {x: 4.5, y: 1.5}
       - {x: 4.5, y: -1.5}
   m_UseDelaunayMesh: 0
+--- !u!114 &1475772976682666745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562100769972250148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 108f2a9a5a4f90f4e8864caa72fe248c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayCastDistance: 5
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &2623653881379105391
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,7 +190,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8962237979625893998}
-  m_Layer: 0
+  - component: {fileID: 7078373820107584658}
+  - component: {fileID: 8793117692699649805}
+  - component: {fileID: 2659775032679677991}
+  m_Layer: 8
   m_Name: ElectricStingray
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +209,7 @@ Transform:
   m_GameObject: {fileID: 2623653881379105391}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.1, y: 4.21, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -199,6 +219,69 @@ Transform:
   - {fileID: 522790196343583895}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &7078373820107584658
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2623653881379105391}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &8793117692699649805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2623653881379105391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64ad42ce62c4dc74ca05f332f7bd1fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triangleDetection: {fileID: 1475772976682666745}
+  circleDetection: {fileID: 7175979368324994330}
+  electricAttack: {fileID: 8020849776936000050}
+  stingRayStat: {fileID: 2659775032679677991}
+--- !u!114 &2659775032679677991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2623653881379105391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ab202a474af2924cb2bbad8928f2523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterMaxHealth: 100
+  monsterCurrentHealth: 100
+  dashContinueTime: 2
+  dashDelayTime: 2
+  fullChargeTime: 1.5
+  patrolRange: 5
+  initialMoveSpeed: 5
+  dashMoveSpeed: 7
 --- !u!1 &3912614460237088990
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,6 +292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 522790196343583895}
   - component: {fileID: 4374203833136615301}
+  - component: {fileID: 8020849776936000050}
   m_Layer: 0
   m_Name: attack_range
   m_TagString: Untagged
@@ -260,12 +344,24 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 4
+--- !u!114 &8020849776936000050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3912614460237088990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc4f9dbbe4a03f5458a84d96cf5e6ac0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8666596679079151143
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,6 +372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4316763216483207890}
   - component: {fileID: 7356771657795781826}
+  - component: {fileID: 7175979368324994330}
   m_Layer: 0
   m_Name: circle_detect_2
   m_TagString: Untagged
@@ -327,9 +424,25 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2.5
+--- !u!114 &7175979368324994330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8666596679079151143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208d1155173a7824da9b6948665782c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayCastDistance: 4
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 512

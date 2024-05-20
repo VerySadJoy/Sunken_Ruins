@@ -24,18 +24,6 @@ namespace SunkenRuins
             enemyStat = GetComponent<EnemyStat>();
         }
 
-        protected void OnPlayerDetection_MoveTowardsPlayer(object sender, PlayerDetectionEventArgs e)
-        {
-            Debug.Log("플레이어를 향해 이동 중");
-
-            // EventArgs e에 플레이어 매니저 클래스를 받는다
-            player = e._player;
-
-            // 타이머 재시작
-            // FixedUpdate에서 초기화하면 플레이어 인식할 때 렉 걸림
-            timer = 0f;
-        }
-
         protected void UpdateFacingDirection(float moveDirectionX) {
             if (moveDirectionX != 0f) {
                 isFacingRight = moveDirectionX > 0f;

@@ -11,7 +11,7 @@ namespace SunkenRuins {
         [SerializeField] private GameObject cameraFollowTarget;
         // 바라보는 방향으로 얼마나 앞에 있는 지점을 카메라가 추적할 것인지
         [SerializeField, Range(0f, 2f)] private float cameraLookAheadDistance = 1f;
-        [SerializeField]private float zoomSpeed = 2f;
+        [SerializeField] private float zoomSpeed = 2f;
 
         //Component
         private Rigidbody2D rb;

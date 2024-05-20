@@ -9,6 +9,7 @@ namespace SunkenRuins
         [Header("Time")]
         public float dashContinueTime = 2f;
         public float dashDelayTime = 2f;
+        public float fullChargeTime = 1.5f;
         
         [Header("Movement")]
         public float patrolRange = 5;
