@@ -571,26 +571,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2623653881379105391, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
   m_PrefabInstance: {fileID: 8492821429296422170}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1157477558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1157477556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d611bd8a15fa8740a756a7d5c72eddd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  monsterMaxHealth: 100
-  monsterCurrentHealth: 100
-  objectMoveSpeed: 1
-  dashMoveSpeed: 4.5
-  turnAcceleration: 60
-  moveAcceleration: 30
-  moveDecceleration: 50
-  dashContinueTime: 2
 --- !u!50 &1157477560
 Rigidbody2D:
   serializedVersion: 4
@@ -618,7 +598,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1157477562
+--- !u!114 &1157477564
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -627,11 +607,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 1157477556}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37c3331c9bfd7a9468b947a0dc2d0b52, type: 3}
+  m_Script: {fileID: 11500000, guid: 64ad42ce62c4dc74ca05f332f7bd1fc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   triangleDetection: {fileID: 1376917074}
   circleDetection: {fileID: 2099644458}
+  stingRayStat: {fileID: 1157477565}
+--- !u!114 &1157477565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157477556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ab202a474af2924cb2bbad8928f2523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterMaxHealth: 100
+  monsterCurrentHealth: 100
+  dashContinueTime: 2
+  dashDelayTime: 2
+  patrolRange: 5
+  initialMoveSpeed: 5
+  dashMoveSpeed: 7
 --- !u!1 &1357147440
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,12 +1064,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterMaxHealth: 100
   monsterCurrentHealth: 100
-  objectMoveSpeed: 1
-  dashMoveSpeed: 4.5
-  turnAcceleration: 60
-  moveAcceleration: 30
-  moveDecceleration: 50
-  dashContinueTime: 2
 --- !u!50 &2101442563
 Rigidbody2D:
   serializedVersion: 4
@@ -1254,10 +1248,10 @@ PrefabInstance:
       addedObject: {fileID: 1157477560}
     - targetCorrespondingSourceObject: {fileID: 2623653881379105391, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1157477558}
+      addedObject: {fileID: 1157477564}
     - targetCorrespondingSourceObject: {fileID: 2623653881379105391, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1157477562}
+      addedObject: {fileID: 1157477565}
     - targetCorrespondingSourceObject: {fileID: 1562100769972250148, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1376917074}
