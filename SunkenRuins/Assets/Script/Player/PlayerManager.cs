@@ -42,6 +42,7 @@ namespace SunkenRuins
         private float boostDuration = 0.5f;
         private GameObject boostBarUI;
         private bool temp = false;
+        private bool hasBoostEventBeenInvoked = false;
 
         private void Awake()
         {
@@ -107,13 +108,14 @@ namespace SunkenRuins
         {
             float boostInput = playerControl.Player.Mouse.ReadValue<float>();
             if (temp && boostInput > 0) {
+                Debug.Log("hi");
                 boostInput = 0;
             }
             else if(temp && boostInput == 0) {
                 temp = false;
             }
             else if (!temp && boostInput > 0) { 
-                temp = true;
+                //temp = true;
             } //언젠간 Refactoring하길... ㅎㅎ
             
 
@@ -136,7 +138,10 @@ namespace SunkenRuins
         {
             isBoostPreparing = true;
             Time.timeScale = 0.5f;
-            OnPlayerBoost?.Invoke(this, EventArgs.Empty); // 플레이어가 부스트를 시도하는 것을 UI에 알림
+            if (!hasBoostEventBeenInvoked) {
+                OnPlayerBoost?.Invoke(this, EventArgs.Empty);
+                hasBoostEventBeenInvoked = true;
+            } // 플레이어가 부스트를 시도하는 것을 UI에 알림
             virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize / 2f, zoomSpeed * Time.deltaTime); ; //Zoom In
             //TODO:
             // UI 보이기
@@ -152,6 +157,7 @@ namespace SunkenRuins
             isBoosting = true;
             lastBoostTime = Time.time;
             playerStat.playerCurrentEnergy--;
+            hasBoostEventBeenInvoked = false;
             boostBarUI.SetActive(false);
             
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
@@ -192,6 +198,7 @@ namespace SunkenRuins
             isBoostPreparing = false;
             Time.timeScale = 1f;
             boostBarUI.SetActive(false);
+            hasBoostEventBeenInvoked = false;
             temp = true;
             
             StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed));
