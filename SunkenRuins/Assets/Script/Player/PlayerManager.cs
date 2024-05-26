@@ -40,6 +40,7 @@ namespace SunkenRuins
         private float lastBoostTime = 0f;
         private float boostCooldown = 1f;
         private float boostDuration = 0.5f;
+        private GameObject boostBarUI;
 
         private void Awake()
         {
@@ -51,6 +52,7 @@ namespace SunkenRuins
             playerStat = GetComponent<PlayerStat>();
             virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
             defaultOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
+            boostBarUI = this.transform.GetChild(1).gameObject;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -124,9 +126,11 @@ namespace SunkenRuins
             isBoostPreparing = true;
             Time.timeScale = 0.5f;
             OnPlayerBoost?.Invoke(this, EventArgs.Empty); // 플레이어가 부스트를 시도하는 것을 UI에 알림
-            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize, zoomSpeed * Time.deltaTime); ; //Zoom In
+            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize / 2f, zoomSpeed * Time.deltaTime); ; //Zoom In
             //TODO:
             // UI 보이기
+            boostBarUI.SetActive(true);
+            
             Debug.Log("준비");
         }
 
@@ -137,11 +141,12 @@ namespace SunkenRuins
             isBoosting = true;
             lastBoostTime = Time.time;
             playerStat.playerCurrentEnergy--;
-
-            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize * 2f, zoomSpeed * Time.deltaTime); //Zoom Out
+            boostBarUI.SetActive(false);
+            
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
             float boostSpeed = 10f; //TODO: Zone System에 따른 스피드의 변경
+            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize * 2f, zoomSpeed * Time.deltaTime); //Zoom Out
             StartCoroutine(BoostMovement(boostDirection, boostSpeed));
         }
 
@@ -166,7 +171,7 @@ namespace SunkenRuins
                 elapsed += Time.deltaTime;
                 yield return null;
             }
-
+            
             isBoosting = false;
         }
 
