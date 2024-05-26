@@ -41,6 +41,7 @@ namespace SunkenRuins
         private float boostCooldown = 1f;
         private float boostDuration = 0.5f;
         private GameObject boostBarUI;
+        private bool temp = false;
 
         private void Awake()
         {
@@ -105,6 +106,16 @@ namespace SunkenRuins
         private void BoostInput()
         {
             float boostInput = playerControl.Player.Mouse.ReadValue<float>();
+            if (temp && boostInput > 0) {
+                boostInput = 0;
+            }
+            else if(temp && boostInput == 0) {
+                temp = false;
+            }
+            else if (!temp && boostInput > 0) { 
+                temp = true;
+            } //언젠간 Refactoring하길... ㅎㅎ
+            
 
             if (boostInput > 0 && playerStat.playerCurrentEnergy > 0 && !isBoosting && Time.time > lastBoostTime + boostCooldown)
             {
@@ -146,8 +157,9 @@ namespace SunkenRuins
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
             float boostSpeed = 10f; //TODO: Zone System에 따른 스피드의 변경
-            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize * 2f, zoomSpeed * Time.deltaTime); //Zoom Out
+            StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed)); // Zoom Out
             StartCoroutine(BoostMovement(boostDirection, boostSpeed));
+            Debug.Log("발사");
         }
 
         private IEnumerator BoostMovement(Vector2 direction, float speed)
@@ -179,12 +191,26 @@ namespace SunkenRuins
         {
             isBoostPreparing = false;
             Time.timeScale = 1f;
-
-            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize * 2f, zoomSpeed * Time.deltaTime); //Zoom Out
+            boostBarUI.SetActive(false);
+            temp = true;
+            
+            StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed));
             //TODO:
             //UI 가리기
             Debug.Log("취소");
         }
+
+        private IEnumerator ZoomOutCoroutine(float targetOrthographicSize, float zoomSpeed) {
+            float initialOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
+
+            while (virtualCamera.m_Lens.OrthographicSize > targetOrthographicSize) {
+                float newOrthographicSize = Mathf.MoveTowards(virtualCamera.m_Lens.OrthographicSize, targetOrthographicSize, zoomSpeed * Time.deltaTime);
+                virtualCamera.m_Lens.OrthographicSize = newOrthographicSize;
+                yield return null;
+            }
+            virtualCamera.m_Lens.OrthographicSize = targetOrthographicSize; //최종실행
+        }
+
 
         public void SetInputEnabled(bool enable)
         { // 컷신이나 뭐할때 Input 죽이는 용
