@@ -26,7 +26,8 @@ namespace SunkenRuins
         private SpriteRenderer spriteRenderer;
         private PlayerStat playerStat;
         private CinemachineVirtualCamera virtualCamera;
-        private float defaultOrthographicSize;
+        [SerializeField] private float defaultOrthographicSize = 8f;
+        [SerializeField] private float zoomOrthographicSize = 5f;
         private PlayerControl playerControl; // Input System
         private bool isFacingRight = true;
 
@@ -53,7 +54,7 @@ namespace SunkenRuins
             spriteRenderer = GetComponent<SpriteRenderer>();
             playerStat = GetComponent<PlayerStat>();
             virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-            defaultOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
+            virtualCamera.m_Lens.OrthographicSize = 8f;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -155,8 +156,8 @@ namespace SunkenRuins
                 boostBarUI.SetNewScrollandImageValue();
                 hasBoostEventBeenInvoked = true;
             } // 플레이어가 부스트를 시도하는 것을 UI에 알림
-            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize / 2f, zoomSpeed * Time.deltaTime); ; //Zoom In
-            //TODO:
+            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, zoomOrthographicSize, zoomSpeed * Time.deltaTime); ; //Zoom In
+            // TODO:
             // UI 보이기
             boostBarUI.SetUIActive(true);
 

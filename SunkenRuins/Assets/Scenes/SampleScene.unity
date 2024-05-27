@@ -448,6 +448,8 @@ MonoBehaviour:
   cameraFollowTarget: {fileID: 418955423}
   cameraLookAheadDistance: 1
   zoomSpeed: 2
+  defaultOrthographicSize: 8
+  zoomOrthographicSize: 5
   boostBarUI: {fileID: 115310309}
 --- !u!61 &329036048
 BoxCollider2D:
@@ -512,6 +514,7 @@ MonoBehaviour:
   playerCurrentEnergy: 0
   healthDecreaseRate: 5
   energyDecreaseRate: 5
+  invincibleTime: 2
   initialMoveSpeed: 5
   boostMoveSpeed: 10
   turnAcceleration: 60
