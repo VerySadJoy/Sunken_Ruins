@@ -40,8 +40,6 @@ namespace SunkenRuins
         private float lastBoostTime = 0f;
         private float boostCooldown = 1f;
         private float boostDuration = 0.5f;
-        [SerializeField] private float normalBoostSpeed = 10f;
-        [SerializeField] private float perfectBoostSpeed = 15f;
         [SerializeField] private BoostBarUI boostBarUI;
         private bool temp = false;
         private bool hasBoostEventBeenInvoked = false;
@@ -85,11 +83,11 @@ namespace SunkenRuins
                 }
                 Destroy(other.gameObject); //아이템 삭제
             }
-            else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString))
-            {
-                EnemyStat monsterStat = other.gameObject.GetComponent<EnemyStat>();
-                playerStat.Damage(monsterStat.teamType);
-            }
+            // else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString))
+            // {
+            //     EnemyStat monsterStat = other.gameObject.GetComponent<EnemyStat>();
+            //     playerStat.Damage(monsterStat.teamType);
+            // }
         }
 
         private void OnEnable()
@@ -98,11 +96,21 @@ namespace SunkenRuins
             playerControl.Player.Enable();
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             HandleMoveInput();
             BoostInput();
             UpdateCameraFollowTarget();
+        }
+
+        public void GetAbsorbed(Vector2 dirToOtherNormalized)
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            transform.Translate(playerStat.absorbSpeed * dirToOtherNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
+        }
+        public void EscapeFromShell()
+        {
+            rb.constraints = RigidbodyConstraints2D.None;
         }
 
         private void BoostInput()
@@ -170,12 +178,12 @@ namespace SunkenRuins
             StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed)); // Zoom Out
             if (boostBarUI.IsPerfectBoost)
             {
-                StartCoroutine(BoostMovement(boostDirection, perfectBoostSpeed));
+                StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
                 Debug.Log("완벽 부스트");
             }
             else
             {
-                StartCoroutine(BoostMovement(boostDirection, normalBoostSpeed));
+                StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed));
                 Debug.Log("노말 부스트");
             }
         }

@@ -19,9 +19,9 @@ namespace SunkenRuins
             monsterCurrentHealth = monsterMaxHealth;
         }
 
-        public void Damage(TeamType other)
+        public void Damage(int damageAmount)
         {
-            if(other == TeamType.Player) Debug.Log("몬스터가 피해를 입습니다.");
+            // 공격받을 수 있나요?
         }
     }
 }

@@ -7,6 +7,6 @@ namespace SunkenRuins
     public interface IDamageable
     {
         TeamType teamType { get; }
-        void Damage(TeamType teamType);
+        void Damage(int damageAmount);
     }
 }

@@ -20,6 +20,9 @@ namespace SunkenRuins {
         public float turnAcceleration = 60f;
         public float moveAcceleration = 30f;
         public float moveDecceleration = 50f;
+        public float normalBoostSpeed = 10f;
+        public float perfectBoostSpeed = 15f;
+        public float absorbSpeed = 3.5f;
 
         //Bool
         private bool isInvincible = false;
@@ -88,14 +91,15 @@ namespace SunkenRuins {
             // 2. 무적 UI
         }
 
-        public void Damage(TeamType other)
+        public void Damage(int damageAmount)
         {
-            if(other == TeamType.Monster) Debug.Log("플레이어가 피해를 입습니다.");
+            playerCurrentHealth -= damageAmount;
+            Debug.Log("체력 손실");
+            playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
 
             // TODO:
             // 1. 데미지 모션, 효과
             // 2. 입고 무적 판정
-            // 3. 데미지 입는 float OR int값 설정
         }
     }
 }
