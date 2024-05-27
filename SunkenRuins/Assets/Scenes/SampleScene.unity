@@ -515,14 +515,16 @@ MonoBehaviour:
   healthDecreaseRate: 5
   energyDecreaseRate: 5
   invincibleTime: 2
+  paralyzeTime: 2
   initialMoveSpeed: 5
-  boostMoveSpeed: 10
+  paralyzeMoveSpeed: 3
   turnAcceleration: 60
   moveAcceleration: 30
   moveDecceleration: 50
   normalBoostSpeed: 10
   perfectBoostSpeed: 15
   absorbSpeed: 3.5
+  electricAttack: {fileID: 1828419400}
 --- !u!95 &329036050
 Animator:
   serializedVersion: 5
@@ -1278,6 +1280,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b39900d840138d24d8a11fdda95b2820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1828419400 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8020849776936000050, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
+  m_PrefabInstance: {fileID: 8492821429296422170}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc4f9dbbe4a03f5458a84d96cf5e6ac0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &2086747258

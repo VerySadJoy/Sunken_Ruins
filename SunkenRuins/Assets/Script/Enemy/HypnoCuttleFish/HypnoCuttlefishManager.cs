@@ -19,7 +19,7 @@ namespace SunkenRuins
         public int totalKeyAmount = 10;
         public float retreatSpeed = 4f;
         public bool isHypnotizePlayer { get { return player != null; } }
-        private float retreatTime = 1f;
+        private float retreatTime = 1.5f;
         private Vector2 startPosition;
         private float lerpAmount;
         [SerializeField] private float distanceFromPlayer = 3.0f;
@@ -41,7 +41,7 @@ namespace SunkenRuins
 
         private void Update()
         {
-            if (isHypnotizePlayer)
+            if (canAttack && isHypnotizePlayer)
             {
                 lerpAmount += Time.deltaTime / hypnotizeTime;
                 transform.position = Vector2.Lerp(startPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);

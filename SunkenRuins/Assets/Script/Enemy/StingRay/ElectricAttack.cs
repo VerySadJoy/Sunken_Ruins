@@ -9,10 +9,13 @@ namespace SunkenRuins
 {
     public class ElectricAttack : MonoBehaviour
     {
+        public event EventHandler OnPlayerParalyze;
+
         private const string playerLayerString = "Player";
         [SerializeField] private GameObject attackSpriteObject;
         [SerializeField] private GameObject attackRangeObject;
         [SerializeField] private float showSpriteTime = 0.1f;
+        private bool isAttack = false;
 
         public void ShowAttackRange()
         {
@@ -34,16 +37,19 @@ namespace SunkenRuins
 
         private IEnumerator ShowSpriteCoroutine(GameObject gameObject)
         {
-            gameObject.SetActive(true); // spriteObject 스크립트를 만들어서 따로 알아서 처리하게 하기?
+            gameObject.SetActive(isAttack = true); // spriteObject 스크립트를 만들어서 따로 알아서 처리하게 하기?
             yield return new WaitForSeconds(showSpriteTime);
-            gameObject.SetActive(false);            
+            gameObject.SetActive(isAttack = false);            
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnTriggerStay2D(Collider2D other)
         {
-            if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
+            if (isAttack && other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
                 Debug.LogWarning("플레이어가 피격당함");
+                
+                // 마비 효과
+                OnPlayerParalyze?.Invoke(this, EventArgs.Empty);
             }
         }
     }

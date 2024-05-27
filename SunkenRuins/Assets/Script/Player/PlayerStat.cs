@@ -13,25 +13,29 @@ namespace SunkenRuins {
         public int healthDecreaseRate;
         public float energyDecreaseRate;
         public TeamType teamType { get; set; }
-        [SerializeField] private int invincibleTime = 2; // Invincibility
+        [SerializeField] private int invincibleTime = 1; // Invincibility
+        [SerializeField] private float paralyzeTime = 2f;
 
         [Header("Movement")]
         public float initialMoveSpeed = 5f; //부스트 미사용 최고 이동속도
-        public float boostMoveSpeed = 10f;
+        public float paralyzeMoveSpeed = 3f;
         public float turnAcceleration = 60f;
         public float moveAcceleration = 30f;
         public float moveDecceleration = 50f;
         public float normalBoostSpeed = 10f;
         public float perfectBoostSpeed = 15f;
-        public float absorbSpeed = 3.5f;
+        public float absorbSpeed = 6f;
 
         //Bool
         private bool isInvincible = false;
+
+        [SerializeField] private ElectricAttack electricAttack;
 
         private void Start() {
             teamType = TeamType.Player;
             playerCurrentHealth = playerMaxHealth;
             playerCurrentEnergy = playerMaxEnergy;
+            electricAttack.OnPlayerParalyze += paralyzePlayer;
             StartCoroutine(DecreaseHealthOverTime());
         }
 
@@ -105,6 +109,18 @@ namespace SunkenRuins {
             // TODO:
             // 1. 데미지 모션, 효과
             // 2. 입고 무적 판정
+        }
+
+        private void paralyzePlayer(object sender, EventArgs e)
+        {
+            StartCoroutine(ParalyzeSpeedCoroutine());
+        }
+
+        private IEnumerator ParalyzeSpeedCoroutine()
+        {
+            initialMoveSpeed = paralyzeMoveSpeed;
+            yield return new WaitForSeconds(paralyzeTime);
+            initialMoveSpeed = 5f;
         }
     }
 }

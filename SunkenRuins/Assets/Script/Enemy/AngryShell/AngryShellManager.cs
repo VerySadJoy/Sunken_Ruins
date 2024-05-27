@@ -32,7 +32,7 @@ namespace SunkenRuins
 
         private void Update()
         {
-            if (isAbsorbingPlayer)
+            if (canAttack && isAbsorbingPlayer)
             {
                 if (isEngulfing) // 삼켜서 데미지를 줄 수 있으면
                 {

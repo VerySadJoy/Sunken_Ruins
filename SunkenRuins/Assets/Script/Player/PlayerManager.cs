@@ -106,11 +106,13 @@ namespace SunkenRuins
 
         public void GetAbsorbed(Vector2 dirToOtherNormalized)
         {
-            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            // rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            SetInputEnabled(false);
             transform.Translate(playerStat.absorbSpeed * dirToOtherNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
         }
         public void EscapeFromEnemy()
         {
+            SetInputEnabled(true);
             rb.constraints = RigidbodyConstraints2D.None;
         }
 
