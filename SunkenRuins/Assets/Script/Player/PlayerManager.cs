@@ -108,7 +108,7 @@ namespace SunkenRuins
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
             transform.Translate(playerStat.absorbSpeed * dirToOtherNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
         }
-        public void EscapeFromShell()
+        public void EscapeFromEnemy()
         {
             rb.constraints = RigidbodyConstraints2D.None;
         }

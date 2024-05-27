@@ -7,8 +7,6 @@ namespace SunkenRuins
     public class AngryShellManager : EnemyManager
     {
         // 변수
-        public float detectRadius = 10f;
-        public float attackRadius = 5f;
         public float engulfTime = 3f;
         public float engulfDelayTime = 5f;
         public float attackCoolTime = 1f;
@@ -66,7 +64,7 @@ namespace SunkenRuins
             keyPressCount = 0;
             isEngulfing = false;
             canAttack = false;
-            player?.GetComponent<PlayerManager>().EscapeFromShell();
+            player?.GetComponent<PlayerManager>().EscapeFromEnemy();
             player = null;
 
             yield return new WaitForSeconds(engulfDelayTime);
