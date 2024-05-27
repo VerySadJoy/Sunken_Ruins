@@ -10,10 +10,33 @@ namespace SunkenRuins
     public class ElectricAttack : MonoBehaviour
     {
         private const string playerLayerString = "Player";
+        [SerializeField] private GameObject attackSpriteObject;
+        [SerializeField] private GameObject attackRangeObject;
+        [SerializeField] private float showSpriteTime = 0.1f;
+
+        public void ShowAttackRange()
+        {
+            // Debug.Log("전기 가오리 공격 범위");
+            attackRangeObject.SetActive(true);
+        }
+
+        public void HideAttackRange()
+        {
+            // Debug.Log("전기 가오리 공격 범위");
+            attackRangeObject.SetActive(false);
+        }
 
         public void Attack()
         {
             Debug.Log("플레이어 공격 시도함");
+            StartCoroutine(ShowSpriteCoroutine(attackSpriteObject));
+        }
+
+        private IEnumerator ShowSpriteCoroutine(GameObject gameObject)
+        {
+            gameObject.SetActive(true); // spriteObject 스크립트를 만들어서 따로 알아서 처리하게 하기?
+            yield return new WaitForSeconds(showSpriteTime);
+            gameObject.SetActive(false);            
         }
 
         private void OnTriggerEnter2D(Collider2D other)

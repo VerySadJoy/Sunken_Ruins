@@ -24,9 +24,9 @@ namespace SunkenRuins
             enemyStat = GetComponent<EnemyStat>();
         }
 
-        protected void UpdateFacingDirection(float moveDirectionX) {
-            if (moveDirectionX != 0f) {
-                isFacingRight = moveDirectionX > 0f;
+        protected void UpdateFacingDirection(Vector2 moveDirection) {
+            if (moveDirection.x != 0f) {
+                isFacingRight = moveDirection.x > 0f;
             }
             transform.rotation = isFacingRight? Quaternion.Euler(Vector3.zero) : Quaternion.Euler(Vector3.up * 180f); // flipX인데 collider도 같이 뒤집도록 rotate
         }
