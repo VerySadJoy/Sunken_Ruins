@@ -269,6 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollbar: {fileID: 1449301600}
+  scrollbarTransform: {fileID: 1449301599}
   highlightImageTransform: {fileID: 817506473}
   progressChangeSpeed: 1.5
 --- !u!1001 &297564547
@@ -461,6 +462,9 @@ MonoBehaviour:
   cameraFollowTarget: {fileID: 418955423}
   cameraLookAheadDistance: 1
   zoomSpeed: 2
+  normalBoostSpeed: 10
+  perfectBoostSpeed: 15
+  boostBarUI: {fileID: 115310309}
 --- !u!61 &329036048
 BoxCollider2D:
   m_ObjectHideFlags: 0

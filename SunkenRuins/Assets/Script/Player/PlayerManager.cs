@@ -13,7 +13,7 @@ namespace SunkenRuins
         public static PlayerManager Instance { get; private set; }
 
         // UnityEvent
-        public event EventHandler OnPlayerBoost;
+        // public event EventHandler OnPlayerBoost;
 
         [Header("Follow Camera Target")]
         [SerializeField] private GameObject cameraFollowTarget;
@@ -40,7 +40,9 @@ namespace SunkenRuins
         private float lastBoostTime = 0f;
         private float boostCooldown = 1f;
         private float boostDuration = 0.5f;
-        private GameObject boostBarUI;
+        [SerializeField] private float normalBoostSpeed = 10f;
+        [SerializeField] private float perfectBoostSpeed = 15f;
+        [SerializeField] private BoostBarUI boostBarUI;
         private bool temp = false;
         private bool hasBoostEventBeenInvoked = false;
 
@@ -54,7 +56,6 @@ namespace SunkenRuins
             playerStat = GetComponent<PlayerStat>();
             virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
             defaultOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
-            boostBarUI = this.transform.GetChild(1).gameObject;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -107,17 +108,20 @@ namespace SunkenRuins
         private void BoostInput()
         {
             float boostInput = playerControl.Player.Mouse.ReadValue<float>();
-            if (temp && boostInput > 0) {
+            if (temp && boostInput > 0)
+            {
                 Debug.Log("hi");
                 boostInput = 0;
             }
-            else if(temp && boostInput == 0) {
+            else if (temp && boostInput == 0)
+            {
                 temp = false;
             }
-            else if (!temp && boostInput > 0) { 
+            else if (!temp && boostInput > 0)
+            {
                 //temp = true;
             } //언젠간 Refactoring하길... ㅎㅎ
-            
+
 
             if (boostInput > 0 && playerStat.playerCurrentEnergy > 0 && !isBoosting && Time.time > lastBoostTime + boostCooldown)
             {
@@ -138,15 +142,16 @@ namespace SunkenRuins
         {
             isBoostPreparing = true;
             Time.timeScale = 0.5f;
-            if (!hasBoostEventBeenInvoked) {
-                OnPlayerBoost?.Invoke(this, EventArgs.Empty);
+            if (!hasBoostEventBeenInvoked)
+            {
+                boostBarUI.SetNewScrollandImageValue();
                 hasBoostEventBeenInvoked = true;
             } // 플레이어가 부스트를 시도하는 것을 UI에 알림
             virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, defaultOrthographicSize / 2f, zoomSpeed * Time.deltaTime); ; //Zoom In
             //TODO:
             // UI 보이기
-            boostBarUI.SetActive(true);
-            
+            boostBarUI.SetUIActive(true);
+
             Debug.Log("준비");
         }
 
@@ -158,14 +163,21 @@ namespace SunkenRuins
             lastBoostTime = Time.time;
             playerStat.playerCurrentEnergy--;
             hasBoostEventBeenInvoked = false;
-            boostBarUI.SetActive(false);
-            
+            boostBarUI.SetUIActive(false);
+
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
-            float boostSpeed = 10f; //TODO: Zone System에 따른 스피드의 변경
             StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed)); // Zoom Out
-            StartCoroutine(BoostMovement(boostDirection, boostSpeed));
-            Debug.Log("발사");
+            if (boostBarUI.IsPerfectBoost)
+            {
+                StartCoroutine(BoostMovement(boostDirection, perfectBoostSpeed));
+                Debug.Log("완벽 부스트");
+            }
+            else
+            {
+                StartCoroutine(BoostMovement(boostDirection, normalBoostSpeed));
+                Debug.Log("노말 부스트");
+            }
         }
 
         private IEnumerator BoostMovement(Vector2 direction, float speed)
@@ -189,7 +201,7 @@ namespace SunkenRuins
                 elapsed += Time.deltaTime;
                 yield return null;
             }
-            
+
             isBoosting = false;
         }
 
@@ -197,20 +209,22 @@ namespace SunkenRuins
         {
             isBoostPreparing = false;
             Time.timeScale = 1f;
-            boostBarUI.SetActive(false);
+            boostBarUI.SetUIActive(false);
             hasBoostEventBeenInvoked = false;
             temp = true;
-            
+
             StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed));
             //TODO:
             //UI 가리기
             Debug.Log("취소");
         }
 
-        private IEnumerator ZoomOutCoroutine(float targetOrthographicSize, float zoomSpeed) {
+        private IEnumerator ZoomOutCoroutine(float targetOrthographicSize, float zoomSpeed)
+        {
             float initialOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
 
-            while (virtualCamera.m_Lens.OrthographicSize > targetOrthographicSize) {
+            while (virtualCamera.m_Lens.OrthographicSize > targetOrthographicSize)
+            {
                 float newOrthographicSize = Mathf.MoveTowards(virtualCamera.m_Lens.OrthographicSize, targetOrthographicSize, zoomSpeed * Time.deltaTime);
                 virtualCamera.m_Lens.OrthographicSize = newOrthographicSize;
                 yield return null;
