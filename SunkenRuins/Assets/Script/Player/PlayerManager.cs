@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using System;
+using Unity.Mathematics;
 
 namespace SunkenRuins
 {
@@ -119,6 +120,9 @@ namespace SunkenRuins
         private void BoostInput()
         {
             float boostInput = playerControl.Player.Mouse.ReadValue<float>();
+        
+            // 부스트 방향 버그 수정
+            UpdateFacingDirection(boostInput);
             if (temp && boostInput > 0)
             {
                 Debug.Log("hi");
@@ -163,7 +167,12 @@ namespace SunkenRuins
             // UI 보이기
             boostBarUI.SetUIActive(true);
 
-            Debug.Log("준비");
+            Debug.Log("부스트 준비");
+
+            // 부스트 준비 중에도 Sprite 방향 신경쓰기
+            Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
+            Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
+            UpdateFacingDirection(boostDirection.x);
         }
 
         private void ExecuteBoost()
@@ -193,6 +202,9 @@ namespace SunkenRuins
 
         private IEnumerator BoostMovement(Vector2 direction, float speed)
         {
+            // 부스트 방향 버그 수정
+            UpdateFacingDirection(direction.x);
+
             float elapsed = 0f;
             while (elapsed < boostDuration)
             {
@@ -272,7 +284,8 @@ namespace SunkenRuins
             float updatedVelocityY = Mathf.MoveTowards(rb.velocity.y, desiredVelocityY, accelerationY * Time.deltaTime);
             rb.velocity = new Vector2(updatedVelocityX, updatedVelocityY);
             //HandleBoost(moveInput);
-            UpdateFacingDirection(moveInput.x);
+
+            if (!isBoosting && !isBoostPreparing) UpdateFacingDirection(moveInput.x); // 부스트할 때는 마우스 방향만이 Sprite flip을 결정함
         }
 
         private void UpdateFacingDirection(float moveInputX)
@@ -299,6 +312,7 @@ namespace SunkenRuins
             {
                 return playerStat.turnAcceleration;
             }
+
             // Case 3) 기존 방향으로 계속 이동하는 경우
             return playerStat.moveAcceleration;
         }
