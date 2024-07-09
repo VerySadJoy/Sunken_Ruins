@@ -7,14 +7,16 @@ namespace SunkenRuins {
     public class MenuUI : MonoBehaviour {
 
         //추후 변수 타입 변경
-        [SerializeField] Canvas SettingUI;
+        [SerializeField] CanvasGroup SettingUI;
 
         public void OnStartButton() {
-            //SceneManager.LoadScene(1);
+            SceneManager.LoadScene(1);
         }
 
         public void OnSettingButton() {
-            SettingUI.enabled = true;
+            SettingUI.blocksRaycasts = true;
+            SettingUI.GetComponentInChildren<Canvas>().enabled = true;
+
         }
     }
 }
