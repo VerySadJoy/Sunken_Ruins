@@ -116,7 +116,7 @@ namespace SunkenRuins
         private void AttackPlayer()
         {
             player.GetComponent<PlayerStat>().Damage(damagePerAttack);
-            Debug.LogError("갑오징어가 플레이어를 공격함");
+            Debug.LogError("갑오징어가 플레이어를 공격함"); //이거 왜 로그 에러임? 이거 나오면 안됨????
             StartCoroutine(StopHypnotizeCoroutine());
 
             // TODO:
