@@ -7,14 +7,14 @@ namespace SunkenRuins {
     public class MenuUI : MonoBehaviour {
 
         //추후 변수 타입 변경
-        [SerializeField] GameObject SettingUI;
+        [SerializeField] Canvas SettingUI;
 
         public void OnStartButton() {
             //SceneManager.LoadScene(1);
         }
 
         public void OnSettingButton() {
-            SettingUI.SetActive(true);
+            SettingUI.enabled = true;
         }
     }
 }
