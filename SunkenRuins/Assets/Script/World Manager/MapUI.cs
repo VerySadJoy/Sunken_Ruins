@@ -8,8 +8,7 @@ using TMPro;
 namespace SunkenRuins {
     public class MapUI : MonoBehaviour {
 
-        public TextMeshProUGUI mapNameText;
-        
+        public TextMeshProUGUI mapNameText;        
         private void Awake() {
             mapNameText = GetComponentInChildren<TextMeshProUGUI>();
             if (mapNameText == null) {
