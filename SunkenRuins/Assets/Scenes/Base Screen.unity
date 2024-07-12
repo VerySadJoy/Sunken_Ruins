@@ -639,7 +639,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1674077796}
         m_TargetAssemblyTypeName: SunkenRuins.MapSelectionUI, Assembly-CSharp
-        m_MethodName: LeftBoxOnClick
+        m_MethodName: RightBoxOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1881,7 +1881,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1674077796}
         m_TargetAssemblyTypeName: SunkenRuins.MapSelectionUI, Assembly-CSharp
-        m_MethodName: RightBoxOnClick
+        m_MethodName: LeftBoxOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
