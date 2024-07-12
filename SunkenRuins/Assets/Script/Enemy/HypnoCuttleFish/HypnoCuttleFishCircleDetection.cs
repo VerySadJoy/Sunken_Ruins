@@ -2,14 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace SunkenRuins
 {
-    public class HypnoFishCircleDetection : MonoBehaviour
+    public class HypnoCuttleFishCircleDetection : MonoBehaviour
     {
-        // Detection Event <--> EnemyManager
-        public event EventHandler<PlayerDetectionEventArgs> OnPlayerDetection;
-
         // Components
         private CircleCollider2D circleCollider2D;
         [SerializeField] private float rayCastDistance = 6.0f;
@@ -37,7 +35,7 @@ namespace SunkenRuins
                 if (raycastHit2D)
                 {
                     Debug.Log("원: 플레이어 감지!");
-                    OnPlayerDetection?.Invoke(this, new PlayerDetectionEventArgs(other.gameObject.transform));
+                    EventManager.TriggerEvent(EventType.HypnoCuttleFishHypnotize, null);
                 }
             }
         }

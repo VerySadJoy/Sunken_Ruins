@@ -9,7 +9,6 @@ namespace SunkenRuins
 {
     public class StingRayManager : EnemyManager
     {
-
         // 삼각형 감지 범위랑 동그라미 감지 범위 컴포넌트로 받기
         [SerializeField] private TriangleDetection triangleDetection;
         [SerializeField] private CircleDetection circleDetection;
@@ -26,11 +25,20 @@ namespace SunkenRuins
         protected override void Start()
         {
             base.Start();
-            triangleDetection.OnPlayerDetection += OnPlayerDetection_MoveTowardsPlayer;
-            circleDetection.OnPlayerDetection += OnPlayerDetection_PrepareAttack;
             initialPosition = transform.position;
         }
 
+        private void OnEnable()
+        {
+            EventManager.StartListening(EventType.StingRayMoveTowardsPlayer, OnPlayerDetection_MoveTowardsPlayer);
+            EventManager.StartListening(EventType.StingRayPrepareAttack, OnPlayerDetection_PrepareAttack);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventType.StingRayMoveTowardsPlayer, OnPlayerDetection_MoveTowardsPlayer);
+            EventManager.StopListening(EventType.StingRayPrepareAttack, OnPlayerDetection_PrepareAttack);
+        }
 
         private void Update()
         {
@@ -116,23 +124,23 @@ namespace SunkenRuins
             rb.velocity = new Vector2(stingRayStat.initialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
         }
 
-        private void OnPlayerDetection_MoveTowardsPlayer(object sender, PlayerDetectionEventArgs e)
+        private void OnPlayerDetection_MoveTowardsPlayer(Dictionary<string, object> message)
         {
             Debug.Log("플레이어를 향해 이동 중");
 
             // EventArgs e에 플레이어 매니저 클래스를 받는다
-            player = e._player;
+            player = (Transform)message["Player"];
 
             // 타이머 재시작
             timer = 0f;
         }
 
-        protected void OnPlayerDetection_PrepareAttack(object sender, PlayerDetectionEventArgs e)
+        protected void OnPlayerDetection_PrepareAttack(Dictionary<string, object> message)
         {
             Debug.Log("플레이어 공격 준비");
 
             // EventArgs e에 플레이어 매니저 클래스를 받는다
-            player = e._player;
+            player = (Transform)message["Player"];
 
             // 공격 flag 변수
             isPrepareAttack = true;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SunkenRuins {
-    public class PlayerStat : MonoBehaviour, IDamageable {
+    public class PlayerStat : MonoBehaviour, IDamageable, IParalyzeable {
         [Header("Stat")]
         public int playerMaxHealth;
         public int playerCurrentHealth;
@@ -15,10 +15,12 @@ namespace SunkenRuins {
         public TeamType teamType { get; set; }
         [SerializeField] private int invincibleTime = 1; // Invincibility
         [SerializeField] private float paralyzeTime = 2f;
+        [SerializeField] private float hypnotizeTime = 1f; public float HypnotizeTime { get { return hypnotizeTime; } }
 
         [Header("Movement")]
         public float initialMoveSpeed = 5f; //부스트 미사용 최고 이동속도
-        public float paralyzeMoveSpeed = 3f;
+        public float paralyzeMoveSpeed = 2f;
+        public float hypnotizeMoveSpeed = 2f;
         public float turnAcceleration = 60f;
         public float moveAcceleration = 30f;
         public float moveDecceleration = 50f;
@@ -27,16 +29,27 @@ namespace SunkenRuins {
         public float absorbSpeed = 6f;
 
         //Bool
-        private bool isInvincible = false;
-
-        [SerializeField] private ElectricAttack electricAttack;
+        private bool isInvincible = false; public bool IsInvincible { get { return isInvincible;} }
+        private bool isParalyzed = false; public bool IsParalyzed { get {return isParalyzed;} }
+        private bool canUseEnergy = true; public bool CanUseEnergy {get {return canUseEnergy;} }
 
         private void Start() {
             teamType = TeamType.Player;
             playerCurrentHealth = playerMaxHealth;
             playerCurrentEnergy = playerMaxEnergy;
-            electricAttack.OnPlayerParalyze += paralyzePlayer;
             StartCoroutine(DecreaseHealthOverTime());
+        }
+
+        void OnEnable()
+        {
+            EventManager.StartListening(EventType.StingRayParalyze, Paralyze);
+            EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+        }
+
+        void OnDisable()
+        {
+            EventManager.StopListening(EventType.StingRayParalyze, Paralyze);
+            EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
         }
 
         private System.Collections.IEnumerator DecreaseHealthOverTime() {
@@ -75,11 +88,10 @@ namespace SunkenRuins {
         }
 
         public void BeInvincible(int invincibleTime){
-            isInvincible = true;
-            StartCoroutine(beInvincibleOverInvincibleTime(invincibleTime));
+            StartCoroutine(BeInvincibleOverInvincibleTime(invincibleTime));
         }
 
-        private System.Collections.IEnumerator beInvincibleOverInvincibleTime(int invincibleTime) {
+        private System.Collections.IEnumerator BeInvincibleOverInvincibleTime(int invincibleTime) {
             // Player의 BoxCollider를 가져와서 끈다 <-- 이거 안 좋은 구조 같은데 의견 부탁해요...
             BoxCollider2D tempPlayerCollider = this.GetComponent<BoxCollider2D>();
             isInvincible = true;
@@ -111,16 +123,48 @@ namespace SunkenRuins {
             // 2. 입고 무적 판정
         }
 
-        private void paralyzePlayer(object sender, EventArgs e)
+        public void Paralyze(Dictionary<string, object> message)
         {
+            Debug.Log("플레이어 마비당함");
             StartCoroutine(ParalyzeSpeedCoroutine());
+
+            // TODO:
+            // 1. Paralyze Animation 재생 --> Idle Animation으로 변환
+            // 2. Paralyze SFX 재생
         }
 
         private IEnumerator ParalyzeSpeedCoroutine()
         {
-            initialMoveSpeed = paralyzeMoveSpeed;
+            float tempSpeed = initialMoveSpeed; // 기본 이동 속도를 잠시 변수에 보관
+
+            initialMoveSpeed = paralyzeMoveSpeed; // 마비되어 느린 속도로 이동
+            canUseEnergy = false; // 부스트 사용 불가
             yield return new WaitForSeconds(paralyzeTime);
-            initialMoveSpeed = 5f;
+
+            initialMoveSpeed = tempSpeed; // 본래 속도로 복귀
+            canUseEnergy = true;
+        }
+
+        public void Hypnotize(Dictionary<string, object> message)
+        {
+            Debug.Log("플레이어 최면당함");
+            StartCoroutine(HypnotizeSpeedCoroutine());
+
+            // TODO:
+            // 1. Paralyze Animation 재생 --> Idle Animation으로 변환
+            // 2. Paralyze SFX 재생
+        }
+
+        private IEnumerator HypnotizeSpeedCoroutine()
+        {
+            float tempSpeed = initialMoveSpeed; // 기본 이동 속도를 잠시 변수에 보관
+
+            initialMoveSpeed = hypnotizeMoveSpeed; // 마비되어 느린 속도로 이동
+            canUseEnergy = false; // 부스트 사용 불가 <== "이거 유지해야 함?"
+            yield return new WaitForSeconds(hypnotizeTime);
+
+            initialMoveSpeed = tempSpeed; // 본래 속도로 복귀
+            canUseEnergy = true;
         }
     }
 }

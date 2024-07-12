@@ -61,7 +61,6 @@ namespace SunkenRuins
 
             // Highlighted Image Reposition
             highlightImageTransform.localPosition = Vector3.right * UnityEngine.Random.Range(-80f, 80f);
-            Debug.LogWarning((80f + highlightImageTransform.localPosition.x) / 160f);
         }
 
         private void Update()

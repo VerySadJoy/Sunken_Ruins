@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SunkenRuins
@@ -25,9 +26,20 @@ namespace SunkenRuins
         protected override void Start()
         {
             base.Start();
-            shellCircleDetection.OnPlayerDetection += OnPlayerDetection_AbsorbPlayer;
-            shellCircleDetection.OnPlayerEscape += OnPlayerEscape_ReleasePlayer;
-            shellAttackDetection.OnPlayerDetection += OnPlayerDetection_AttackPlayer;
+        }
+
+        private void OnEnable()
+        {
+            EventManager.StartListening(EventType.ShellAbsorb, OnPlayerDetection_AbsorbPlayer);
+            EventManager.StartListening(EventType.ShellRelease, OnPlayerEscape_ReleasePlayer);
+            EventManager.StartListening(EventType.ShellAttack, OnPlayerDetection_AttackPlayer);            
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventType.ShellAbsorb, OnPlayerDetection_AbsorbPlayer);
+            EventManager.StopListening(EventType.ShellRelease, OnPlayerEscape_ReleasePlayer);
+            EventManager.StopListening(EventType.ShellAttack, OnPlayerDetection_AttackPlayer);  
         }
 
         private void Update()
@@ -71,23 +83,23 @@ namespace SunkenRuins
             canAttack = true;
         }
 
-        private void OnPlayerDetection_AbsorbPlayer(object sender, PlayerDetectionEventArgs e)
+        private void OnPlayerDetection_AbsorbPlayer(Dictionary<string, object> message)
         {
             Debug.LogError("조개가 플레이어를 빨아들임");
 
             // EventArgs e에 플레이어 매니저 클래스를 받는다
-            player = e._player;
+            player = (Transform)message["Player"];
 
             // 타이머 재시작
             timer = 0f;
         }
 
-        private void OnPlayerDetection_AttackPlayer(object sender, PlayerDetectionEventArgs e)
+        private void OnPlayerDetection_AttackPlayer(Dictionary<string, object> message)
         {
             Debug.LogError("조개가 플레이어를 공격함");
 
             // EventArgs e에 플레이어 매니저 클래스를 받는다
-            player = e._player;
+            player = (Transform)message["Player"];
 
             // 공격하는가?
             isEngulfing = true;
@@ -96,7 +108,7 @@ namespace SunkenRuins
             timer = 0f;
         }
 
-        private void OnPlayerEscape_ReleasePlayer(object sender, PlayerDetectionEventArgs e)
+        private void OnPlayerEscape_ReleasePlayer(Dictionary<string, object> message)
         {
             Debug.LogError("플레이어가 조개한테서 벗어남");
 

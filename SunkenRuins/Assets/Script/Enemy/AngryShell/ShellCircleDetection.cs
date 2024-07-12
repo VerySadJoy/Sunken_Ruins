@@ -7,10 +7,6 @@ namespace SunkenRuins
 {
     public class ShellCircleDetection : MonoBehaviour
     {
-        // Detection Event <--> EnemyManager
-        public event EventHandler<PlayerDetectionEventArgs> OnPlayerDetection;
-        public event EventHandler<PlayerDetectionEventArgs> OnPlayerEscape;
-
         // Components
         private CircleCollider2D circleCollider2D;
         [SerializeField] private float rayCastDistance = 5.0f;
@@ -38,7 +34,7 @@ namespace SunkenRuins
                 if (raycastHit2D)
                 {
                     Debug.Log("원: 플레이어 감지!");
-                    OnPlayerDetection?.Invoke(this, new PlayerDetectionEventArgs(other.gameObject.transform));
+                    EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "Player", other.gameObject.transform } });
                 }
             }
         }
@@ -49,7 +45,7 @@ namespace SunkenRuins
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
                 Debug.Log("플레이어 탈출!");
-                OnPlayerEscape?.Invoke(this, new PlayerDetectionEventArgs(other.gameObject.transform));
+                EventManager.TriggerEvent(EventType.ShellRelease, null);
             }
         }
 

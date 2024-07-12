@@ -9,8 +9,6 @@ namespace SunkenRuins
 {
     public class HypnoCuttlefishManager : EnemyManager
     {
-        [SerializeField] private HypnoFishCircleDetection hypnoFishCircleDetection;
-
         // 변수
         public float hypnotizeTime = 1f;
         public float hypnotizeDelayTime = 5f;
@@ -36,7 +34,6 @@ namespace SunkenRuins
             base.Start();
             startPosition = transform.position;
             // retreatSpeed = (오브젝트 길이) * time.deltatime / (이동할 시간) <== 상의 필요
-            hypnoFishCircleDetection.OnPlayerDetection += OnPlayerDetection_HypnotizePlayer;
         }
 
         private void Update()
@@ -98,21 +95,7 @@ namespace SunkenRuins
             yield return new WaitForSeconds(hypnotizeDelayTime);
             canAttack = true;
         }
-
-        private void OnPlayerDetection_HypnotizePlayer(object sender, PlayerDetectionEventArgs e)
-        {
-            Debug.LogError("갑오징어가 플레이어를 최면시킴");
-
-            // EventArgs e에 플레이어 매니저 클래스를 받는다
-            player = e._player;
-
-            // 부스트 못하게 막기
-            player.GetComponent<PlayerManager>().SetInputEnabled(false);
-
-            // 타이머 재시작
-            timer = 0f;
-        }
-
+        
         private void AttackPlayer()
         {
             player.GetComponent<PlayerStat>().Damage(damagePerAttack);

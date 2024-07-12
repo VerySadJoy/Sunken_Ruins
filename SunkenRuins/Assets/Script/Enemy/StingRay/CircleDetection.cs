@@ -7,9 +7,6 @@ namespace SunkenRuins
 {
     public class CircleDetection : MonoBehaviour
     {
-        // Detection Event <--> EnemyManager
-        public event EventHandler<PlayerDetectionEventArgs> OnPlayerDetection;
-
         // Components
         private CircleCollider2D circleCollider2D;
         [SerializeField] private float rayCastDistance = 4.0f;
@@ -52,7 +49,7 @@ namespace SunkenRuins
                 if (raycastHit2D)
                 {
                     Debug.Log("원: 플레이어 감지!");
-                    OnPlayerDetection?.Invoke(this, new PlayerDetectionEventArgs(other.gameObject.transform));
+                    EventManager.TriggerEvent(EventType.StingRayPrepareAttack, new Dictionary<string, object>{ { "Player", other.gameObject.transform } });
                 }
             }
         }

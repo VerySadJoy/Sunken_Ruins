@@ -59,9 +59,7 @@ namespace SunkenRuins
         }
 
         private void OnTriggerEnter2D(Collider2D other)
-        { // 임시 처리
-            //소신발언
-            //충돌로만 Item 획득이 가능하면 굳이 EventHandler 써야할 이유가 있는지?
+        { 
             if (other.gameObject.layer == LayerMask.NameToLayer(itemLayerString))
             { //Item 획득
                 ItemSO itemSO = other.gameObject.GetComponent<Item>().GetItemSO();
@@ -96,6 +94,13 @@ namespace SunkenRuins
         {
             playerControl = new PlayerControl();
             playerControl.Player.Enable();
+
+            EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
         }
 
         private void Update()
@@ -125,7 +130,7 @@ namespace SunkenRuins
             UpdateFacingDirection(boostInput);
             if (temp && boostInput > 0)
             {
-                Debug.Log("hi");
+                // Debug.Log("hi");
                 boostInput = 0;
             }
             else if (temp && boostInput == 0)
@@ -138,16 +143,20 @@ namespace SunkenRuins
             } //언젠간 Refactoring하길... ㅎㅎ
 
 
-            if (boostInput > 0 && playerStat.playerCurrentEnergy > 0 && !isBoosting && Time.time > lastBoostTime + boostCooldown)
+            if (boostInput > 0 && playerStat.playerCurrentEnergy > 0 && !isBoosting 
+                && Time.time > lastBoostTime + boostCooldown && playerStat.CanUseEnergy)
             {
                 PrepareBoost();
             }
+
             if (boostInput == 0 && isBoostPreparing)
             {
                 ExecuteBoost();
             }
+            
             if (Input.GetKeyDown(KeyCode.E) && isBoostPreparing)
-            { //이거 나중에 Input System으로 수정해야함
+            { 
+                //이거 나중에 Input System으로 수정해야함
                 CancelBoost();
             }
 
@@ -255,6 +264,17 @@ namespace SunkenRuins
             virtualCamera.m_Lens.OrthographicSize = targetOrthographicSize; //최종실행
         }
 
+        private void Hypnotize(Dictionary<string, object> message)
+        {
+            StartCoroutine(HypnotizeInputCoroutine());
+        }
+
+        private IEnumerator HypnotizeInputCoroutine()
+        {
+            SetInputEnabled(false);
+            yield return new WaitForSeconds(playerStat.HypnotizeTime);
+            SetInputEnabled(true);
+        }
 
         public void SetInputEnabled(bool enable)
         { // 컷신이나 뭐할때 Input 죽이는 용
