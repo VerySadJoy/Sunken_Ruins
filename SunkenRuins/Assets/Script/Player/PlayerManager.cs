@@ -125,7 +125,6 @@ namespace SunkenRuins
             UpdateFacingDirection(boostInput);
             if (temp && boostInput > 0)
             {
-                Debug.Log("hi");
                 boostInput = 0;
             }
             else if (temp && boostInput == 0)
