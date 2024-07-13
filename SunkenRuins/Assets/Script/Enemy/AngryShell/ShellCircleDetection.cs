@@ -34,7 +34,7 @@ namespace SunkenRuins
                 if (raycastHit2D)
                 {
                     Debug.Log("원: 플레이어 감지!");
-                    EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "Player", other.gameObject.transform } });
+                    EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "dirToPlayerNormalized", (transform.position - other.gameObject.transform.position).normalized } });
                 }
             }
         }

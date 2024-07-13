@@ -96,11 +96,13 @@ namespace SunkenRuins
             playerControl.Player.Enable();
 
             EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StartListening(EventType.ShellAbsorb, GetAbsorbed);
         }
 
         private void OnDisable()
         {
             EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StopListening(EventType.ShellAbsorb, GetAbsorbed);
         }
 
         private void Update()
@@ -110,11 +112,11 @@ namespace SunkenRuins
             UpdateCameraFollowTarget();
         }
 
-        public void GetAbsorbed(Vector2 dirToOtherNormalized)
+        public void GetAbsorbed(Dictionary<string, object> message)
         {
             // rb.constraints = RigidbodyConstraints2D.FreezeAll;
             SetInputEnabled(false);
-            transform.Translate(playerStat.absorbSpeed * dirToOtherNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
+            transform.Translate(playerStat.absorbSpeed * (Vector2)message["dirToPlayerNormalized"] * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
         }
         public void EscapeFromEnemy()
         {

@@ -31,6 +31,7 @@ namespace SunkenRuins
         ShellAbsorb,
         ShellRelease,
         ShellAttack,
-
+        PlayerDamaged,
+        
     }
 }

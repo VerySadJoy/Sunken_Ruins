@@ -124,9 +124,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1904956056168377913}
-  - component: {fileID: 4820799699766992496}
   - component: {fileID: 8128839354737156187}
   - component: {fileID: 8369857963736683423}
+  - component: {fileID: 2757796759777889220}
   m_Layer: 8
   m_Name: AngryShell
   m_TagString: Untagged
@@ -152,20 +152,6 @@ Transform:
   - {fileID: 7011773032127867584}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4820799699766992496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4784678540410205240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ab202a474af2924cb2bbad8928f2523, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  monsterMaxHealth: 100
-  monsterCurrentHealth: 100
 --- !u!50 &8128839354737156187
 Rigidbody2D:
   serializedVersion: 4
@@ -205,15 +191,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e97c6396ddc94c046aa93e8974a31b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectRadius: 10
-  attackRadius: 5
-  engulfTime: 3
-  engulfDelayTime: 5
-  attackCoolTime: 1
-  damagePerAttack: 10
-  totalKeyAmount: 10
+  shellStat: {fileID: 0}
   shellCircleDetection: {fileID: 620261000997387437}
   shellAttackDetection: {fileID: 1425830237138012539}
+--- !u!114 &2757796759777889220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4784678540410205240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f712eece74b581b4fa4b77c7a714dce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterMaxHealth: 100
+  monsterCurrentHealth: 100
 --- !u!1 &5783719899696567945
 GameObject:
   m_ObjectHideFlags: 0

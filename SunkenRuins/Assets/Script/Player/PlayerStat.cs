@@ -44,12 +44,14 @@ namespace SunkenRuins {
         {
             EventManager.StartListening(EventType.StingRayParalyze, Paralyze);
             EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StartListening(EventType.ShellAttack, ShellAttack); 
         }
 
         void OnDisable()
         {
             EventManager.StopListening(EventType.StingRayParalyze, Paralyze);
             EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StopListening(EventType.ShellAttack, ShellAttack);
         }
 
         private System.Collections.IEnumerator DecreaseHealthOverTime() {
@@ -165,6 +167,11 @@ namespace SunkenRuins {
 
             initialMoveSpeed = tempSpeed; // 본래 속도로 복귀
             canUseEnergy = true;
+        }
+
+        private void ShellAttack(Dictionary<string, object> message)
+        {
+            Damage((int)message["amount"]);
         }
     }
 }
