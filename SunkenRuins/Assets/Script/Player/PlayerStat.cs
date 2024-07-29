@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneTemplate;
 using UnityEngine;
 
 namespace SunkenRuins {
@@ -15,10 +16,11 @@ namespace SunkenRuins {
         public TeamType teamType { get; set; }
         [SerializeField] private int invincibleTime = 1; // Invincibility
         [SerializeField] private float paralyzeTime = 2f;
-        [SerializeField] private float hypnotizeTime = 1f; public float HypnotizeTime { get { return hypnotizeTime; } }
+        [SerializeField] private float hypnotizeTime = 2f; public float HypnotizeTime { get { return hypnotizeTime; } }
 
         [Header("Movement")]
-        public float initialMoveSpeed = 5f; //부스트 미사용 최고 이동속도
+        public float moveSpeed = 5f;
+        public float defaultMoveSpeed = 5f; //부스트 미사용 최고 이동속도
         public float paralyzeMoveSpeed = 2f;
         public float hypnotizeMoveSpeed = 2f;
         public float turnAcceleration = 60f;
@@ -40,24 +42,29 @@ namespace SunkenRuins {
             StartCoroutine(DecreaseHealthOverTime());
         }
 
+        private void FixedUpdate()
+        {
+            Debug.Log($"현재 체력: {playerCurrentHealth} / {playerMaxHealth}");
+        }
+
         void OnEnable()
         {
             EventManager.StartListening(EventType.StingRayParalyze, Paralyze);
             EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
-            EventManager.StartListening(EventType.ShellAttack, ShellAttack); 
+            EventManager.StartListening(EventType.PlayerDamaged, Damage); 
         }
 
         void OnDisable()
         {
             EventManager.StopListening(EventType.StingRayParalyze, Paralyze);
             EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
-            EventManager.StopListening(EventType.ShellAttack, ShellAttack);
+            EventManager.StopListening(EventType.PlayerDamaged, Damage);
         }
 
         private System.Collections.IEnumerator DecreaseHealthOverTime() {
             while (playerCurrentHealth > 0) {
                 if (!isInvincible) {
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(100f);
                     playerCurrentHealth -= healthDecreaseRate;
                     Debug.LogWarning("무적이 아닐 때 체력 꾸준히 감소");
                 }
@@ -111,23 +118,9 @@ namespace SunkenRuins {
             // 2. 무적 UI
         }
 
-        public void Damage(int damageAmount)
-        {
-            playerCurrentHealth -= damageAmount;
-            Debug.Log("체력 손실");
-            playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
-
-            // 무적이 된다
-            BeInvincible(invincibleTime); // 2초 동안 하드코딩
-
-            // TODO:
-            // 1. 데미지 모션, 효과
-            // 2. 입고 무적 판정
-        }
-
         public void Paralyze(Dictionary<string, object> message)
         {
-            Debug.Log("플레이어 마비당함");
+            // Debug.Log("플레이어 마비당함");
             StartCoroutine(ParalyzeSpeedCoroutine());
 
             // TODO:
@@ -137,41 +130,44 @@ namespace SunkenRuins {
 
         private IEnumerator ParalyzeSpeedCoroutine()
         {
-            float tempSpeed = initialMoveSpeed; // 기본 이동 속도를 잠시 변수에 보관
-
-            initialMoveSpeed = paralyzeMoveSpeed; // 마비되어 느린 속도로 이동
+            moveSpeed = paralyzeMoveSpeed; // 마비되어 느린 속도로 이동
             canUseEnergy = false; // 부스트 사용 불가
             yield return new WaitForSeconds(paralyzeTime);
 
-            initialMoveSpeed = tempSpeed; // 본래 속도로 복귀
-            canUseEnergy = true;
+            moveSpeed = defaultMoveSpeed; // 본래 속도로 복귀
+            canUseEnergy = true; // paralyzeTime 이후 부스트 사용 가능
         }
 
         public void Hypnotize(Dictionary<string, object> message)
         {
-            Debug.Log("플레이어 최면당함");
+            // Debug.Log("플레이어 최면당함");
             StartCoroutine(HypnotizeSpeedCoroutine());
-
-            // TODO:
-            // 1. Paralyze Animation 재생 --> Idle Animation으로 변환
-            // 2. Paralyze SFX 재생
         }
 
         private IEnumerator HypnotizeSpeedCoroutine()
         {
-            float tempSpeed = initialMoveSpeed; // 기본 이동 속도를 잠시 변수에 보관
-
-            initialMoveSpeed = hypnotizeMoveSpeed; // 마비되어 느린 속도로 이동
-            canUseEnergy = false; // 부스트 사용 불가 <== "이거 유지해야 함?"
+            moveSpeed = hypnotizeMoveSpeed; // 기본 이동 속도를 잠시 변수에 보관
+            canUseEnergy = false; // 부스트 사용 불가
             yield return new WaitForSeconds(hypnotizeTime);
 
-            initialMoveSpeed = tempSpeed; // 본래 속도로 복귀
+            moveSpeed = defaultMoveSpeed; // 본래 속도로 복귀
             canUseEnergy = true;
         }
 
-        private void ShellAttack(Dictionary<string, object> message)
+        private void Damage(Dictionary<string, object> message)
         {
             Damage((int)message["amount"]);
         }
+
+        public void Damage(int damageAmount)
+        {
+            Debug.Log("체력 손실");
+            playerCurrentHealth -= damageAmount;
+            playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
+
+            // 무적이 된다
+            BeInvincible(invincibleTime); // 2초 동안 하드코딩
+        }
+
     }
 }

@@ -44,7 +44,6 @@ namespace SunkenRuins
         {
             if (isAttack && other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
-                Debug.LogWarning("플레이어가 피격당함");
                 isAttack = false; // OnTriggerStay가 여러 번 call되는 것을 방지함
                 
                 EventManager.TriggerEvent(EventType.StingRayParalyze, null);

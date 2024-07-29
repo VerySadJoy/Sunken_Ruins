@@ -16,6 +16,9 @@ namespace SunkenRuins
         private LayerMask playerLayerMask;
         private const string playerLayerString = "Player";
 
+        private bool isShellAttack = false;
+        public bool IsShellAttack { get { return isShellAttack; } }
+
         private void Awake()
         {
             boxCollider2D = GetComponent<BoxCollider2D>();
@@ -27,8 +30,19 @@ namespace SunkenRuins
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
                 Debug.Log("네모: 플레이어 감지!");
-                EventManager.TriggerEvent(EventType.ShellAttack, new Dictionary<string, object>() { { "Player", other.gameObject.transform } });
+                EventManager.TriggerEvent(EventType.ShellSwallow, new Dictionary<string, object>() { {"shellPos", transform.position } });
+                // EventManager.TriggerEvent(EventType.ShellAttack, null);
             }
         }
+
+        // public void ShellAttackEnable()
+        // {
+        //     isShellAttack = true;
+        // }
+
+        // public void ShellAttackDisable()
+        // {
+        //     isShellAttack = false;
+        // }
     }
 }

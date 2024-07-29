@@ -10,6 +10,7 @@ namespace SunkenRuins
         public int monsterMaxHealth;
         public int monsterCurrentHealth;
         public TeamType teamType { get; set; }
+        public int damageAmount { get; protected set;}
 
         private void Start()
         {

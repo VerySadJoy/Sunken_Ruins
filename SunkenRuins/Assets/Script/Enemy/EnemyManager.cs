@@ -28,13 +28,13 @@ namespace SunkenRuins
             if (moveDirection.x != 0f) {
                 isFacingRight = moveDirection.x > 0f;
             }
-            transform.rotation = isFacingRight? Quaternion.Euler(Vector3.zero) : Quaternion.Euler(Vector3.up * 180f); // flipX인데 collider도 같이 뒤집도록 rotate
+            transform.rotation = isFacingRight? Quaternion.Euler(Vector3.zero) : Quaternion.Euler(Vector3.up * 180f); // flipX?�데 collider??같이 ?�집?�록 rotate
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            // 몬스터가 플레이어한테 데미지 입는 코드
-            // 필요없으면 삭제하면 될 듯?
+            // 몬스?��? ?�레?�어?�테 ?��?지 ?�는 코드
+            // ?�요?�으�???��?�면 ????
         }
     }
 }

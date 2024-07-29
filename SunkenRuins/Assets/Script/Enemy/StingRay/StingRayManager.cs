@@ -32,12 +32,14 @@ namespace SunkenRuins
         {
             EventManager.StartListening(EventType.StingRayMoveTowardsPlayer, OnPlayerDetection_MoveTowardsPlayer);
             EventManager.StartListening(EventType.StingRayPrepareAttack, OnPlayerDetection_PrepareAttack);
+            EventManager.StartListening(EventType.StingRayParalyze, OnPlayerDetection_AttackPlayer);
         }
 
         private void OnDisable()
         {
             EventManager.StopListening(EventType.StingRayMoveTowardsPlayer, OnPlayerDetection_MoveTowardsPlayer);
             EventManager.StopListening(EventType.StingRayPrepareAttack, OnPlayerDetection_PrepareAttack);
+            EventManager.StartListening(EventType.StingRayParalyze, OnPlayerDetection_AttackPlayer);
         }
 
         private void Update()
@@ -126,6 +128,8 @@ namespace SunkenRuins
 
         private void OnPlayerDetection_MoveTowardsPlayer(Dictionary<string, object> message)
         {
+            if (isChasingPlayer) return;
+
             Debug.Log("플레이어를 향해 이동 중");
 
             // EventArgs e에 플레이어 매니저 클래스를 받는다
@@ -135,8 +139,10 @@ namespace SunkenRuins
             timer = 0f;
         }
 
-        protected void OnPlayerDetection_PrepareAttack(Dictionary<string, object> message)
+        private void OnPlayerDetection_PrepareAttack(Dictionary<string, object> message)
         {
+            if (isPrepareAttack) return; // 몹 중간에 플레이어가 있을 때 발생하는 버그 수정
+
             Debug.Log("플레이어 공격 준비");
 
             // EventArgs e에 플레이어 매니저 클래스를 받는다
@@ -148,5 +154,12 @@ namespace SunkenRuins
             // 타이머 재시작
             timer = 0f;
         }
+
+        private void OnPlayerDetection_AttackPlayer(Dictionary<string, object> message)
+        {
+            EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", stingRayStat.damageAmount } });
+        }
+
+
     }
 }

@@ -47,13 +47,9 @@ namespace SunkenRuins
                 Vector2 dirToPlayerNormalized = (other.gameObject.transform.position - transform.position).normalized;
                 temp = dirToPlayerNormalized;
 
-                // RayCast해서 플레이어가 벽 같은 장애물에 가려져 있는지 확인
-                // 이거 LayerMask.NameToLayer쓰면 플레이어 인식이 안 돼서 일단 layermask 따로 serializefield로 받아놨어
-                // 오류 고치는 방법 있으면 알려줘...!
                 RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, dirToPlayerNormalized, rayCastDistance, playerLayerMask);
                 if (raycastHit2D)
                 {
-                    Debug.Log("삼각형: 플레이어 감지!");
                     EventManager.TriggerEvent(EventType.StingRayMoveTowardsPlayer, new Dictionary<string, object>{ { "Player", other.gameObject.transform } });
                 }
             }

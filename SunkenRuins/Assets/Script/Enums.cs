@@ -23,7 +23,6 @@ namespace SunkenRuins
     /// </summary>
     public enum EventType
     {
-        StingRayAttack,
         StingRayParalyze,
         StingRayMoveTowardsPlayer,
         StingRayPrepareAttack,
@@ -31,6 +30,8 @@ namespace SunkenRuins
         ShellAbsorb,
         ShellRelease,
         ShellAttack,
+        ShellEscape,
+        ShellSwallow,
         PlayerDamaged,
         
     }

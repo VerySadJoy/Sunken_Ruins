@@ -34,8 +34,7 @@ namespace SunkenRuins
                 RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, dirToPlayerNormalized, rayCastDistance, playerLayerMask);
                 if (raycastHit2D)
                 {
-                    Debug.Log("원: 플레이어 감지!");
-                    EventManager.TriggerEvent(EventType.HypnoCuttleFishHypnotize, null);
+                    EventManager.TriggerEvent(EventType.HypnoCuttleFishHypnotize, new Dictionary<string, object>{ { "Player", other.gameObject.transform } });
                 }
             }
         }
