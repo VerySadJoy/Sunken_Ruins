@@ -20,7 +20,7 @@ namespace SunkenRuins
         private float highLightImageRange;
         public bool IsPerfectBoost // 스크롤이 빨간 area에 있을 때 부스트를 실행하면 perfectBoostSpeed를 가진다.
         {
-            get 
+            get
             {
                 // 80f로 더하고 160f로 나누는 이유는 localPosition의 시작과 끝이 각각 -80f, 80f이기 때문이다
                 // scrollbar value는 0부터 1이므로 바꿔줄 필요가 있다.

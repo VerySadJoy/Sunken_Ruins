@@ -37,7 +37,7 @@ namespace SunkenRuins
         private const string enemyLayerString = "Enemy";
 
         //Boost
-        private LineRenderer boostTrajectoryLine;
+        [SerializeField] private DottedLineUI boostTrajectoryLineUI;
         [SerializeField] private BoostBarUI boostBarUI;
 
         private bool isBoosting = false;
@@ -54,7 +54,6 @@ namespace SunkenRuins
             else Instance = this;
 
             rb = GetComponent<Rigidbody2D>();
-            boostTrajectoryLine = GetComponent<LineRenderer>();
             spriteRenderer = GetComponent<SpriteRenderer>();
             playerStat = GetComponent<PlayerStat>();
             virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
@@ -220,17 +219,11 @@ namespace SunkenRuins
             UpdateFacingDirection(boostDirection.x);
 
             // 점선 잇기 (Player Position to Mouse Position)
-            boostTrajectoryLine.enabled = true;
-            boostTrajectoryLine.positionCount = 2;
-            boostTrajectoryLine.SetPosition(0, this.transform.position);
-            boostTrajectoryLine.SetPosition(1, finalMousePosition);
+            boostTrajectoryLineUI.LineEnable();
         }
 
         private void ExecuteBoost()
         {
-            // 부스트 방향 안내하는 점선 숨기기
-            boostTrajectoryLine.enabled = false;
-
             Time.timeScale = 1f;
             isBoostPreparing = false;
             isBoosting = true;
@@ -238,6 +231,7 @@ namespace SunkenRuins
             playerStat.playerCurrentEnergy--;
             hasBoostEventBeenInvoked = false;
             boostBarUI.SetUIActive(false);
+            boostTrajectoryLineUI.LineDisable();
 
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
@@ -287,6 +281,7 @@ namespace SunkenRuins
             isBoostPreparing = false;
             Time.timeScale = 1f;
             boostBarUI.SetUIActive(false);
+            boostTrajectoryLineUI.LineDisable();
             hasBoostEventBeenInvoked = false;
             temp = true;
 
