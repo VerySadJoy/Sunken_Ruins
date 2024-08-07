@@ -37,12 +37,14 @@ namespace SunkenRuins
         private const string enemyLayerString = "Enemy";
 
         //Boost
+        [SerializeField] private DottedLineUI boostTrajectoryLineUI;
+        [SerializeField] private BoostBarUI boostBarUI;
+
         private bool isBoosting = false;
         private bool isBoostPreparing = false;
         private float lastBoostTime = 0f;
         private float boostCooldown = 1f;
         private float boostDuration = 0.5f;
-        [SerializeField] private BoostBarUI boostBarUI;
         private bool temp = false;
         private bool hasBoostEventBeenInvoked = false;
 
@@ -59,9 +61,7 @@ namespace SunkenRuins
         }
 
         private void OnTriggerEnter2D(Collider2D other)
-        { // 임시 처리
-            //소신발언
-            //충돌로만 Item 획득이 가능하면 굳이 EventHandler 써야할 이유가 있는지?
+        { 
             if (other.gameObject.layer == LayerMask.NameToLayer(itemLayerString))
             { //Item 획득
                 ItemSO itemSO = other.gameObject.GetComponent<Item>().GetItemSO();
@@ -96,25 +96,65 @@ namespace SunkenRuins
         {
             playerControl = new PlayerControl();
             playerControl.Player.Enable();
+
+            EventManager.StartListening(EventType.PlayerDamaged, Damage);
+            EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StartListening(EventType.ShellAbsorb, GetAbsorbed);
+            EventManager.StartListening(EventType.ShellEscape, EscapeFromEnemy);
+            EventManager.StartListening(EventType.ShellSwallow, ShellSwallow);
         }
 
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventType.PlayerDamaged, Damage);
+            EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StopListening(EventType.ShellAbsorb, GetAbsorbed);
+            EventManager.StopListening(EventType.ShellEscape, EscapeFromEnemy);
+            EventManager.StopListening(EventType.ShellSwallow, ShellSwallow);
+        }
+
+        private Vector3 dirFromShellNormalized;
+        private bool isAbsorbed = false; private bool isSwallowed = false;
         private void Update()
         {
             HandleMoveInput();
             BoostInput();
             UpdateCameraFollowTarget();
+
+            if (isAbsorbed)
+            {
+                transform.Translate(playerStat.absorbSpeed * dirFromShellNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
+            }
         }
 
-        public void GetAbsorbed(Vector2 dirToOtherNormalized)
+        public void ShellSwallow(Dictionary<string, object> message)
+        {
+            // 조개 중간 위치로 순간이동
+            transform.position = (Vector3)message["shellPos"];
+
+            // 버튼 연타 확인
+            isSwallowed = true;
+        }
+
+        public void GetAbsorbed(Dictionary<string, object> message)
         {
             // rb.constraints = RigidbodyConstraints2D.FreezeAll;
             SetInputEnabled(false);
-            transform.Translate(playerStat.absorbSpeed * dirToOtherNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
+            isAbsorbed = true;
+            dirFromShellNormalized = (Vector3)message["dirToPlayerNormalized"];
         }
-        public void EscapeFromEnemy()
+        public void EscapeFromEnemy(Dictionary<string, object> message)
         {
+            isAbsorbed = false;
             SetInputEnabled(true);
             rb.constraints = RigidbodyConstraints2D.None;
+        }
+
+        private void Damage(Dictionary<string ,object> message)
+        {
+            // TODO:
+            // 1. 데미지 입는 효과
+            // 2. 데미지 SFX
         }
 
         private void BoostInput()
@@ -137,16 +177,20 @@ namespace SunkenRuins
             } //언젠간 Refactoring하길... ㅎㅎ
 
 
-            if (boostInput > 0 && playerStat.playerCurrentEnergy > 0 && !isBoosting && Time.time > lastBoostTime + boostCooldown)
+            if (boostInput > 0 && playerStat.playerCurrentEnergy > 0 && !isBoosting 
+                && Time.time > lastBoostTime + boostCooldown && playerStat.CanUseEnergy)
             {
                 PrepareBoost();
             }
+
             if (boostInput == 0 && isBoostPreparing)
             {
                 ExecuteBoost();
             }
+            
             if (Input.GetKeyDown(KeyCode.E) && isBoostPreparing)
-            { //이거 나중에 Input System으로 수정해야함
+            { 
+                //이거 나중에 Input System으로 수정해야함
                 CancelBoost();
             }
 
@@ -170,8 +214,11 @@ namespace SunkenRuins
 
             // 부스트 준비 중에도 Sprite 방향 신경쓰기
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
-            Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
+            Vector2 boostDirection = (finalMousePosition - ((Vector2)transform.position)).normalized;
             UpdateFacingDirection(boostDirection.x);
+
+            // 점선 잇기 (Player Position to Mouse Position)
+            boostTrajectoryLineUI.LineEnable();
         }
 
         private void ExecuteBoost()
@@ -183,6 +230,7 @@ namespace SunkenRuins
             playerStat.playerCurrentEnergy--;
             hasBoostEventBeenInvoked = false;
             boostBarUI.SetUIActive(false);
+            boostTrajectoryLineUI.LineDisable();
 
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
@@ -232,6 +280,7 @@ namespace SunkenRuins
             isBoostPreparing = false;
             Time.timeScale = 1f;
             boostBarUI.SetUIActive(false);
+            boostTrajectoryLineUI.LineDisable();
             hasBoostEventBeenInvoked = false;
             temp = true;
 
@@ -254,9 +303,21 @@ namespace SunkenRuins
             virtualCamera.m_Lens.OrthographicSize = targetOrthographicSize; //최종실행
         }
 
+        private void Hypnotize(Dictionary<string, object> message)
+        {
+            StartCoroutine(HypnotizeInputCoroutine());
+        }
+
+        private IEnumerator HypnotizeInputCoroutine()
+        {
+            SetInputEnabled(false);
+            yield return new WaitForSeconds(playerStat.HypnotizeTime);
+            SetInputEnabled(true);
+        }
 
         public void SetInputEnabled(bool enable)
-        { // 컷신이나 뭐할때 Input 죽이는 용
+        { 
+            // 컷신이나 뭐할때 Input 죽이는 용
             if (enable)
             {
                 playerControl.Player.Enable();
@@ -270,9 +331,10 @@ namespace SunkenRuins
         private void HandleMoveInput()
         {
             Vector2 moveInput = playerControl.Player.Move.ReadValue<Vector2>();
+
             // 원하는 속도를 계산
-            float desiredVelocityX = playerStat.initialMoveSpeed * moveInput.x;
-            float desiredVelocityY = playerStat.initialMoveSpeed * moveInput.y;
+            float desiredVelocityX = playerStat.moveSpeed * moveInput.x;
+            float desiredVelocityY = playerStat.moveSpeed * moveInput.y;
 
             // 방향 전환 여부에 따라 다른 가속도 사용
             float accelerationX = ChooseAcceleration(moveInput.x, desiredVelocityX);

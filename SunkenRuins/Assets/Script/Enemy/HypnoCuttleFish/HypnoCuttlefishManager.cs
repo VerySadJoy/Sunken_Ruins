@@ -9,17 +9,15 @@ namespace SunkenRuins
 {
     public class HypnoCuttlefishManager : EnemyManager
     {
-        [SerializeField] private HypnoFishCircleDetection hypnoFishCircleDetection;
-
         // 변수
-        public float hypnotizeTime = 1f;
+        public float hypnotizeTime = 1.5f;
         public float hypnotizeDelayTime = 5f;
         public float attackTime = 1f;
         public int damagePerAttack = 10;
-        public int totalKeyAmount = 10;
+        public int hypnotizeEscapeKeyNum = 10;
         public float retreatSpeed = 4f;
-        public bool isHypnotizePlayer { get { return player != null; } }
-        private float retreatTime = 1.5f;
+        // public bool isHypnotizePlayer { get { return player != null; } }
+        private float retreatTime = 3f;
         private Vector2 startPosition;
         private float lerpAmount;
         [SerializeField] private float distanceFromPlayer = 3.0f;
@@ -36,15 +34,23 @@ namespace SunkenRuins
             base.Start();
             startPosition = transform.position;
             // retreatSpeed = (오브젝트 길이) * time.deltatime / (이동할 시간) <== 상의 필요
-            hypnoFishCircleDetection.OnPlayerDetection += OnPlayerDetection_HypnotizePlayer;
+        }
+
+        private void OnEnable()
+        {
+            EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, OnPlayerDetection_Hypnotize);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, OnPlayerDetection_Hypnotize);
         }
 
         private void Update()
         {
-            if (canAttack && isHypnotizePlayer)
+            if (canAttack && isHypnotize)
             {
-                lerpAmount += Time.deltaTime / hypnotizeTime;
-                transform.position = Vector2.Lerp(startPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);
+                MoveToPlayer();
 
                 if (timer > hypnotizeTime) // 최면해서 데미지를 줄 수 있으면
                 {
@@ -56,13 +62,12 @@ namespace SunkenRuins
                 { 
                     if (Input.anyKeyDown)
                     {
-                        if (++keyPressCount >= totalKeyAmount)
+                        if (++keyPressCount >= hypnotizeEscapeKeyNum)
                         {
                             Debug.Log("연타 잘해서 탈출함");
                             isRetreat = true; // 후퇴한다
                             StartCoroutine(StopHypnotizeCoroutine());
                         }
-                        Debug.Log(keyPressCount);
                     }
 
                     // TODO:
@@ -88,31 +93,16 @@ namespace SunkenRuins
 
         private IEnumerator StopHypnotizeCoroutine()
         {
-            player?.GetComponent<PlayerManager>().EscapeFromEnemy();
-            player?.GetComponent<PlayerManager>().SetInputEnabled(true); // 부스트 다시 가능함
+            // EventManager.TriggerEvent(EventType.ShellEscape, null);
             timer = 0f;
             keyPressCount = 0;
-            canAttack = false;
+            canAttack = false; isHypnotize = false;
             player = null;
 
             yield return new WaitForSeconds(hypnotizeDelayTime);
             canAttack = true;
         }
-
-        private void OnPlayerDetection_HypnotizePlayer(object sender, PlayerDetectionEventArgs e)
-        {
-            Debug.LogError("갑오징어가 플레이어를 최면시킴");
-
-            // EventArgs e에 플레이어 매니저 클래스를 받는다
-            player = e._player;
-
-            // 부스트 못하게 막기
-            player.GetComponent<PlayerManager>().SetInputEnabled(false);
-
-            // 타이머 재시작
-            timer = 0f;
-        }
-
+        
         private void AttackPlayer()
         {
             player.GetComponent<PlayerStat>().Damage(damagePerAttack);
@@ -121,6 +111,23 @@ namespace SunkenRuins
 
             // TODO:
             // 공격 모션
+        }
+
+        private void MoveToPlayer()
+        {
+            lerpAmount += Time.deltaTime / hypnotizeTime;
+            transform.position = Vector2.Lerp(startPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);
+        }
+
+        private void OnPlayerDetection_Hypnotize(Dictionary<string, object> message)
+        {
+            if (!canAttack) return;
+
+            // 최면시키는 동시에 플레이어 앞으로 이동
+            isHypnotize = true;
+
+            // 쫒아갈 플레이어 reference 받기
+            player = (Transform)message["Player"];
         }
 
         // private void StopEngulf()

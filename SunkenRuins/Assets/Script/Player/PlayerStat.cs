@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneTemplate;
 using UnityEngine;
 
 namespace SunkenRuins {
-    public class PlayerStat : MonoBehaviour, IDamageable {
+    public class PlayerStat : MonoBehaviour, IDamageable, IParalyzeable {
         [Header("Stat")]
         public int playerMaxHealth;
         public int playerCurrentHealth;
@@ -15,10 +16,13 @@ namespace SunkenRuins {
         public TeamType teamType { get; set; }
         [SerializeField] private int invincibleTime = 1; // Invincibility
         [SerializeField] private float paralyzeTime = 2f;
+        [SerializeField] private float hypnotizeTime = 2f; public float HypnotizeTime { get { return hypnotizeTime; } }
 
         [Header("Movement")]
-        public float initialMoveSpeed = 5f; //부스트 미사용 최고 이동속도
-        public float paralyzeMoveSpeed = 3f;
+        public float moveSpeed = 5f;
+        public float defaultMoveSpeed = 5f; //부스트 미사용 최고 이동속도
+        public float paralyzeMoveSpeed = 2f;
+        public float hypnotizeMoveSpeed = 2f;
         public float turnAcceleration = 60f;
         public float moveAcceleration = 30f;
         public float moveDecceleration = 50f;
@@ -27,22 +31,40 @@ namespace SunkenRuins {
         public float absorbSpeed = 6f;
 
         //Bool
-        private bool isInvincible = false;
-
-        [SerializeField] private ElectricAttack electricAttack;
+        private bool isInvincible = false; public bool IsInvincible { get { return isInvincible;} }
+        private bool isParalyzed = false; public bool IsParalyzed { get {return isParalyzed;} }
+        private bool canUseEnergy = true; public bool CanUseEnergy {get {return canUseEnergy;} }
 
         private void Start() {
             teamType = TeamType.Player;
             playerCurrentHealth = playerMaxHealth;
             playerCurrentEnergy = playerMaxEnergy;
-            electricAttack.OnPlayerParalyze += paralyzePlayer;
             StartCoroutine(DecreaseHealthOverTime());
+        }
+
+        private void FixedUpdate()
+        {
+            Debug.Log($"현재 체력: {playerCurrentHealth} / {playerMaxHealth}");
+        }
+
+        void OnEnable()
+        {
+            EventManager.StartListening(EventType.StingRayParalyze, Paralyze);
+            EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StartListening(EventType.PlayerDamaged, Damage); 
+        }
+
+        void OnDisable()
+        {
+            EventManager.StopListening(EventType.StingRayParalyze, Paralyze);
+            EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StopListening(EventType.PlayerDamaged, Damage);
         }
 
         private System.Collections.IEnumerator DecreaseHealthOverTime() {
             while (playerCurrentHealth > 0) {
                 if (!isInvincible) {
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(100f);
                     playerCurrentHealth -= healthDecreaseRate;
                     Debug.LogWarning("무적이 아닐 때 체력 꾸준히 감소");
                 }
@@ -75,11 +97,10 @@ namespace SunkenRuins {
         }
 
         public void BeInvincible(int invincibleTime){
-            isInvincible = true;
-            StartCoroutine(beInvincibleOverInvincibleTime(invincibleTime));
+            StartCoroutine(BeInvincibleOverInvincibleTime(invincibleTime));
         }
 
-        private System.Collections.IEnumerator beInvincibleOverInvincibleTime(int invincibleTime) {
+        private System.Collections.IEnumerator BeInvincibleOverInvincibleTime(int invincibleTime) {
             // Player의 BoxCollider를 가져와서 끈다 <-- 이거 안 좋은 구조 같은데 의견 부탁해요...
             BoxCollider2D tempPlayerCollider = this.GetComponent<BoxCollider2D>();
             isInvincible = true;
@@ -97,30 +118,56 @@ namespace SunkenRuins {
             // 2. 무적 UI
         }
 
-        public void Damage(int damageAmount)
+        public void Paralyze(Dictionary<string, object> message)
         {
-            playerCurrentHealth -= damageAmount;
-            Debug.Log("체력 손실");
-            playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
-
-            // 무적이 된다
-            BeInvincible(invincibleTime); // 2초 동안 하드코딩
+            // Debug.Log("플레이어 마비당함");
+            StartCoroutine(ParalyzeSpeedCoroutine());
 
             // TODO:
-            // 1. 데미지 모션, 효과
-            // 2. 입고 무적 판정
-        }
-
-        private void paralyzePlayer(object sender, EventArgs e)
-        {
-            StartCoroutine(ParalyzeSpeedCoroutine());
+            // 1. Paralyze Animation 재생 --> Idle Animation으로 변환
+            // 2. Paralyze SFX 재생
         }
 
         private IEnumerator ParalyzeSpeedCoroutine()
         {
-            initialMoveSpeed = paralyzeMoveSpeed;
+            moveSpeed = paralyzeMoveSpeed; // 마비되어 느린 속도로 이동
+            canUseEnergy = false; // 부스트 사용 불가
             yield return new WaitForSeconds(paralyzeTime);
-            initialMoveSpeed = 5f;
+
+            moveSpeed = defaultMoveSpeed; // 본래 속도로 복귀
+            canUseEnergy = true; // paralyzeTime 이후 부스트 사용 가능
         }
+
+        public void Hypnotize(Dictionary<string, object> message)
+        {
+            // Debug.Log("플레이어 최면당함");
+            StartCoroutine(HypnotizeSpeedCoroutine());
+        }
+
+        private IEnumerator HypnotizeSpeedCoroutine()
+        {
+            moveSpeed = hypnotizeMoveSpeed; // 기본 이동 속도를 잠시 변수에 보관
+            canUseEnergy = false; // 부스트 사용 불가
+            yield return new WaitForSeconds(hypnotizeTime);
+
+            moveSpeed = defaultMoveSpeed; // 본래 속도로 복귀
+            canUseEnergy = true;
+        }
+
+        private void Damage(Dictionary<string, object> message)
+        {
+            Damage((int)message["amount"]);
+        }
+
+        public void Damage(int damageAmount)
+        {
+            Debug.Log("체력 손실");
+            playerCurrentHealth -= damageAmount;
+            playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
+
+            // 무적이 된다
+            BeInvincible(invincibleTime); // 2초 동안 하드코딩
+        }
+
     }
 }

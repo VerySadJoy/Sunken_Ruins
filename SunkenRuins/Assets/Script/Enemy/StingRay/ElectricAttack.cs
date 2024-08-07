@@ -9,8 +9,6 @@ namespace SunkenRuins
 {
     public class ElectricAttack : MonoBehaviour
     {
-        public event EventHandler OnPlayerParalyze;
-
         private const string playerLayerString = "Player";
         [SerializeField] private GameObject attackSpriteObject;
         [SerializeField] private GameObject attackRangeObject;
@@ -46,10 +44,9 @@ namespace SunkenRuins
         {
             if (isAttack && other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
-                Debug.LogWarning("플레이어가 피격당함");
+                isAttack = false; // OnTriggerStay가 여러 번 call되는 것을 방지함
                 
-                // 마비 효과
-                OnPlayerParalyze?.Invoke(this, EventArgs.Empty);
+                EventManager.TriggerEvent(EventType.StingRayParalyze, null);
             }
         }
     }

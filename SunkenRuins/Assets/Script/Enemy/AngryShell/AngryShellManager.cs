@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SunkenRuins
@@ -7,11 +8,7 @@ namespace SunkenRuins
     public class AngryShellManager : EnemyManager
     {
         // 변수
-        public float engulfTime = 3f;
-        public float engulfDelayTime = 5f;
-        public float attackCoolTime = 1f;
-        public int damagePerAttack = 10;
-        public int totalKeyAmount = 10;
+        [SerializeField] private ShellStat shellStat;
         [SerializeField] private ShellCircleDetection shellCircleDetection;
         [SerializeField] private ShellAttackDetection shellAttackDetection;
         private bool isAbsorbingPlayer { get { return player != null; } }
@@ -25,9 +22,20 @@ namespace SunkenRuins
         protected override void Start()
         {
             base.Start();
-            shellCircleDetection.OnPlayerDetection += OnPlayerDetection_AbsorbPlayer;
-            shellCircleDetection.OnPlayerEscape += OnPlayerEscape_ReleasePlayer;
-            shellAttackDetection.OnPlayerDetection += OnPlayerDetection_AttackPlayer;
+        }
+
+        private void OnEnable()
+        {
+            EventManager.StartListening(EventType.ShellAbsorb, OnPlayerDetection_AbsorbPlayer);
+            EventManager.StartListening(EventType.ShellRelease, OnPlayerEscape_ReleasePlayer);
+            EventManager.StartListening(EventType.ShellSwallow, PrepareAttack);            
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventType.ShellAbsorb, OnPlayerDetection_AbsorbPlayer);
+            EventManager.StopListening(EventType.ShellRelease, OnPlayerEscape_ReleasePlayer);
+            EventManager.StopListening(EventType.ShellSwallow, PrepareAttack); 
         }
 
         private void Update()
@@ -38,14 +46,10 @@ namespace SunkenRuins
                 {
                     // TODO:
                     // Close Shell Animation
-                    AttackPlayer();
                 }
                 else // 그저 빨아들이는 중이라면
-                {
-                    Vector2 dirToPlayerNormalized = -(player.position - transform.position).normalized; // 일단 "-"로 하드코딩
-                    player.GetComponent<PlayerManager>().GetAbsorbed(dirToPlayerNormalized);
-                    
-                    if (timer > engulfTime)
+                {                    
+                    if (timer > shellStat.EngulfTime)
                     {
                         // 빨아들이기 중단
                         StartCoroutine(StopEngulfingCoroutine());
@@ -59,36 +63,19 @@ namespace SunkenRuins
             }
         }
 
-        private IEnumerator StopEngulfingCoroutine()
-        {
-            keyPressCount = 0;
-            isEngulfing = false;
-            canAttack = false;
-            player?.GetComponent<PlayerManager>().EscapeFromEnemy();
-            player = null;
-
-            yield return new WaitForSeconds(engulfDelayTime);
-            canAttack = true;
-        }
-
-        private void OnPlayerDetection_AbsorbPlayer(object sender, PlayerDetectionEventArgs e)
+        private void OnPlayerDetection_AbsorbPlayer(Dictionary<string, object> message)
         {
             Debug.LogError("조개가 플레이어를 빨아들임");
-
-            // EventArgs e에 플레이어 매니저 클래스를 받는다
-            player = e._player;
 
             // 타이머 재시작
             timer = 0f;
         }
 
-        private void OnPlayerDetection_AttackPlayer(object sender, PlayerDetectionEventArgs e)
+        private void OnPlayerDetection_AttackPlayer(Dictionary<string, object> message)
         {
             Debug.LogError("조개가 플레이어를 공격함");
-
-            // EventArgs e에 플레이어 매니저 클래스를 받는다
-            player = e._player;
-
+            EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", shellStat.DamagePerAttack } });
+            
             // 공격하는가?
             isEngulfing = true;
 
@@ -96,7 +83,7 @@ namespace SunkenRuins
             timer = 0f;
         }
 
-        private void OnPlayerEscape_ReleasePlayer(object sender, PlayerDetectionEventArgs e)
+        private void OnPlayerEscape_ReleasePlayer(Dictionary<string, object> message)
         {
             Debug.LogError("플레이어가 조개한테서 벗어남");
 
@@ -108,14 +95,23 @@ namespace SunkenRuins
             timer = 0f;
         }
 
-        private void AttackPlayer()
+        private IEnumerator StopEngulfingCoroutine()
         {
-            // 부스트 못하게 막기
-            player.GetComponent<PlayerManager>().SetInputEnabled(false);
-            if (timer >= attackCoolTime)
+            keyPressCount = 0;
+            isEngulfing = false;
+            canAttack = false;
+            EventManager.TriggerEvent(EventType.ShellEscape, null);
+
+            yield return new WaitForSeconds(shellStat.EngulfDelayTime);
+            canAttack = true;
+        }
+
+        private void PrepareAttack(Dictionary<string, object> message)
+        {
+            if (timer >= shellStat.AttackCoolTime)
             {
                 timer = 0f; // 시간 다시 초기화
-                player.GetComponent<PlayerStat>().Damage(damagePerAttack);
+                EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", shellStat.DamagePerAttack } });
                 Debug.LogError("조개가 플레이어를 공격함");
 
                 // TODO:
@@ -127,13 +123,12 @@ namespace SunkenRuins
                 // TODO:
                 // 텍스트로 누른 키 횟수 표시
 
-                if (++keyPressCount >= totalKeyAmount)
+                if (++keyPressCount >= shellStat.TotalKeyAmount)
                 {
                     Debug.Log("연타 잘해서 탈출함");
                     player.GetComponent<PlayerManager>().SetInputEnabled(true); // 부스트 다시 가능함
                     StartCoroutine(StopEngulfingCoroutine());
                 }
-                Debug.Log(keyPressCount);
             }
         }
 

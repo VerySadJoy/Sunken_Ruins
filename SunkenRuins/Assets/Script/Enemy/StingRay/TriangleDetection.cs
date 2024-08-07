@@ -5,27 +5,12 @@ using UnityEngine;
 
 namespace SunkenRuins
 {
-    // EventArgs 만들 때 따로 naming convention같은 거 있어?
-    // 그리고 이거 TriangleDetection이랑 CricleDetection 중 어디에 보관할까
-    // 아예 다른 script에 eventargs들을 전용 보관할까
-    // 근데 이벤트 말고 다른 방법 있으면 안 해도 되긴 해
-    public class PlayerDetectionEventArgs : EventArgs
-    {
-        public Transform _player { get; }
-        public PlayerDetectionEventArgs(Transform player)
-        {
-            _player = player;
-        }
-    }
-
     public class TriangleDetection : MonoBehaviour
     {
-        // Detection Event <--> EnemyManager
-        public event EventHandler<PlayerDetectionEventArgs> OnPlayerDetection;
-
         // Components
         private PolygonCollider2D polygonCollider2D;
         [SerializeField] private float rayCastDistance = 6.0f;
+        Vector2 temp;
 
         // LayerMasks
         [SerializeField]
@@ -62,23 +47,18 @@ namespace SunkenRuins
                 Vector2 dirToPlayerNormalized = (other.gameObject.transform.position - transform.position).normalized;
                 temp = dirToPlayerNormalized;
 
-                // RayCast해서 플레이어가 벽 같은 장애물에 가려져 있는지 확인
-                // 이거 LayerMask.NameToLayer쓰면 플레이어 인식이 안 돼서 일단 layermask 따로 serializefield로 받아놨어
-                // 오류 고치는 방법 있으면 알려줘...!
                 RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, dirToPlayerNormalized, rayCastDistance, playerLayerMask);
                 if (raycastHit2D)
                 {
-                    Debug.Log("삼각형: 플레이어 감지!");
-                    OnPlayerDetection?.Invoke(this, new PlayerDetectionEventArgs(other.gameObject.transform));
+                    EventManager.TriggerEvent(EventType.StingRayMoveTowardsPlayer, new Dictionary<string, object>{ { "Player", other.gameObject.transform } });
                 }
             }
         }
 
         // 플레이어를 향한 Vector를 선으로 표현
-        Vector2 temp;
-        void OnDrawGizmos()
-        {
-            Gizmos.DrawLine(transform.position, (Vector2)transform.position + temp * rayCastDistance);
-        }
+        // void OnDrawGizmos()
+        // {
+        //     Gizmos.DrawLine(transform.position, (Vector2)transform.position + temp * rayCastDistance);
+        // }
     }
 }

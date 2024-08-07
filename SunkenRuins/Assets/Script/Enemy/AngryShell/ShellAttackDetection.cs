@@ -7,9 +7,6 @@ namespace SunkenRuins
 {
     public class ShellAttackDetection : MonoBehaviour
     {
-        // Detection Event <--> EnemyManager
-        public event EventHandler<PlayerDetectionEventArgs> OnPlayerDetection;
-
         // Components
         private BoxCollider2D boxCollider2D;
         [SerializeField] private float rayCastDistance = 7.0f;
@@ -18,6 +15,9 @@ namespace SunkenRuins
         [SerializeField]
         private LayerMask playerLayerMask;
         private const string playerLayerString = "Player";
+
+        private bool isShellAttack = false;
+        public bool IsShellAttack { get { return isShellAttack; } }
 
         private void Awake()
         {
@@ -30,8 +30,19 @@ namespace SunkenRuins
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
                 Debug.Log("네모: 플레이어 감지!");
-                OnPlayerDetection?.Invoke(this, new PlayerDetectionEventArgs(other.gameObject.transform));
+                EventManager.TriggerEvent(EventType.ShellSwallow, new Dictionary<string, object>() { {"shellPos", transform.position } });
+                // EventManager.TriggerEvent(EventType.ShellAttack, null);
             }
         }
+
+        // public void ShellAttackEnable()
+        // {
+        //     isShellAttack = true;
+        // }
+
+        // public void ShellAttackDisable()
+        // {
+        //     isShellAttack = false;
+        // }
     }
 }

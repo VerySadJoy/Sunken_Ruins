@@ -18,4 +18,21 @@ namespace SunkenRuins
         NPC,
     }
 
+    /// <summary>
+    /// Determines the Event type that is used for the EventManager.
+    /// </summary>
+    public enum EventType
+    {
+        StingRayParalyze,
+        StingRayMoveTowardsPlayer,
+        StingRayPrepareAttack,
+        HypnoCuttleFishHypnotize,
+        ShellAbsorb,
+        ShellRelease,
+        ShellAttack,
+        ShellEscape,
+        ShellSwallow,
+        PlayerDamaged,
+        
+    }
 }
