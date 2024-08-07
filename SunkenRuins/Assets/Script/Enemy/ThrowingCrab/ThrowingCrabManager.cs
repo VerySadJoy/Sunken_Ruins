@@ -10,17 +10,10 @@ namespace SunkenRuins
     public class ThrowingCrabManager : EnemyManager
     {
         // 변수
-        public float hypnotizeTime = 1.5f;
-        public float hypnotizeDelayTime = 5f;
-        public float attackTime = 1f;
-        public int damagePerAttack = 10;
-        public int hypnotizeEscapeKeyNum = 10;
-        public float retreatSpeed = 4f;
-        // public bool isHypnotizePlayer { get { return player != null; } }
-        private float retreatTime = 3f;
         private Vector2 startPosition;
-        private float lerpAmount;
-        [SerializeField] private float distanceFromPlayer = 3.0f;
+
+        //Component
+        public ThrowingCrabStat throwingCrabStat;
 
         // State 변수
         // private bool isEscape { get { return keyPressCount >= totalKeyAmount; } }
@@ -29,6 +22,10 @@ namespace SunkenRuins
         private bool isRetreat = false;
         private int keyPressCount = 0;
 
+        private void Awake() {
+            throwingCrabStat = GetComponent<ThrowingCrabStat>();
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -36,98 +33,31 @@ namespace SunkenRuins
             // retreatSpeed = (오브젝트 길이) * time.deltatime / (이동할 시간) <== 상의 필요
         }
 
-        private void OnEnable()
-        {
-            EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, OnPlayerDetection_Hypnotize);
-        }
-
-        private void OnDisable()
-        {
-            EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, OnPlayerDetection_Hypnotize);
-        }
-
         private void Update()
         {
-            if (canAttack && isHypnotize)
+            PerformPatrolMovement();
+        }
+
+        private void PerformPatrolMovement()
+        {
+            float offsetFromInitialPosition = transform.position.x - startPosition.x;
+
+            // 순찰 경계를 넘어서면 방향 전환
+            if (offsetFromInitialPosition < -throwingCrabStat.patrolRange)
             {
-                MoveToPlayer();
+                // Collider도 같이 뒤집어야 해서 각도 회전하는 게 맞는 듯!
+                // 방향 전환하기
+                UpdateFacingDirection(Vector2.right); // collider도 맞추어서 회전
 
-                if (timer > hypnotizeTime) // 최면해서 데미지를 줄 수 있으면
-                {
-                    // TODO:
-                    // Hypnotize Damage Animation
-                    AttackPlayer();
-                }
-                else // 최면만 하고 기다리는 중이면
-                { 
-                    if (Input.anyKeyDown)
-                    {
-                        if (++keyPressCount >= hypnotizeEscapeKeyNum)
-                        {
-                            Debug.Log("연타 잘해서 탈출함");
-                            isRetreat = true; // 후퇴한다
-                            StartCoroutine(StopHypnotizeCoroutine());
-                        }
-                    }
-
-                    // TODO:
-                    // 텍스트로 누른 키 횟수 표시
-                }
-
-                timer += Time.deltaTime;
+                // spriteRenderer.flipX = false;
             }
-            else if (isRetreat)
+            else if (offsetFromInitialPosition > throwingCrabStat.patrolRange)
             {
-                StartCoroutine(retreatCoroutine());
+                UpdateFacingDirection(Vector2.left); // collider도 맞추어서 회전
             }
-        }
 
-        private IEnumerator retreatCoroutine()
-        {
-            rb.velocity = retreatSpeed * Vector2.left;
-            yield return new WaitForSeconds(retreatTime); // 일단 하드코딩으로 1초 후퇴한다고 설정함
-            rb.velocity = Vector2.zero;
-            isRetreat = false;
-            // rb.constraints = RigidbodyConstraints2D.FreezeAll; // 일단 하드코딩으로 아예 못 움직이게 만듦
-        }
-
-        private IEnumerator StopHypnotizeCoroutine()
-        {
-            // EventManager.TriggerEvent(EventType.ShellEscape, null);
-            timer = 0f;
-            keyPressCount = 0;
-            canAttack = false; isHypnotize = false;
-            player = null;
-
-            yield return new WaitForSeconds(hypnotizeDelayTime);
-            canAttack = true;
-        }
-        
-        private void AttackPlayer()
-        {
-            player.GetComponent<PlayerStat>().Damage(damagePerAttack);
-            Debug.LogError("갑오징어가 플레이어를 공격함"); //이거 왜 로그 에러임? 이거 나오면 안됨????
-            StartCoroutine(StopHypnotizeCoroutine());
-
-            // TODO:
-            // 공격 모션
-        }
-
-        private void MoveToPlayer()
-        {
-            lerpAmount += Time.deltaTime / hypnotizeTime;
-            transform.position = Vector2.Lerp(startPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);
-        }
-
-        private void OnPlayerDetection_Hypnotize(Dictionary<string, object> message)
-        {
-            if (!canAttack) return;
-
-            // 최면시키는 동시에 플레이어 앞으로 이동
-            isHypnotize = true;
-
-            // 쫒아갈 플레이어 reference 받기
-            player = (Transform)message["Player"];
+            // 속도 설정
+            rb.velocity = new Vector2(throwingCrabStat.initialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
         }
     }
 }
