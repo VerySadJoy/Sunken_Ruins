@@ -13,14 +13,13 @@ namespace SunkenRuins
         private Vector2 startPosition;
 
         //Component
-        public ThrowingCrabStat throwingCrabStat;
+        private ThrowingCrabStat throwingCrabStat;
 
         // State 변수
         // private bool isEscape { get { return keyPressCount >= totalKeyAmount; } }
         private bool canAttack = true;
-        private bool isHypnotize = false;
+        private bool canThrow = false;
         private bool isRetreat = false;
-        private int keyPressCount = 0;
 
         private void Awake() {
             throwingCrabStat = GetComponent<ThrowingCrabStat>();
@@ -33,9 +32,37 @@ namespace SunkenRuins
             // retreatSpeed = (오브젝트 길이) * time.deltatime / (이동할 시간) <== 상의 필요
         }
 
+        private void OnEnable()
+        {
+            EventManager.StartListening(EventType.ThrowingCrabThrowRock, OnPlayerDetection_ThrowRock);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventType.ThrowingCrabThrowRock, OnPlayerDetection_ThrowRock);
+        }
+
+        private void OnPlayerDetection_ThrowRock(Dictionary<string, object> message){
+            if (!canAttack) {
+                return;
+            }
+
+            canThrow = true;
+            player = (Transform)message["Player"];
+        }
+
         private void Update()
         {
-            PerformPatrolMovement();
+            if (!canThrow) {
+                PerformPatrolMovement();
+            }
+            else {
+                ThrowRock();
+            }
+        }
+
+        private void ThrowRock() {
+            Debug.Log("Throw!");
         }
 
         private void PerformPatrolMovement()
