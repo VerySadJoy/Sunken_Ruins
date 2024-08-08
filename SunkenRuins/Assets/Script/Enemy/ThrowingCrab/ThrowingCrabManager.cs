@@ -19,7 +19,8 @@ namespace SunkenRuins
         // private bool isEscape { get { return keyPressCount >= totalKeyAmount; } }
         private bool canAttack = true;
         private bool canThrow = false;
-        private bool isRetreat = false;
+        private bool backToPatrol = false;
+        [SerializeField] private GameObject rockPrefab;
 
         private void Awake() {
             throwingCrabStat = GetComponent<ThrowingCrabStat>();
@@ -43,26 +44,30 @@ namespace SunkenRuins
         }
 
         private void OnPlayerDetection_ThrowRock(Dictionary<string, object> message){
-            if (!canAttack) {
-                return;
-            }
-
             canThrow = true;
             player = (Transform)message["Player"];
         }
 
         private void Update()
         {
-            if (!canThrow) {
+            if (!canThrow || backToPatrol) {
                 PerformPatrolMovement();
             }
             else {
                 ThrowRock();
+                StartCoroutine(BackToPatrol());
             }
         }
 
         private void ThrowRock() {
-            Debug.Log("Throw!");
+            GameObject rock = Instantiate(rockPrefab, rb.position, Quaternion.identity);
+            canThrow = false;
+        }
+
+        private IEnumerator BackToPatrol(){
+            backToPatrol = true;
+            yield return new WaitForSeconds(2); //추후 수정
+            backToPatrol = false;
         }
 
         private void PerformPatrolMovement()
@@ -75,8 +80,6 @@ namespace SunkenRuins
                 // Collider도 같이 뒤집어야 해서 각도 회전하는 게 맞는 듯!
                 // 방향 전환하기
                 UpdateFacingDirection(Vector2.right); // collider도 맞추어서 회전
-
-                // spriteRenderer.flipX = false;
             }
             else if (offsetFromInitialPosition > throwingCrabStat.patrolRange)
             {
