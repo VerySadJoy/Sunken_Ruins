@@ -66,7 +66,7 @@ namespace SunkenRuins
 
         private IEnumerator BackToPatrol(){
             backToPatrol = true;
-            yield return new WaitForSeconds(2); //추후 수정
+            yield return new WaitForSeconds(1f); //추후 수정
             backToPatrol = false;
         }
 
