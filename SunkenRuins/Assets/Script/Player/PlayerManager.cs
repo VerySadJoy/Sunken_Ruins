@@ -227,7 +227,7 @@ namespace SunkenRuins
             isBoostPreparing = false;
             isBoosting = true;
             lastBoostTime = Time.time;
-            playerStat.playerCurrentEnergy--;
+            playerStat.playerCurrentEnergy -= playerStat.energyDecreaseRate;
             hasBoostEventBeenInvoked = false;
             boostBarUI.SetUIActive(false);
             boostTrajectoryLineUI.LineDisable();

@@ -11,6 +11,9 @@ namespace SunkenRuins {
         private void Awake () {
             healthBar = GetComponentInChildren<Slider>();
         }
+        private void Start() {
+            healthBar.maxValue = player.playerStat.playerMaxHealth;
+        }
         private void Update() {
             healthBar.value = player.playerStat.playerCurrentHealth;
         }

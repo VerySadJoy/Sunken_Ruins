@@ -12,7 +12,7 @@ namespace SunkenRuins {
         public float playerMaxEnergy;
         public float playerCurrentEnergy;
         public int healthDecreaseRate;
-        public float energyDecreaseRate;
+        public float energyDecreaseRate = 20f;
         public TeamType teamType { get; set; }
         [SerializeField] private int invincibleTime = 1; // Invincibility
         [SerializeField] private float paralyzeTime = 2f;
@@ -100,7 +100,7 @@ namespace SunkenRuins {
             StartCoroutine(BeInvincibleOverInvincibleTime(invincibleTime));
         }
 
-        private System.Collections.IEnumerator BeInvincibleOverInvincibleTime(int invincibleTime) {
+        private IEnumerator BeInvincibleOverInvincibleTime(int invincibleTime) {
             // Player의 BoxCollider를 가져와서 끈다 <-- 이거 안 좋은 구조 같은데 의견 부탁해요...
             BoxCollider2D tempPlayerCollider = this.GetComponent<BoxCollider2D>();
             isInvincible = true;
