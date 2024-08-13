@@ -12,7 +12,7 @@ namespace SunkenRuins {
         public float playerMaxEnergy;
         public float playerCurrentEnergy;
         public int healthDecreaseRate;
-        public float energyDecreaseRate = 20f;
+        public float energyDecreaseRate = 1f;
         public TeamType teamType { get; set; }
         [SerializeField] private int invincibleTime = 1; // Invincibility
         [SerializeField] private float paralyzeTime = 2f;

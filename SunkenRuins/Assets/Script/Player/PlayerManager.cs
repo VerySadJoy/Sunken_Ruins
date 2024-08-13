@@ -38,7 +38,7 @@ namespace SunkenRuins
 
         //Boost
         [SerializeField] private DottedLineUI boostTrajectoryLineUI;
-        [SerializeField] private BoostBarUI boostBarUI;
+        [SerializeField] private EnergyBarUI boostBarUI;
 
         private bool isBoosting = false;
         private bool isBoostPreparing = false;
@@ -73,7 +73,7 @@ namespace SunkenRuins
                             playerStat.RestoreHealth(100);
                             break;
                         case ItemType.PowerBattery:
-                            playerStat.RestoreEnergy(100f);
+                            playerStat.RestoreEnergy(3f);
                             break;
                         case ItemType.BubbleShield:
                             playerStat.BeInvincible(2); // 일단은 하드코딩으로 invincibleTime 인자로 받음
@@ -131,6 +131,12 @@ namespace SunkenRuins
             if (isAbsorbed)
             {
                 transform.Translate(playerStat.absorbSpeed * dirFromShellNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
+            }
+            if (playerStat.playerCurrentEnergy > playerStat.playerMaxEnergy) { 
+                playerStat.playerCurrentEnergy = playerStat.playerMaxEnergy;
+            }
+            if (playerStat.playerCurrentHealth > playerStat.playerMaxHealth) { 
+                playerStat.playerCurrentHealth = playerStat.playerMaxHealth;
             }
         }
 
@@ -209,7 +215,7 @@ namespace SunkenRuins
             Time.timeScale = 0.5f;
             if (!hasBoostEventBeenInvoked)
             {
-                boostBarUI.SetNewScrollandImageValue();
+                //boostBarUI.SetNewScrollandImageValue();
                 hasBoostEventBeenInvoked = true;
             } // 플레이어가 부스트를 시도하는 것을 UI에 알림
             virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, zoomOrthographicSize, zoomSpeed * Time.deltaTime); ; //Zoom In
@@ -234,24 +240,26 @@ namespace SunkenRuins
             isBoostPreparing = false;
             isBoosting = true;
             lastBoostTime = Time.time;
-            playerStat.playerCurrentEnergy -= playerStat.energyDecreaseRate;
+            playerStat.playerCurrentEnergy -= 1;
             hasBoostEventBeenInvoked = false;
             boostBarUI.SetUIActive(false);
             boostTrajectoryLineUI.LineDisable();
+            Debug.Log("발사");
 
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
             StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed)); // Zoom Out
-            if (boostBarUI.IsPerfectBoost)
-            {
-                StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
-                Debug.Log("완벽 부스트");
-            }
-            else
-            {
-                StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed));
-                Debug.Log("노말 부스트");
-            }
+            StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
+            // if (boostBarUI.IsPerfectBoost)
+            // {
+            //     StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
+            //     Debug.Log("완벽 부스트");
+            // }
+            // else
+            // {
+            //     StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed));
+            //     Debug.Log("노말 부스트");
+            // }
         }
 
         private IEnumerator BoostMovement(Vector2 direction, float speed)
