@@ -25,7 +25,7 @@ namespace SunkenRuins
         //Component
         private Rigidbody2D rb;
         private SpriteRenderer spriteRenderer;
-        private PlayerStat playerStat;
+        public PlayerStat playerStat;
         private CinemachineVirtualCamera virtualCamera;
         [SerializeField] private float defaultOrthographicSize = 8f;
         [SerializeField] private float zoomOrthographicSize = 5f;
