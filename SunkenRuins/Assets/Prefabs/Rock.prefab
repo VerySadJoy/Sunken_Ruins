@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -5707009575376959347}
   - component: {fileID: -1056172949541753906}
   - component: {fileID: 1552721818821281207}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de349d608485e2141b2fc39bf18ae6e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 5
 --- !u!50 &1552721818821281207
 Rigidbody2D:
   serializedVersion: 4

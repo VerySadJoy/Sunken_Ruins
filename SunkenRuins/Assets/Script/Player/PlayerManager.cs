@@ -85,6 +85,9 @@ namespace SunkenRuins
                 }
                 Destroy(other.gameObject); //아이템 삭제
             }
+            else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString)) {
+                playerStat.playerCurrentHealth -= 20;
+            }
             // else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString))
             // {
             //     EnemyStat monsterStat = other.gameObject.GetComponent<EnemyStat>();
