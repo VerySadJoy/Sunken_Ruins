@@ -29,7 +29,7 @@ namespace SunkenRuins
         private CinemachineVirtualCamera virtualCamera;
         [SerializeField] private float defaultOrthographicSize = 8f;
         [SerializeField] private float zoomOrthographicSize = 5f;
-        private PlayerControl playerControl; // Input System
+        private PlayerControl playerControl { get; set; } // Input System
         private bool isFacingRight = true;
 
         // Layermask String
@@ -120,6 +120,10 @@ namespace SunkenRuins
         private bool isAbsorbed = false; private bool isSwallowed = false;
         private void Update()
         {
+            if (Time.timeScale == 0) {
+                Debug.Log("Stopped");
+                return;
+            }
             HandleMoveInput();
             BoostInput();
             UpdateCameraFollowTarget();

@@ -480,8 +480,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 12625598218737803}
-  m_Layer: 0
-  m_Name: UI
+  m_Layer: 5
+  m_Name: StatUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
