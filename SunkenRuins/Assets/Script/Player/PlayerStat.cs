@@ -44,7 +44,7 @@ namespace SunkenRuins {
 
         private void FixedUpdate()
         {
-            Debug.Log($"현재 체력: {playerCurrentHealth} / {playerMaxHealth}");
+            //Debug.Log($"현재 체력: {playerCurrentHealth} / {playerMaxHealth}");
         }
 
         void OnEnable()
@@ -66,7 +66,7 @@ namespace SunkenRuins {
                 if (!isInvincible) {
                     yield return new WaitForSeconds(1f);
                     playerCurrentHealth -= healthDecreaseRate;
-                    Debug.LogWarning("무적이 아닐 때 체력 꾸준히 감소");
+                    //Debug.LogWarning("무적이 아닐 때 체력 꾸준히 감소");
                 }
                 else {
                     yield return null;
