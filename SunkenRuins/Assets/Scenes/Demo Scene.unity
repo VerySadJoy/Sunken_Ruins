@@ -246,6 +246,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9088064463837450016, guid: 8358104773ec2364db16f3ef012ec84d, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -756,6 +760,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThrowingCrab
       objectReference: {fileID: 0}
+    - target: {fileID: 1709879035874833766, guid: 1231d0bc922b1e54290efd01141ae5a3, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5727191240336264604, guid: 1231d0bc922b1e54290efd01141ae5a3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.21
@@ -956,6 +964,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1181124757177755097, guid: 65b36e02f259b704eb89c85ed588a6b8, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1368620166249159327, guid: 65b36e02f259b704eb89c85ed588a6b8, type: 3}
       propertyPath: m_Name
       value: PowerBattery
