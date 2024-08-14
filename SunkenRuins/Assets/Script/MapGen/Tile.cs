@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    protected SpriteRenderer spriteRenderer;
+    [SerializeField] protected SpriteRenderer spriteRenderer;
 
-    [SerializeField]
-    protected GameObject edgeUp;
+    // [SerializeField]
+    // protected GameObject edgeUp;
 
-    [SerializeField]
-    protected GameObject edgeDown;
+    // [SerializeField]
+    // protected GameObject edgeDown;
 
-    [SerializeField]
-    protected GameObject edgeLeft;
+    // [SerializeField]
+    // protected GameObject edgeLeft;
 
-    [SerializeField]
-    protected GameObject edgeRight;
+    // [SerializeField]
+    // protected GameObject edgeRight;
 
     [Space(10)]
 

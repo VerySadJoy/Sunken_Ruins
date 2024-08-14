@@ -7,14 +7,14 @@ namespace SunkenRuins
 {
     public class AngryShellManager : EnemyManager
     {
-        // 변수
+        // 변??
         [SerializeField] private ShellStat shellStat;
         [SerializeField] private ShellCircleDetection shellCircleDetection;
         [SerializeField] private ShellAttackDetection shellAttackDetection;
         private bool isAbsorbingPlayer { get { return player != null; } }
         // private bool isEscape { get { return keyPressCount >= totalKeyAmount; } }
 
-        // State 변수
+        // State 변??
         private bool canAttack = true;
         private bool isEngulfing = false;
         private int keyPressCount = 0;
@@ -42,16 +42,16 @@ namespace SunkenRuins
         {
             if (canAttack && isAbsorbingPlayer)
             {
-                if (isEngulfing) // 삼켜서 데미지를 줄 수 있으면
+                if (isEngulfing) // ?�켜???��?지�?�????�으�?
                 {
                     // TODO:
                     // Close Shell Animation
                 }
-                else // 그저 빨아들이는 중이라면
+                else // 그�? 빨아?�이??중이?�면
                 {                    
                     if (timer > shellStat.EngulfTime)
                     {
-                        // 빨아들이기 중단
+                        // 빨아?�이�?중단
                         StartCoroutine(StopEngulfingCoroutine());
 
                         // TODO:
@@ -65,33 +65,28 @@ namespace SunkenRuins
 
         private void OnPlayerDetection_AbsorbPlayer(Dictionary<string, object> message)
         {
-            Debug.LogError("조개가 플레이어를 빨아들임");
-
-            // 타이머 재시작
+            // ?�?�머 ?�시??
             timer = 0f;
         }
 
         private void OnPlayerDetection_AttackPlayer(Dictionary<string, object> message)
         {
-            Debug.LogError("조개가 플레이어를 공격함");
             EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", shellStat.DamagePerAttack } });
             
-            // 공격하는가?
+            // 공격?�는가?
             isEngulfing = true;
 
-            // 타이머 재시작
+            // ?�?�머 ?�시??
             timer = 0f;
         }
 
         private void OnPlayerEscape_ReleasePlayer(Dictionary<string, object> message)
         {
-            Debug.LogError("플레이어가 조개한테서 벗어남");
+            // 공격 ?�정 ?�간?�안 중�?
+            // + 모든 �?초기??
+            StartCoroutine(StopEngulfingCoroutine()); // 공격받�? ?�고 ?�출?�을 ?�만 발동
 
-            // 공격 일정 시간동안 중지
-            // + 모든 값 초기화
-            StartCoroutine(StopEngulfingCoroutine()); // 공격받지 않고 탈출했을 때만 발동
-
-            // 타이머 재시작
+            // ?�?�머 ?�시??
             timer = 0f;
         }
 
@@ -110,9 +105,8 @@ namespace SunkenRuins
         {
             if (timer >= shellStat.AttackCoolTime)
             {
-                timer = 0f; // 시간 다시 초기화
+                timer = 0f; // ?�간 ?�시 초기??
                 EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", shellStat.DamagePerAttack } });
-                Debug.LogError("조개가 플레이어를 공격함");
 
                 // TODO:
                 // 공격 모션
@@ -121,12 +115,11 @@ namespace SunkenRuins
             if (Input.anyKeyDown)
             {
                 // TODO:
-                // 텍스트로 누른 키 횟수 표시
+                // ?�스?�로 ?�른 ???�수 ?�시
 
                 if (++keyPressCount >= shellStat.TotalKeyAmount)
                 {
-                    Debug.Log("연타 잘해서 탈출함");
-                    player.GetComponent<PlayerManager>().SetInputEnabled(true); // 부스트 다시 가능함
+                    player.GetComponent<PlayerManager>().SetInputEnabled(true); // 부?�트 ?�시 가?�함
                     StartCoroutine(StopEngulfingCoroutine());
                 }
             }
@@ -134,12 +127,12 @@ namespace SunkenRuins
 
         // private void StopEngulf()
         // {
-        //     Debug.Log("클릭 많이 해서 공격 못 함");
+        //     Debug.Log("?�릭 많이 ?�서 공격 �???);
 
         //     isEngulfing = false;
         //     keyPressCount = 0;
         //     canAttack = false;
-        //     Invoke(nameof(ResetAttack), engulfDelayTime); // 이 시간 동안 공격 금지
+        //     Invoke(nameof(ResetAttack), engulfDelayTime); // ???�간 ?�안 공격 금�?
         // }
 
         // private void ResetAttack()
