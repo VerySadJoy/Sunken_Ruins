@@ -7,7 +7,7 @@ namespace SunkenRuins
 {
     public class AngryShellManager : EnemyManager
     {
-        // 변수
+        // 변??
         [SerializeField] private ShellStat shellStat;
         [SerializeField] private ShellCircleDetection shellCircleDetection;
         [SerializeField] private ShellAttackDetection shellAttackDetection;
@@ -17,7 +17,7 @@ namespace SunkenRuins
         private int spriteIndex = 9;
         // private bool isEscape { get { return keyPressCount >= totalKeyAmount; } }
 
-        // State 변수
+        // State 변??
         private bool canAttack = true;
         private bool isEngulfing = false;
         private int keyPressCount = 0;
@@ -49,12 +49,12 @@ namespace SunkenRuins
             
             if (canAttack)
             {
-                if (isEngulfing) // 삼켜서 데미지를 줄 수 있으면
+                if (isEngulfing) // ?�켜???��?지�?�????�으�?
                 {
                     // TODO:
                     // Close Shell Animation
                 }
-                else // 그저 빨아들이는 중이라면
+                else // 그�? 빨아?�이??중이?�면
                 {                    
                     
                 }
@@ -121,7 +121,7 @@ namespace SunkenRuins
         {
             EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", shellStat.DamagePerAttack } });
             
-            // 공격하는가?
+            // 공격?�는가?
             isEngulfing = true;
 
             // 타이머 재시작
@@ -131,11 +131,7 @@ namespace SunkenRuins
         private void OnPlayerEscape_ReleasePlayer(Dictionary<string, object> message)
         {
 
-            // 공격 일정 시간동안 중지
-            // + 모든 값 초기화
-            StartCoroutine(StopEngulfingCoroutine()); // 공격받지 않고 탈출했을 때만 발동
-
-            // 타이머 재시작
+            // ?�?�머 ?�시??
             timer = 0f;
         }
 
@@ -157,9 +153,8 @@ namespace SunkenRuins
         {
             if (timer >= shellStat.AttackCoolTime)
             {
-                timer = 0f; // 시간 다시 초기화
+                timer = 0f; // ?�간 ?�시 초기??
                 EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", shellStat.DamagePerAttack } });
-                Debug.LogError("조개가 플레이어를 공격함");
 
                 // TODO:
                 // 공격 모션
@@ -168,12 +163,11 @@ namespace SunkenRuins
             if (Input.anyKeyDown)
             {
                 // TODO:
-                // 텍스트로 누른 키 횟수 표시
+                // ?�스?�로 ?�른 ???�수 ?�시
 
                 if (++keyPressCount >= shellStat.TotalKeyAmount)
                 {
-                    Debug.Log("연타 잘해서 탈출함");
-                    player.GetComponent<PlayerManager>().SetInputEnabled(true); // 부스트 다시 가능함
+                    player.GetComponent<PlayerManager>().SetInputEnabled(true); // 부?�트 ?�시 가?�함
                     StartCoroutine(StopEngulfingCoroutine());
                 }
             }

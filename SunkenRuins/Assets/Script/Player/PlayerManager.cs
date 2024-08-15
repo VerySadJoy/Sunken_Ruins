@@ -18,7 +18,7 @@ namespace SunkenRuins
 
         [Header("Follow Camera Target")]
         [SerializeField] private GameObject cameraFollowTarget;
-        // 바라보는 방향으로 얼마나 앞에 있는 지점을 카메라가 추적할 것인지
+        // 바라보는 방향?�로 ?�마???�에 ?�는 지?�을 카메?��? 추적??것인지
         [SerializeField, Range(0f, 2f)] private float cameraLookAheadDistance = 1f;
         [SerializeField] private float zoomSpeed = 2f;
 
@@ -38,7 +38,7 @@ namespace SunkenRuins
 
         //Boost
         [SerializeField] private DottedLineUI boostTrajectoryLineUI;
-        [SerializeField] private EnergyBarUI boostBarUI;
+        [SerializeField] private BoostBarUI boostBarUI;
 
         private bool isBoosting = false;
         private bool isBoostPreparing = false;
@@ -63,7 +63,7 @@ namespace SunkenRuins
         private void OnTriggerEnter2D(Collider2D other)
         { 
             if (other.gameObject.layer == LayerMask.NameToLayer(itemLayerString))
-            { //Item 획득
+            { //Item ?�득
                 ItemSO itemSO = other.gameObject.GetComponent<Item>().GetItemSO();
                 if (itemSO != null)
                 {
@@ -76,14 +76,14 @@ namespace SunkenRuins
                             playerStat.RestoreEnergy(3f);
                             break;
                         case ItemType.BubbleShield:
-                            playerStat.BeInvincible(2); // 일단은 하드코딩으로 invincibleTime 인자로 받음
+                            playerStat.BeInvincible(2); // ?�단?� ?�드코딩?�로 invincibleTime ?�자�?받음
                             break;
                         default:
-                            Debug.LogError("이거 나오면 안됨");
+                            Debug.LogError("?�거 ?�오�??�됨");
                             break;
                     }
                 }
-                Destroy(other.gameObject); //아이템 삭제
+                Destroy(other.gameObject); //?�이????��
             }
             else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString)) {
                 playerStat.playerCurrentHealth -= 20;
@@ -142,10 +142,10 @@ namespace SunkenRuins
 
         public void ShellSwallow(Dictionary<string, object> message)
         {
-            // 조개 중간 위치로 순간이동
+            // 조개 중간 ?�치�??�간?�동
             transform.position = (Vector3)message["shellPos"];
 
-            // 버튼 연타 확인
+            // 버튼 ?��? ?�인
             isSwallowed = true;
         }
 
@@ -166,15 +166,15 @@ namespace SunkenRuins
         private void Damage(Dictionary<string ,object> message)
         {
             // TODO:
-            // 1. 데미지 입는 효과
-            // 2. 데미지 SFX
+            // 1. ?��?지 ?�는 ?�과
+            // 2. ?��?지 SFX
         }
 
         private void BoostInput()
         {
             float boostInput = playerControl.Player.Mouse.ReadValue<float>();
         
-            // 부스트 방향 버그 수정
+            // 부?�트 방향 버그 ?�정
             UpdateFacingDirection(boostInput);
             if (temp && boostInput > 0)
             {
@@ -187,7 +187,7 @@ namespace SunkenRuins
             else if (!temp && boostInput > 0)
             {
                 //temp = true;
-            } //언젠간 Refactoring하길... ㅎㅎ
+            } //?�젠�?Refactoring?�길... ?�ㅎ
 
 
             if (boostInput > 0 && playerStat.playerCurrentEnergy > 0 && !isBoosting 
@@ -203,7 +203,7 @@ namespace SunkenRuins
             
             if (Input.GetKeyDown(KeyCode.E) && isBoostPreparing)
             { 
-                //이거 나중에 Input System으로 수정해야함
+                //?�거 ?�중??Input System?�로 ?�정?�야??
                 CancelBoost();
             }
 
@@ -217,20 +217,18 @@ namespace SunkenRuins
             {
                 //boostBarUI.SetNewScrollandImageValue();
                 hasBoostEventBeenInvoked = true;
-            } // 플레이어가 부스트를 시도하는 것을 UI에 알림
+            } // ?�레?�어가 부?�트�??�도?�는 것을 UI???�림
             virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, zoomOrthographicSize, zoomSpeed * Time.deltaTime); ; //Zoom In
             // TODO:
-            // UI 보이기
+            // UI 보이�?
             boostBarUI.SetUIActive(true);
 
-            Debug.Log("부스트 준비");
-
-            // 부스트 준비 중에도 Sprite 방향 신경쓰기
-            Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
+            // 부?�트 준�?중에??Sprite 방향 ?�경?�기
+            Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System?�로 변경해?�한?�면 변�?
             Vector2 boostDirection = (finalMousePosition - ((Vector2)transform.position)).normalized;
             UpdateFacingDirection(boostDirection.x);
 
-            // 점선 잇기 (Player Position to Mouse Position)
+            // ?�선 ?�기 (Player Position to Mouse Position)
             boostTrajectoryLineUI.LineEnable();
         }
 
@@ -246,25 +244,24 @@ namespace SunkenRuins
             boostTrajectoryLineUI.LineDisable();
             Debug.Log("발사");
 
-            Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System으로 변경해야한다면 변경
+            Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System?�로 변경해?�한?�면 변�?
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
             StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed)); // Zoom Out
-            StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
-            // if (boostBarUI.IsPerfectBoost)
-            // {
-            //     StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
-            //     Debug.Log("완벽 부스트");
-            // }
-            // else
-            // {
-            //     StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed));
-            //     Debug.Log("노말 부스트");
-            // }
+            if (boostBarUI.IsPerfectBoost)
+            {
+                StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
+                Debug.Log("?�벽 부?�트");
+            }
+            else
+            {
+                StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed));
+                Debug.Log("?�말 부?�트");
+            }
         }
 
         private IEnumerator BoostMovement(Vector2 direction, float speed)
         {
-            // 부스트 방향 버그 수정
+            // 부?�트 방향 버그 ?�정
             UpdateFacingDirection(direction.x);
 
             float elapsed = 0f;
@@ -315,7 +312,7 @@ namespace SunkenRuins
                 virtualCamera.m_Lens.OrthographicSize = newOrthographicSize;
                 yield return null;
             }
-            virtualCamera.m_Lens.OrthographicSize = targetOrthographicSize; //최종실행
+            virtualCamera.m_Lens.OrthographicSize = targetOrthographicSize; //최종?�행
         }
 
         private void Hypnotize(Dictionary<string, object> message)
@@ -332,7 +329,7 @@ namespace SunkenRuins
 
         public void SetInputEnabled(bool enable)
         { 
-            // 컷신이나 뭐할때 Input 죽이는 용
+            // 컷신?�나 뭐할??Input 죽이????
             if (enable)
             {
                 playerControl.Player.Enable();
@@ -347,21 +344,21 @@ namespace SunkenRuins
         {
             Vector2 moveInput = playerControl.Player.Move.ReadValue<Vector2>();
 
-            // 원하는 속도를 계산
+            // ?�하???�도�?계산
             float desiredVelocityX = playerStat.moveSpeed * moveInput.x;
             float desiredVelocityY = playerStat.moveSpeed * moveInput.y;
 
-            // 방향 전환 여부에 따라 다른 가속도 사용
+            // 방향 ?�환 ?��????�라 ?�른 가?�도 ?�용
             float accelerationX = ChooseAcceleration(moveInput.x, desiredVelocityX);
             float accelerationY = ChooseAcceleration(moveInput.y, desiredVelocityY);
 
-            // x축 속도가 원하는 속도에 부드럽게 도달하도록 보간
+            // x�??�도가 ?�하???�도??부?�럽�??�달?�도�?보간
             float updatedVelocityX = Mathf.MoveTowards(rb.velocity.x, desiredVelocityX, accelerationX * Time.deltaTime);
             float updatedVelocityY = Mathf.MoveTowards(rb.velocity.y, desiredVelocityY, accelerationY * Time.deltaTime);
             rb.velocity = new Vector2(updatedVelocityX, updatedVelocityY);
             //HandleBoost(moveInput);
 
-            if (!isBoosting && !isBoostPreparing) UpdateFacingDirection(moveInput.x); // 부스트할 때는 마우스 방향만이 Sprite flip을 결정함
+            if (!isBoosting && !isBoostPreparing) UpdateFacingDirection(moveInput.x); // 부?�트???�는 마우??방향만이 Sprite flip??결정??
         }
 
         private void UpdateFacingDirection(float moveInputX)
@@ -375,21 +372,21 @@ namespace SunkenRuins
 
         private float ChooseAcceleration(float moveInput, float desiredVelocityX)
         {
-            // Case 1) 이동을 멈추는 경우
+            // Case 1) ?�동??멈추??경우
             bool isStopping = moveInput == 0f;
             if (isStopping)
             {
                 return playerStat.moveDecceleration;
             }
 
-            // Case 2) 반대 방향으로 이동하려는 경우
+            // Case 2) 반�? 방향?�로 ?�동?�려??경우
             bool isTurningDirection = rb.velocity.x * desiredVelocityX < 0f;
             if (isTurningDirection)
             {
                 return playerStat.turnAcceleration;
             }
 
-            // Case 3) 기존 방향으로 계속 이동하는 경우
+            // Case 3) 기존 방향?�로 계속 ?�동?�는 경우
             return playerStat.moveAcceleration;
         }
 
@@ -397,12 +394,12 @@ namespace SunkenRuins
         {
             Vector2 newPosition = transform.position;
 
-            // 바라보는 방향으로 look ahead
+            // 바라보는 방향?�로 look ahead
             newPosition.x += isFacingRight ? cameraLookAheadDistance : -cameraLookAheadDistance;
             cameraFollowTarget.transform.position = newPosition;
         }
 
-        // private void HandleBoost(Vector2 moveInput) { //쓰읍 살짝 짜치네요
+        // private void HandleBoost(Vector2 moveInput) { //?�읍 ?�짝 짜치?�요
         //     if (playerStat.playerCurrentEnergy <= 0) {
         //         return;
         //     }
@@ -415,7 +412,7 @@ namespace SunkenRuins
         //     }
         // }
 
-        // private bool isBoosting(Vector2 moveInput) { // Boost Condition 확인하는 함수
+        // private bool isBoosting(Vector2 moveInput) { // Boost Condition ?�인?�는 ?�수
         //     return playerControl.Player.Boost.IsPressed() && moveInput.magnitude > 0 && playerStat.playerCurrentEnergy > 0;
         // }
     }
