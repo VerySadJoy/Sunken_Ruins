@@ -11,7 +11,6 @@ namespace SunkenRuins
     {
         // Component
         protected Rigidbody2D rb;
-        protected SpriteRenderer spriteRenderer;
         protected EnemyStat enemyStat;
         protected Transform player;
         protected float timer = 0f;
@@ -20,7 +19,6 @@ namespace SunkenRuins
         protected virtual void Start()
         {
             rb = GetComponent<Rigidbody2D>();
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             enemyStat = GetComponent<EnemyStat>();
         }
 

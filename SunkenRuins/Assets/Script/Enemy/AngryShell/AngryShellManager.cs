@@ -90,7 +90,7 @@ namespace SunkenRuins
         }
         private IEnumerator ShellAbsorb() {
             while (timer <= shellStat.EngulfTime) {
-                spriteRenderer.sprite = sprites[spriteIndex];
+                shellSpriteRenderer.sprite = sprites[spriteIndex];
                 spriteIndex++;
                 if (spriteIndex > 14) {
                     spriteIndex = 9;
