@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 424585133315178713}
   - component: {fileID: 4215011452394186543}
   - component: {fileID: 6810892630160050883}
+  - component: {fileID: 5024067958278177453}
   m_Layer: 0
   m_Name: ThrowingCrab
   m_TagString: Untagged
@@ -32,7 +33,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8433519052010012309}
   - {fileID: 9137973205612814158}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -44,14 +44,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1371259693188626941}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -89,52 +89,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae4a31b369c75345ae02399e30b70b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hypnotizeTime: 1.5
-  hypnotizeDelayTime: 5
-  attackTime: 1
-  damagePerAttack: 10
-  hypnotizeEscapeKeyNum: 10
-  retreatSpeed: 4
-  distanceFromPlayer: 3
---- !u!1 &4603149704401614152
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8433519052010012309}
-  - component: {fileID: 1709879035874833766}
-  m_Layer: 0
-  m_Name: sprite
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8433519052010012309
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4603149704401614152}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25, y: -10.51, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5727191240336264604}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1709879035874833766
+  rockPrefab: {fileID: 7515262236776795520, guid: ea0c203c42057354b97378610ddf3a0d, type: 3}
+  sprites:
+  - {fileID: -1980102874, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: -1649068100, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 2003811977, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 142963000, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 226469344, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 1175068310, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 535149720, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 1153146723, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 223681728, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 1873478906, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 719937522, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+  - {fileID: 1547088447, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
+--- !u!212 &5024067958278177453
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4603149704401614152}
+  m_GameObject: {fileID: 1371259693188626941}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -168,8 +143,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: -1421080034, guid: 618361eb5e4346f42a5453532a53da5c, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 154808651, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -190,6 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9137973205612814158}
   - component: {fileID: 7077384160143909120}
+  - component: {fileID: 1221914370874246268}
   m_Layer: 0
   m_Name: circle_detect
   m_TagString: Untagged
@@ -228,3 +204,38 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 512
+--- !u!58 &1221914370874246268
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4936011771049102750}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 4

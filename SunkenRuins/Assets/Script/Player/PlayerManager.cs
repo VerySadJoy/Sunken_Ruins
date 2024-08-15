@@ -39,6 +39,7 @@ namespace SunkenRuins
         //Boost
         [SerializeField] private DottedLineUI boostTrajectoryLineUI;
         [SerializeField] private BoostBarUI boostBarUI;
+        [SerializeField] private EnergyBarUI energyBarUI;
 
         private bool isBoosting = false;
         private bool isBoostPreparing = false;
@@ -206,7 +207,6 @@ namespace SunkenRuins
                 //?�거 ?�중??Input System?�로 ?�정?�야??
                 CancelBoost();
             }
-
         }
 
         private void PrepareBoost()
@@ -222,6 +222,7 @@ namespace SunkenRuins
             // TODO:
             // UI 보이�?
             boostBarUI.SetUIActive(true);
+            energyBarUI.SetUIActive(true);
 
             // 부?�트 준�?중에??Sprite 방향 ?�경?�기
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System?�로 변경해?�한?�면 변�?
@@ -241,6 +242,7 @@ namespace SunkenRuins
             playerStat.playerCurrentEnergy -= 1;
             hasBoostEventBeenInvoked = false;
             boostBarUI.SetUIActive(false);
+            energyBarUI.SetUIActive(false);
             boostTrajectoryLineUI.LineDisable();
             Debug.Log("발사");
 

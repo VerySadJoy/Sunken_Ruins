@@ -123,7 +123,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5955091040596774308}
         m_TargetAssemblyTypeName: SunkenRuins.PauseUI, Assembly-CSharp
-        m_MethodName: OnQuit
+        m_MethodName: OnClickResume
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -420,7 +420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4016516233999099629
 RectTransform:
   m_ObjectHideFlags: 0
@@ -517,8 +517,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2bb8aa771716c4596c686a3711170c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PauseUIField: {fileID: 0}
-  instance: {fileID: 0}
 --- !u!1 &8965927718577219296
 GameObject:
   m_ObjectHideFlags: 0

@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 108f2a9a5a4f90f4e8864caa72fe248c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayCastDistance: 5
+  rayCastDistance: 8
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 512
@@ -262,7 +262,7 @@ SpriteRenderer:
   m_Size: {x: 6.5, y: 6}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &2623653881379105391
@@ -345,6 +345,7 @@ MonoBehaviour:
   triangleDetection: {fileID: 1475772976682666745}
   circleDetection: {fileID: 7175979368324994330}
   electricAttack: {fileID: 8020849776936000050}
+  lerpAmount: 0.05
   stingRayStat: {fileID: 2659775032679677991}
 --- !u!114 &2659775032679677991
 MonoBehaviour:
@@ -444,7 +445,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackSpriteObject: {fileID: 2130213722505527377}
   attackRangeObject: {fileID: 5620403393171579595}
-  showSpriteTime: 1
+  showSpriteTime: 0.1
 --- !u!1 &5620403393171579595
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,7 +527,7 @@ SpriteRenderer:
   m_Size: {x: 0.2, y: 0.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &8666596679079151143
