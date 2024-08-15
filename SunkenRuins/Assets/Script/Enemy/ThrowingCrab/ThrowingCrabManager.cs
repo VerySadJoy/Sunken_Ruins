@@ -7,30 +7,49 @@ using UnityEngine.EventSystems;
 
 namespace SunkenRuins
 {
+    public enum CrabState
+    {
+        Patrolling,
+        Throwing,
+        Returning
+    }
+
     public class ThrowingCrabManager : EnemyManager
     {
-        // 변수
+        // Variables
         private Vector2 startPosition;
 
-        //Component
+        // Components
         private ThrowingCrabStat throwingCrabStat;
 
-        // State 변수
-        // private bool isEscape { get { return keyPressCount >= totalKeyAmount; } }
-        private bool canAttack = true;
-        private bool canThrow = false;
-        private bool backToPatrol = false;
+        // State Management
+        private CrabState currentState;
         [SerializeField] private GameObject rockPrefab;
 
-        private void Awake() {
+        // Sprite Handling
+        private SpriteRenderer crabSpriteRenderer;
+        [SerializeField] private Sprite[] sprites;
+        private int spriteIndex = 0;
+
+        private void Awake()
+        {
             throwingCrabStat = GetComponent<ThrowingCrabStat>();
+            crabSpriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         protected override void Start()
         {
             base.Start();
             startPosition = transform.position;
-            // retreatSpeed = (오브젝트 길이) * time.deltatime / (이동할 시간) <== 상의 필요
+            currentState = CrabState.Patrolling;
+            StartCoroutine(ManageState());
+        }
+
+        private void Update(){
+            if (currentState == CrabState.Patrolling)
+            {
+                PerformPatrolMovement();
+            }
         }
 
         private void OnEnable()
@@ -43,50 +62,82 @@ namespace SunkenRuins
             EventManager.StopListening(EventType.ThrowingCrabThrowRock, OnPlayerDetection_ThrowRock);
         }
 
-        private void OnPlayerDetection_ThrowRock(Dictionary<string, object> message){
-            canThrow = true;
-            player = (Transform)message["Player"];
-        }
-
-        private void Update()
+        private void OnPlayerDetection_ThrowRock(Dictionary<string, object> message)
         {
-            if (!canThrow || backToPatrol) {
-                PerformPatrolMovement();
-            }
-            else {
-                ThrowRock();
-                StartCoroutine(BackToPatrol());
+            if (currentState == CrabState.Patrolling)
+            {
+                currentState = CrabState.Throwing;
+                player = (Transform)message["Player"];
             }
         }
 
-        private void ThrowRock() {
-            GameObject rock = Instantiate(rockPrefab, rb.position, Quaternion.identity);
-            canThrow = false;
+        private IEnumerator ManageState()
+        {
+            while (true)
+            {
+                switch (currentState)
+                {
+                    case CrabState.Patrolling:
+                        PerformPatrolMovement();
+                        yield return PatrolAnimation();
+                        break;
+                    case CrabState.Throwing:
+                        yield return ThrowAnimation();
+                        currentState = CrabState.Returning;
+                        break;
+                    case CrabState.Returning:
+                        yield return BackToPatrol();
+                        currentState = CrabState.Patrolling;
+                        break;
+                }
+                yield return null;
+            }
         }
 
-        private IEnumerator BackToPatrol(){
-            backToPatrol = true;
-            yield return new WaitForSeconds(1f); //추후 수정
-            backToPatrol = false;
+        private IEnumerator PatrolAnimation()
+        {
+            while (currentState == CrabState.Patrolling)
+            {
+                crabSpriteRenderer.sprite = sprites[spriteIndex];
+                yield return new WaitForSeconds(0.1f);
+                spriteIndex = (spriteIndex + 1) % 8;
+            }
+        }
+
+        private IEnumerator ThrowAnimation()
+        {
+            rb.velocity = Vector2.zero;
+            for (int i = 7; i <= 11; i++)
+            {
+                crabSpriteRenderer.sprite = sprites[i];
+                yield return new WaitForSeconds(0.1f);
+            }
+            ThrowRock();
+        }
+
+        private void ThrowRock()
+        {
+            Instantiate(rockPrefab, new Vector2(rb.position.x, rb.position.y + 0.5f), Quaternion.identity);
+        }
+
+        private IEnumerator BackToPatrol()
+        {
+            yield return new WaitForSeconds(1f); // Adjust as needed
         }
 
         private void PerformPatrolMovement()
         {
             float offsetFromInitialPosition = transform.position.x - startPosition.x;
-
-            // 순찰 경계를 넘어서면 방향 전환
             if (offsetFromInitialPosition < -throwingCrabStat.patrolRange)
             {
-                // Collider도 같이 뒤집어야 해서 각도 회전하는 게 맞는 듯!
-                // 방향 전환하기
-                UpdateFacingDirection(Vector2.right); // collider도 맞추어서 회전
+
+                UpdateFacingDirection(Vector2.right);
             }
             else if (offsetFromInitialPosition > throwingCrabStat.patrolRange)
             {
-                UpdateFacingDirection(Vector2.left); // collider도 맞추어서 회전
+                UpdateFacingDirection(Vector2.left);
             }
 
-            // 속도 설정
             rb.velocity = new Vector2(throwingCrabStat.initialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
         }
     }
