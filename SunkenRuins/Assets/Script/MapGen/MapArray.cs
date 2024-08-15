@@ -13,7 +13,7 @@ public class MapArray : MonoBehaviour
     int mapXLength = 10; int mapYLength = 8;
 
     [SerializeField]
-    private int mapLength = 4;
+    private int mapLength = 8;
 
     [SerializeField]
     GameObject dwellingTile;
@@ -31,6 +31,7 @@ public class MapArray : MonoBehaviour
         EndRoom = 6,
     }
 
+    // Size of One Map: 15 * 22
     int[,,] StartRoom = new int[2, 8, 10]
     {
         {
@@ -165,17 +166,17 @@ public class MapArray : MonoBehaviour
 
     private void Start()
     {
-        MakeRealMap(0, 10);
+        MakeRealMap();
 
-        MakeRealMap(0, 40);
+        // MakeRealMap(0, 40);
     }
 
-    private void MakeRealMap(int varStartX, int varStartY)
+    private void MakeRealMap()
     {
         MakeBaseMap();
 
-        realMap = new int[mapLength * 8 + varStartY, 40];
-        int realStartX = varStartX; int realStartY = varStartY;
+        realMap = new int[mapLength * 8 , 40];
+        int realStartX = 0; int realStartY = 0;
         int realTraceX; int realTraceY;
         int roomNumber;
         for (int y = 0; y < baseMap.GetLength(0); ++y)
@@ -320,12 +321,18 @@ public class MapArray : MonoBehaviour
                     // Doesn't Get out of Bounds
                     if (basetraceX - 1 >= 0)
                     {
+                        // if (baseMap[basetraceY, basetraceX - 1] != (int)RoomType.RandomRoom)
+                        // {
+                        //     moveProb = Random.Range(1, 3);
+                        //     break;
+                        // }
+
                         baseMap[basetraceY, --basetraceX] = (int)RoomType.LeftRight;
                         moveProb = Random.Range(0, 2);
                     }
                     else
                     {
-                        if (basetraceX + 1 == 0) moveProb = Random.Range(1, 3);
+                        if (basetraceX + 1 <= 3 && baseMap[basetraceY, basetraceX + 1] == (int)RoomType.RandomRoom) moveProb = 2;
                         else moveProb = 1;
                     }
                     break;
@@ -355,12 +362,18 @@ public class MapArray : MonoBehaviour
                     // Doesn't Get out of Bounds
                     if (basetraceX + 1 <= 3)
                     {
+                        // if (baseMap[basetraceY, basetraceX + 1] != (int)RoomType.RandomRoom)
+                        // {
+                        //     moveProb = Random.Range(0, 2);
+                        //     break;
+                        // }
+
                         baseMap[basetraceY, ++basetraceX] = (int)RoomType.LeftRight;
                         moveProb = Random.Range(1, 3);
                     }
                     else
                     {
-                        if (basetraceX - 1 == 0) moveProb = Random.Range(0, 2);
+                        if (basetraceX - 1 >= 0 && baseMap[basetraceY, basetraceX - 1] == (int)RoomType.RandomRoom) moveProb = 0;
                         else moveProb = 1;
                     }
                     break;
@@ -372,31 +385,31 @@ public class MapArray : MonoBehaviour
         }
 
         // For maps with consecutive "DownLeftRight" rooms vertically
-        for (int y = 1; y < baseMap.GetLength(0); ++y)
-        {
-            if (baseMap[y - 1, 0] == 3 && baseMap[y, 0] == 3)
-            {
-                baseMap[y - 1, 0] = (int)RoomType.AllSides;
-                baseMap[y, 0] = (int)RoomType.AllSides;
-            }
-            else if (baseMap[y - 1, 1] == 3 && baseMap[y, 1] == 3)
-            {
-                baseMap[y - 1, 0] = (int)RoomType.AllSides;
-                baseMap[y, 0] = (int)RoomType.AllSides;
-            }
-            else if (baseMap[y - 1, 2] == 3 && baseMap[y, 2] == 3)
-            {
-                baseMap[y - 1, 0] = (int)RoomType.AllSides;
-                baseMap[y, 0] = (int)RoomType.AllSides;
-            }
-            else if (baseMap[y - 1, 3] == 3 && baseMap[y, 3] == 3)
-            {
-                baseMap[y - 1, 0] = (int)RoomType.AllSides;
-                baseMap[y, 0] = (int)RoomType.AllSides;
-            }
-            else continue;
-        }
-        TestBaseMapGeneration();
+        // for (int y = 1; y < baseMap.GetLength(0); ++y)
+        // {
+        //     if (baseMap[y - 1, 0] == 3 && baseMap[y, 0] == 3)
+        //     {
+        //         baseMap[y - 1, 0] = (int)RoomType.AllSides;
+        //         baseMap[y, 0] = (int)RoomType.AllSides;
+        //     }
+        //     else if (baseMap[y - 1, 1] == 3 && baseMap[y, 1] == 3)
+        //     {
+        //         baseMap[y - 1, 0] = (int)RoomType.AllSides;
+        //         baseMap[y, 0] = (int)RoomType.AllSides;
+        //     }
+        //     else if (baseMap[y - 1, 2] == 3 && baseMap[y, 2] == 3)
+        //     {
+        //         baseMap[y - 1, 0] = (int)RoomType.AllSides;
+        //         baseMap[y, 0] = (int)RoomType.AllSides;
+        //     }
+        //     else if (baseMap[y - 1, 3] == 3 && baseMap[y, 3] == 3)
+        //     {
+        //         baseMap[y - 1, 0] = (int)RoomType.AllSides;
+        //         baseMap[y, 0] = (int)RoomType.AllSides;
+        //     }
+        //     else continue;
+        // }
+        // TestBaseMapGeneration();
     }
 
     private void TilePlacement(int[,] realMap)
@@ -407,18 +420,20 @@ public class MapArray : MonoBehaviour
             {
                 if (realMap[y, x] == 1)
                 {
-                    Instantiate(dwellingTile, new Vector3(tileTraceX++, tileTraceY), Quaternion.identity);
+                    Instantiate(dwellingTile, new Vector3(tileTraceX, tileTraceY), Quaternion.identity);
+                    tileTraceX += 2;
                 }
                 else if (realMap[y, x] == 9)
                 {
-                    Instantiate(otherTile, new Vector3(tileTraceX++, tileTraceY), Quaternion.identity);
+                    Instantiate(otherTile, new Vector3(tileTraceX, tileTraceY), Quaternion.identity);
+                    tileTraceX += 2;
                 }
                 else
                 {
-                    ++tileTraceX;
+                    tileTraceX += 2;
                 }
             }
-            tileTraceX = startTileX; --tileTraceY;
+            tileTraceX = startTileX; tileTraceY -= 2;
         }
     }
 

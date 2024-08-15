@@ -96,7 +96,7 @@ public class WoodTile : Tile
     private void Start()
     {
         // Checking Each Side
-        GetComponent<Tile>().checkTileBoundaries();
+        checkTileBoundaries();
 
         bool areFourSidesFull = isUpFull || isLeftFull || isRightFull || isDownFull;
         bool areFourCornersFull = isUpLeftFull || isUpRightFull || isDownLeftFull || isDownRightFull;
@@ -104,13 +104,72 @@ public class WoodTile : Tile
         {
             if (isUpFull)
             {
+                if (!isUpLeftFull)
+                {
+                    if (!isDownFull)
+                    {
+                        spriteRenderer.sprite = DownFullUpLeftCorner;
+                    }
+                    else if (!isRightFull)
+                    {
+                        spriteRenderer.sprite = RightFullUpLeftCorner;
+                    }
+                    else if (!isLeftFull)
+                    {
+                    }
+                    else
+                    {
+                        spriteRenderer.sprite = UpLeftCorner;
+                        spriteRenderer.sprite = LeftBlank;
+                    }
+                }
+                else if (!isUpRightFull)
+                {
+                    if (!isDownFull && !isLeftFull)
+                    {
+                        // 오른쪽 대각선 + 왼쪽 and 아래 테두리
+                    }
+                    else if (!isDownFull)
+                    {
+                        spriteRenderer.sprite = DownFullUpRightCorner;
+                    }
+                    else if (!isLeftFull)
+                    {
+                        spriteRenderer.sprite = DownFullUpRightCorner;
+                    }
+                    else if (!isRightFull)
+                    {
+                    }
+                    else
+                    {
+                        spriteRenderer.sprite = UpRightCorner;
+                        spriteRenderer.sprite = RightBlank;
+                    }
+                }
+
                 if (isDownFull)
                 {
                     if (isRightFull && isLeftFull)
                     {
-                        // �̶� ���� ������ �𼭸��� ���� �� �ֱ⿡
-                        // ���� ���� ����� ���� �����Ѵ�.
-                        checkOnlyForCorners(areFourCornersFull);
+                        if (isUpLeftFull)
+                        {
+                            if (isUpRightFull)
+                            {
+                                spriteRenderer.sprite = AllBlank;
+                            }
+                            else
+                            {
+                                spriteRenderer.sprite = UpRightCorner;
+                            }
+                        }
+                        else if (isUpRightFull)
+                        {
+                            spriteRenderer.sprite = UpLeftCorner;
+                        }
+                        else 
+                        {
+                            spriteRenderer.sprite = UpCorners;
+                        }
                     }
                     else if (isRightFull)
                     {
@@ -122,18 +181,12 @@ public class WoodTile : Tile
                         {
                             spriteRenderer.sprite = LeftFullUpRightCorner;
                         }
-                        else if (isUpRightFull)
-                        {
-                        }
                     }
                     else if (isLeftFull)
                     {
                         if (isUpLeftFull && isDownLeftFull)
                         {
                             spriteRenderer.sprite = UpDownLeftBlank;
-                        }
-                        else if (isUpLeftFull)
-                        {
                         }
                         else if (isDownLeftFull)
                         {
@@ -164,7 +217,7 @@ public class WoodTile : Tile
                         else
                             spriteRenderer.sprite = DownFullUpCorners;
                     }
-                    else if (isLeftFull)
+                    else if (isLeftFull) // 아래랑 오른쪽이 비었음
                     {
                         if (!isUpLeftFull)
                         {
@@ -172,7 +225,7 @@ public class WoodTile : Tile
                         }
                         else spriteRenderer.sprite = UpLeftBlank;
                     }
-                    else if (isRightFull)
+                    else if (isRightFull) // 아래랑 왼쪽이 비었음
                     {
                         if (!isUpRightFull)
                         {
@@ -180,29 +233,31 @@ public class WoodTile : Tile
                         }
                         else spriteRenderer.sprite = UpRightBlank;
                     }
-                    else
+                    else // 위를 제외하고 다 비었음
                     {
                         spriteRenderer.sprite = UpBlank;
                     }
                 }
             }
-            else if (isLeftFull)
+            else if (isLeftFull) // 위가 비었음
             {
+                if (!isUpLeftFull && !isUpRightFull)
+                {
+                    spriteRenderer.sprite = UpCorners;
+                }
+
                 if (isRightFull)
                 {
                     if (isDownFull)
                     {
-                        if (isDownLeftFull && isDownRightFull)
-                        {
-                            spriteRenderer.sprite = DownLeftRightBlank; 
-                        }
+                        spriteRenderer.sprite = DownLeftRightBlank; 
                     }
                     else
                     {
                         spriteRenderer.sprite = LeftRightBlank;
                     }
                 }
-                else
+                else // 위랑 오른쪽이 비었음
                 {
                     if (isDownFull)
                     {
@@ -214,7 +269,7 @@ public class WoodTile : Tile
                     }
                 }
             }
-            else if (isRightFull)
+            else if (isRightFull) // 위랑 왼쪽이 비었음
             {
                 if (isDownFull)
                 {
@@ -225,7 +280,7 @@ public class WoodTile : Tile
                     spriteRenderer.sprite = RightBlank;
                 }
             }
-            else if (isDownFull)
+            else if (isDownFull) // 위, 왼, 오가 비었음
             {
                 spriteRenderer.sprite = DownBlank;
             }
@@ -242,70 +297,36 @@ public class WoodTile : Tile
         {
             if (isUpLeftFull)
             {
-                if (isDownLeftFull)
+                if (isUpRightFull)
                 {
-                    if (isUpRightFull && isDownRightFull)
-                    {
-                        spriteRenderer.sprite = AllBlank;
-                    }
-                    else if (isUpRightFull)
-                    {
-                    }
-                    else if (isDownRightFull)
-                    {
-                        spriteRenderer.sprite = UpRightCorner;
-                    }
+                    spriteRenderer.sprite = AllBlank;
                 }
                 else
                 {
-                    if (isUpRightFull && isDownRightFull)
-                    {
-                    }
-                    else if (isUpRightFull)
-                    {
-                    }
-                    else if (isDownRightFull)
-                    {
-                    }
+                    spriteRenderer.sprite = UpRightCorner;
                 }
             }
-            // UpLeftCorner �ʼ�
             else if (isUpRightFull)
             {
-                if (isDownRightFull && isDownLeftFull)
-                {
-                    spriteRenderer.sprite = UpLeftCorner;
-                }
-                else if (isDownRightFull)
-                {
-                }
-                else if (isDownLeftFull)
-                {
-                }
+                spriteRenderer.sprite = UpLeftCorner;
             }
-            else if (isDownLeftFull)
+            else 
             {
-                if (isDownRightFull)
-                {
-                    spriteRenderer.sprite = UpCorners;
-                }
-            }
-            else if (isDownRightFull)
-            {
+                spriteRenderer.sprite = UpCorners;
             }
         }
         else
         {
+            Debug.Log("Error in Tile Creation: Script [WoodTile] Line 298");
         }
     }
 
-    // WoodTile�� �밢�� ��ġ�� Ȯ���ؾ� ��
     public override void checkTileBoundaries()
     {
         base.checkTileBoundaries();
-        isUpLeftFull = Physics2D.OverlapCircle(transform.position + Vector3.left + Vector3.up, 0.1f, tileLayerMask);
-        isUpRightFull = Physics2D.OverlapCircle(transform.position + Vector3.right + Vector3.up, 0.1f, tileLayerMask);
-        isDownLeftFull = Physics2D.OverlapCircle(transform.position + Vector3.left + Vector3.down, 0.1f, tileLayerMask);
-        isDownRightFull = Physics2D.OverlapCircle(transform.position + Vector3.right + Vector3.down, 0.1f, tileLayerMask);
+        isUpLeftFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.left + 2*Vector3.up, 0.1f, tileLayerMask);
+        isUpRightFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.right + 2*Vector3.up, 0.1f, tileLayerMask);
+        isDownLeftFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.left + 2*Vector3.down, 0.1f, tileLayerMask);
+        isDownRightFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.right + 2*Vector3.down, 0.1f, tileLayerMask);
     }
 }
