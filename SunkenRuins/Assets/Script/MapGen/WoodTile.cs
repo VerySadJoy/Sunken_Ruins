@@ -348,7 +348,9 @@ public class WoodTile : Tile
         {
             // Randomly select coral reef from coralReefPrefabs
             int randomIndex = Random.Range(0, coralReefPrefabs.Length);
-            Instantiate(coralReefPrefabs[randomIndex], this.transform.position, Quaternion.identity);
+            float coralReefHeight = 1.6f;
+            
+            Instantiate(coralReefPrefabs[randomIndex], this.transform.position + coralReefHeight * Vector3.up, Quaternion.identity);
         }
     }
 }

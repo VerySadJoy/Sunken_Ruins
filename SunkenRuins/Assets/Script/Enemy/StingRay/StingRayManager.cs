@@ -39,7 +39,7 @@ namespace SunkenRuins
         {
             EventManager.StopListening(EventType.StingRayMoveTowardsPlayer, OnPlayerDetection_MoveTowardsPlayer);
             EventManager.StopListening(EventType.StingRayPrepareAttack, OnPlayerDetection_PrepareAttack);
-            EventManager.StartListening(EventType.StingRayParalyze, OnPlayerDetection_AttackPlayer);
+            EventManager.StopListening(EventType.StingRayParalyze, OnPlayerDetection_AttackPlayer);
         }
 
         private void Update()
