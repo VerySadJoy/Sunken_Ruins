@@ -11,6 +11,9 @@ public class WoodTile : Tile
     private bool isDownLeftFull;
     private bool isDownRightFull;
 
+    // Coral Reef Prefabs
+    [SerializeField] private GameObject[] coralReefPrefabs;
+
     [Space(10)]
 
     [SerializeField]
@@ -102,6 +105,7 @@ public class WoodTile : Tile
         bool areFourCornersFull = isUpLeftFull || isUpRightFull || isDownLeftFull || isDownRightFull;
         if (areFourSidesFull)
         {
+            // When a block is above this block, no coral reef is instantiated
             if (isUpFull)
             {
                 if (!isUpLeftFull)
@@ -239,50 +243,55 @@ public class WoodTile : Tile
                     }
                 }
             }
-            else if (isLeftFull) // 위가 비었음
+            else // Since there is no block above this block, we can instantiate coral reef
             {
-                if (!isUpLeftFull && !isUpRightFull)
-                {
-                    spriteRenderer.sprite = UpCorners;
-                }
+                RandomInstantiateCoralReef();
 
-                if (isRightFull)
+                if (isLeftFull) // 위가 비었음
+                {
+                    if (!isUpLeftFull && !isUpRightFull)
+                    {
+                        spriteRenderer.sprite = UpCorners;
+                    }
+
+                    if (isRightFull)
+                    {
+                        if (isDownFull)
+                        {
+                            spriteRenderer.sprite = DownLeftRightBlank; 
+                        }
+                        else
+                        {
+                            spriteRenderer.sprite = LeftRightBlank;
+                        }
+                    }
+                    else // 위랑 오른쪽이 비었음
+                    {
+                        if (isDownFull)
+                        {
+                            spriteRenderer.sprite = DownLeftBlank;
+                        }
+                        else
+                        {
+                            spriteRenderer.sprite = LeftBlank;
+                        }
+                    }
+                }
+                else if (isRightFull) // 위랑 왼쪽이 비었음
                 {
                     if (isDownFull)
                     {
-                        spriteRenderer.sprite = DownLeftRightBlank; 
+                        spriteRenderer.sprite = DownRightBlank;
                     }
                     else
                     {
-                        spriteRenderer.sprite = LeftRightBlank;
+                        spriteRenderer.sprite = RightBlank;
                     }
                 }
-                else // 위랑 오른쪽이 비었음
+                else if (isDownFull) // 위, 왼, 오가 비었음
                 {
-                    if (isDownFull)
-                    {
-                        spriteRenderer.sprite = DownLeftBlank;
-                    }
-                    else
-                    {
-                        spriteRenderer.sprite = LeftBlank;
-                    }
+                    spriteRenderer.sprite = DownBlank;
                 }
-            }
-            else if (isRightFull) // 위랑 왼쪽이 비었음
-            {
-                if (isDownFull)
-                {
-                    spriteRenderer.sprite = DownRightBlank;
-                }
-                else
-                {
-                    spriteRenderer.sprite = RightBlank;
-                }
-            }
-            else if (isDownFull) // 위, 왼, 오가 비었음
-            {
-                spriteRenderer.sprite = DownBlank;
             }
         }
         else
@@ -328,5 +337,18 @@ public class WoodTile : Tile
         isUpRightFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.right + 2*Vector3.up, 0.1f, tileLayerMask);
         isDownLeftFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.left + 2*Vector3.down, 0.1f, tileLayerMask);
         isDownRightFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.right + 2*Vector3.down, 0.1f, tileLayerMask);
+    }
+
+    private void RandomInstantiateCoralReef()
+    {
+        // Probability of having coral reef above block = 20%
+        bool isInstantiate = Random.Range(0, 10) < 2;
+
+        if (isInstantiate)
+        {
+            // Randomly select coral reef from coralReefPrefabs
+            int randomIndex = Random.Range(0, coralReefPrefabs.Length);
+            Instantiate(coralReefPrefabs[randomIndex], this.transform.position, Quaternion.identity);
+        }
     }
 }
