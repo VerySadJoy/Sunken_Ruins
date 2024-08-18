@@ -1299,9 +1299,9 @@ public class MapArray : MonoBehaviour
                         roomNumber = Random.Range(0, StartRoom.GetLength(0));
                         for (int roomY = 0; roomY < mapYLength; ++roomY)
                         {
-                            for (int roomX = 0; roomX < mapXLength; ++roomX)
+                            for (int roomX = 0; roomX < mapXLength / 2; ++roomX)
                             {
-                                realMap[realTraceY, realTraceX++] = StartRoom[roomNumber, roomY, roomX];
+                                realMap[realTraceY, realTraceX++] = StartRoom[roomNumber, roomY, mapXLength - roomX - 1];
                             }
                             realTraceX = realStartX;
                             ++realTraceY;
@@ -1335,7 +1335,7 @@ public class MapArray : MonoBehaviour
             }
         }
 
-        CheckMonsterGenerationByTile(); // change int[] array instead of using collision detection
+        // CheckMonsterGenerationByTile(); // change int[] array instead of using collision detection
         TilePlacement(realMap);
     }
 
@@ -1726,4 +1726,19 @@ public class MapArray : MonoBehaviour
             row = null;
         }
     }
+
+    // private int[,,] FlipRoom(int[,,] arrayToBeFlipped, int roomIndex)
+    // {
+    //     int[,,] returnArray = new int[0, mapYLength, mapXLength];
+    //     for (int y = 0; y < arrayToBeFlipped.GetLength(0); ++y)
+    //     {
+    //         for (int x = 0; x < arrayToBeFlipped.GetLength(1) / 2; ++x)
+    //         {
+    //             int temp = arrayToBeFlipped[roomIndex, y, x];
+    //             returnArray[0, y, arrayToBeFlipped.GetLength(1) - x] = temp;
+    //             returnArray[0, y, x] = arrayToBeFlipped[roomIndex, y, arrayToBeFlipped.GetLength(1) - x];
+    //         }
+    //     }
+    //     return returnArray;
+    // }
 }
