@@ -177,22 +177,22 @@ public class WoodTile : Tile
                     }
                     else if (isRightFull)
                     {
-                        if (isDownRightFull && isUpRightFull)
+                        if (isUpRightFull)
                         {
                             spriteRenderer.sprite = UpDownRightBlank;
                         }
-                        else if (isDownRightFull)
+                        else
                         {
                             spriteRenderer.sprite = LeftFullUpRightCorner;
                         }
                     }
                     else if (isLeftFull)
                     {
-                        if (isUpLeftFull && isDownLeftFull)
+                        if (isUpLeftFull)
                         {
                             spriteRenderer.sprite = UpDownLeftBlank;
                         }
-                        else if (isDownLeftFull)
+                        else
                         {
                             spriteRenderer.sprite = RightFullUpLeftCorner;
                         }
