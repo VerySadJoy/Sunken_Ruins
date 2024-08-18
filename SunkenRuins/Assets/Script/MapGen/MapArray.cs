@@ -15,8 +15,8 @@ public class MapArray : MonoBehaviour
     // int endTileX; int endTileY;
     int mapXLength = 10; int mapYLength = 12;
 
-    [SerializeField]
-    private int mapLength = 8;
+    [SerializeField] private int mapHeight = 8;
+    [SerializeField] private int mapWidth = 8;
 
     // Tiles
     [SerializeField] GameObject dwellingTile;
@@ -654,7 +654,7 @@ public class MapArray : MonoBehaviour
     {
         MakeBaseMap();
 
-        realMap = new int[mapLength * 12 , 40]; // 맵 크기 바꿀 때마다 숫자 바꿔야 함
+        realMap = new int[mapHeight * mapYLength, mapWidth * mapXLength]; // 맵 크기 바꿀 때마다 숫자 바꿔야 함
         int realStartX = 0; int realStartY = 0;
         int realTraceX; int realTraceY;
         int roomNumber;
@@ -678,7 +678,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.UpRoom:
@@ -704,7 +704,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.DownRightRoom:
@@ -718,7 +718,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.DownLeftRoom:
@@ -732,7 +732,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.UpLeftRoom:
@@ -746,7 +746,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.UpDownRoom:
@@ -763,7 +763,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.UpDownRightRoom:
@@ -783,7 +783,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.UpLeftRightRoom:
@@ -797,7 +797,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.AllSidesRoom:
@@ -811,7 +811,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.StartRoom:
@@ -825,7 +825,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     case RoomType.EndRoom:
@@ -839,7 +839,7 @@ public class MapArray : MonoBehaviour
                             realTraceX = realStartX;
                             ++realTraceY;
                         }
-                        realStartX += 10;
+                        realStartX += mapXLength;
                         break;
 
                     default:
@@ -847,9 +847,9 @@ public class MapArray : MonoBehaviour
                         break;
                 }
 
-                if (realStartX >= 40)
+                if (realStartX >= mapWidth * mapXLength)
                 {
-                    realStartX = 0; realStartY += 12; // �� ���� y�� ���� = 8
+                    realStartX = 0; realStartY += mapYLength; // �� ���� y�� ���� = 8
                 }
             }
         }
@@ -860,16 +860,15 @@ public class MapArray : MonoBehaviour
 
     private void MakeBaseMap()
     {
-        // 4 * 4 �� ����
-        baseMap = new int[mapLength, 4];
-        startX = Random.Range(0, 4);
+        baseMap = new int[mapHeight, mapWidth];
+        startX = Random.Range(0, mapWidth);
         startY = 0;
         baseMap[startY, startX] = (int)RoomType.StartRoom;
 
         int basetraceX = startX; int basetraceY = startY;
         int moveProb;
         do moveProb = Random.Range(0, 3); while (moveProb == 1);
-        while (endY != mapLength - 1)
+        while (endY != mapHeight - 1)
         {
             switch (moveProb)
             {
@@ -889,7 +888,7 @@ public class MapArray : MonoBehaviour
                     }
                     else
                     {
-                        if (basetraceX + 1 <= 3 && baseMap[basetraceY, basetraceX + 1] == (int)RoomType.RandomRoom) moveProb = 2;
+                        if (basetraceX + 1 < mapWidth && baseMap[basetraceY, basetraceX + 1] == (int)RoomType.RandomRoom) moveProb = 2;
                         else moveProb = 1;
                     }
                     break;
@@ -900,7 +899,7 @@ public class MapArray : MonoBehaviour
                     {
                         do moveProb = Random.Range(0, 3); while (moveProb == 1);
                     }
-                    else if (basetraceY + 1 <= mapLength - 1)
+                    else if (basetraceY + 1 <= mapHeight - 1)
                     {
                         // Determine whether next move is left or right
                         do moveProb = Random.Range(0, 3); while (moveProb == 1);
@@ -911,7 +910,7 @@ public class MapArray : MonoBehaviour
                             baseMap[basetraceY, basetraceX] = (int)RoomType.DownRightRoom;
                             baseMap[++basetraceY, basetraceX] = (int)RoomType.UpRightRoom;
                         }
-                        else if (basetraceX + 1 >= 4) // if right is void
+                        else if (basetraceX + 1 >= mapWidth) // if right is void
                         {
                             baseMap[basetraceY, basetraceX] = (int)RoomType.DownLeftRoom;
                             baseMap[++basetraceY, basetraceX] = (int)RoomType.UpLeftRoom;
@@ -962,10 +961,13 @@ public class MapArray : MonoBehaviour
                     }
                     break;
 
+                // Move Up
+                
+
                 // Move Right
                 case 2:
                     // Doesn't Get out of Bounds
-                    if (basetraceX + 1 <= 3)
+                    if (basetraceX + 1 < mapWidth)
                     {
                         // if (baseMap[basetraceY, basetraceX + 1] != (int)RoomType.RandomRoom)
                         // {
