@@ -58,7 +58,7 @@ namespace SunkenRuins
             spriteRenderer = GetComponent<SpriteRenderer>();
             playerStat = GetComponent<PlayerStat>();
             virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-            virtualCamera.m_Lens.OrthographicSize = 8f;
+            virtualCamera.m_Lens.OrthographicSize = defaultOrthographicSize;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -118,7 +118,8 @@ namespace SunkenRuins
         }
 
         private Vector3 dirFromShellNormalized;
-        private bool isAbsorbed = false; private bool isSwallowed = false;
+        private bool isAbsorbed = false;
+        private bool isSwallowed = false;
         private void Update()
         {
             if (Time.timeScale == 0) {
@@ -217,10 +218,9 @@ namespace SunkenRuins
             {
                 //boostBarUI.SetNewScrollandImageValue();
                 hasBoostEventBeenInvoked = true;
-            } // ?�레?�어가 부?�트�??�도?�는 것을 UI???�림
+            }
             virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, zoomOrthographicSize, zoomSpeed * Time.deltaTime); ; //Zoom In
-            // TODO:
-            // UI 보이�?
+
             boostBarUI.SetUIActive(true);
             energyBarUI.SetUIActive(true);
 
@@ -304,18 +304,18 @@ namespace SunkenRuins
             Debug.Log("취소");
         }
 
-        private IEnumerator ZoomOutCoroutine(float targetOrthographicSize, float zoomSpeed)
-        {
+        private IEnumerator ZoomOutCoroutine(float targetOrthographicSize, float zoomSpeed) {
             float initialOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
 
-            while (virtualCamera.m_Lens.OrthographicSize > targetOrthographicSize)
+            while (Mathf.Abs(virtualCamera.m_Lens.OrthographicSize - targetOrthographicSize) > 0.01f)
             {
                 float newOrthographicSize = Mathf.MoveTowards(virtualCamera.m_Lens.OrthographicSize, targetOrthographicSize, zoomSpeed * Time.deltaTime);
                 virtualCamera.m_Lens.OrthographicSize = newOrthographicSize;
                 yield return null;
             }
-            virtualCamera.m_Lens.OrthographicSize = targetOrthographicSize; //최종?�행
+            virtualCamera.m_Lens.OrthographicSize = targetOrthographicSize;
         }
+
 
         private void Hypnotize(Dictionary<string, object> message)
         {
