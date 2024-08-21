@@ -13,6 +13,10 @@ public class boostEffectRing : MonoBehaviour
     SpriteRenderer spr;
     Color initColor;
 
+    public Color emitColor;
+    [SerializeField] SpriteRenderer blur_front;
+    [SerializeField] SpriteRenderer blur_back;
+
     private void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -26,6 +30,9 @@ public class boostEffectRing : MonoBehaviour
         //spr.color = new Color(initColor.r, initColor.g, initColor.b, 0); //맨 처음에는 투명화
 
         lifeTimer = 0f; //타이머 초기화 
+
+        blur_front.color = emitColor;
+        blur_back.color = emitColor;
     }
 
     void Update()
@@ -42,6 +49,6 @@ public class boostEffectRing : MonoBehaviour
 
         lifeTimer += Time.deltaTime;
         transform.localScale = new Vector3(1, 1, 1) * scaleCurve.Evaluate(lifeTimer / lifeTime); //크기 조절
-        spr.color = new Color(initColor.r, initColor.g, initColor.b, colorCurve.Evaluate(lifeTimer / lifeTime)); //색상 조절 
+        //spr.color = new Color(initColor.r, initColor.g, initColor.b, colorCurve.Evaluate(lifeTimer / lifeTime)); //색상 조절 
     }
 }
