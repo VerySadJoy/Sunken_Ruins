@@ -21,9 +21,13 @@ namespace SunkenRuins
         [SerializeField] private float lerpAmount = 0.05f;
         private Vector3 initialPosition;
         [SerializeField] private StingRayStat stingRayStat;
+        private BoxCollider2D boxCollider2D;
 
         // Used for StingRay Attack CoolTime
         private Time attackTime;
+        private void Awake() {
+            boxCollider2D = GetComponent<BoxCollider2D>();
+        }
 
         protected override void Start()
         {
@@ -101,12 +105,27 @@ namespace SunkenRuins
             isDashDelayTime = true;
             player = null; // 플레이어 초기화해서 플레이어 추적 불가
 
-            yield return new WaitForSeconds(0.2f); // 잠깐 멈춘다 (공격 모션 등의 이유)
-            rb.velocity = -dirToPlayerNormalized * stingRayStat.initialMoveSpeed;
-            yield return new WaitForSeconds(stingRayStat.dashDelayTime);
+            yield return new WaitForSeconds(electricAttack.showSpriteTime); // 잠깐 멈춘다 (공격 모션 등의 이유)
+            rb.velocity = (initialPosition - transform.position).normalized * stingRayStat.initialMoveSpeed;
+            if (initialPosition.x > transform.position.x)
+            {
+                // Initial position is to the right
+                UpdateFacingDirection(Vector2.right);
+            }
+            else if (initialPosition.x < transform.position.x)
+            {
+                // Initial position is to the left
+                UpdateFacingDirection(Vector2.left);
+            }
+            while (Vector3.Distance(transform.position, initialPosition) > 0.1f)
+            {
+                yield return null; // Wait for the next frame
+            }
+            // yield return new WaitForSeconds(stingRayStat.dashDelayTime);
 
             isDashDelayTime = false; // 지금부터 patrol movement을 할 수 있다
             initialPosition = transform.position; // 새로운 위치에서 patrol movement 실시
+            rb.velocity = Vector3.zero;
         }
 
         private void PerformPatrolMovement()
@@ -167,6 +186,15 @@ namespace SunkenRuins
             if ((int)message["Enemy"] != electricAttack.ThisObjectNumber) return;
 
             EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", stingRayStat.damageAmount } });
+        }
+
+        private void OnTriggerEnter2D (Collider2D collision) {
+            if (collision != boxCollider2D) {
+                return;
+            }
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall") {
+
+            }
         }
 
 
