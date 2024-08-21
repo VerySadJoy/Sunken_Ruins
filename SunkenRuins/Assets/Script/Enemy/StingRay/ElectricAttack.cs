@@ -40,6 +40,7 @@ namespace SunkenRuins
         {
             Debug.Log("플레이어 공격 시도함");
             StartCoroutine(ShowSpriteCoroutine(attackSpriteObject));
+            
         }
 
         private IEnumerator ShowSpriteCoroutine(GameObject gameObject)

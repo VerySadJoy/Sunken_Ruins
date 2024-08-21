@@ -22,6 +22,9 @@ namespace SunkenRuins
         private Vector3 initialPosition;
         [SerializeField] private StingRayStat stingRayStat;
 
+        // Used for StingRay Attack CoolTime
+        private Time attackTime;
+
         protected override void Start()
         {
             base.Start();
