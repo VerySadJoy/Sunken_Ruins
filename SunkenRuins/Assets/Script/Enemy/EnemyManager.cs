@@ -30,11 +30,5 @@ namespace SunkenRuins
             }
             transform.rotation = isFacingRight? Quaternion.Euler(Vector3.zero) : Quaternion.Euler(Vector3.up * 180f); // flipX?�데 collider??같이 ?�집?�록 rotate
         }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            // 몬스?��? ?�레?�어?�테 ?��?지 ?�는 코드
-            // ?�요?�으�???��?�면 ????
-        }
     }
 }

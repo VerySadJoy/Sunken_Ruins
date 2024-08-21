@@ -7,6 +7,10 @@ namespace SunkenRuins
 {
     public class CircleDetection : MonoBehaviour
     {
+        private static int totalObjectNumber = 0;
+        [SerializeField] private int thisObjectNumber; 
+        public int ThisObjectNumber { get { return thisObjectNumber; } }  
+
         // Components
         private CircleCollider2D circleCollider2D;
         [SerializeField] private float rayCastDistance = 4.0f;
@@ -19,6 +23,11 @@ namespace SunkenRuins
         private void Awake()
         {
             circleCollider2D = GetComponent<CircleCollider2D>();
+        }
+
+        private void Start()
+        {
+            thisObjectNumber = ++totalObjectNumber;
         }
 
         // 이런 식으로 카메라 범위 밖일 때 collider 끄는 게 성능적 측면에서 좋지 않을까?
@@ -49,7 +58,7 @@ namespace SunkenRuins
                 if (raycastHit2D)
                 {
                     Debug.Log("원: 플레이어 감지!");
-                    EventManager.TriggerEvent(EventType.StingRayPrepareAttack, new Dictionary<string, object>{ { "Player", other.gameObject.transform } });
+                    EventManager.TriggerEvent(EventType.StingRayPrepareAttack, new Dictionary<string, object>{ { "Player", other.gameObject.transform }, {"Enemy", ThisObjectNumber } });
                 }
             }
         }

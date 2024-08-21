@@ -26,6 +26,8 @@ namespace SunkenRuins
         {
             base.Start();
             initialPosition = transform.position;
+
+            // Debug.Log(triangleDetection.ThisObjectNumber);
         }
 
         private void OnEnable()
@@ -44,6 +46,8 @@ namespace SunkenRuins
 
         private void Update()
         {
+            Debug.LogWarning($"{triangleDetection.ThisObjectNumber}. {isChasingPlayer}");
+
             if (isChasingPlayer)
             {
                 Vector2 dirToPlayerNormalized = (player.position - transform.position).normalized; // 플레이어를 향한 단위 벡터
@@ -76,8 +80,6 @@ namespace SunkenRuins
                     // 추격에 주어진 시간이 다하면
                     if (timer > stingRayStat.dashContinueTime)
                     {
-                        Debug.Log("플레이어 추적 중단");
-
                         // 플레이어와 반대방향으로 이동함
                         StartCoroutine(returnDuringDashDelayTime(dirToPlayerNormalized));
                     }
@@ -128,9 +130,10 @@ namespace SunkenRuins
 
         private void OnPlayerDetection_MoveTowardsPlayer(Dictionary<string, object> message)
         {
-            if (isChasingPlayer) return;
-
-            Debug.Log("플레이어를 향해 이동 중");
+            if (isChasingPlayer || (int)message["Enemy"] != triangleDetection.ThisObjectNumber) 
+            {
+                return;
+            }
 
             // EventArgs e에 플레이어 매니저 클래스를 받는다
             player = (Transform)message["Player"];
@@ -141,9 +144,10 @@ namespace SunkenRuins
 
         private void OnPlayerDetection_PrepareAttack(Dictionary<string, object> message)
         {
-            if (isPrepareAttack) return; // 몹 중간에 플레이어가 있을 때 발생하는 버그 수정
-
-            Debug.Log("플레이어 공격 준비");
+            if (isPrepareAttack || (int)message["Enemy"] != circleDetection.ThisObjectNumber) 
+            {
+                return; // 몹 중간에 플레이어가 있을 때 발생하는 버그 수정
+            }
 
             // EventArgs e에 플레이어 매니저 클래스를 받는다
             player = (Transform)message["Player"];
@@ -157,6 +161,8 @@ namespace SunkenRuins
 
         private void OnPlayerDetection_AttackPlayer(Dictionary<string, object> message)
         {
+            if ((int)message["Enemy"] != electricAttack.ThisObjectNumber) return;
+
             EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", stingRayStat.damageAmount } });
         }
 

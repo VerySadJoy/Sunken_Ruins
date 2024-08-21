@@ -79,7 +79,7 @@ MonoBehaviour:
   DownFullUpLeftCorner: {fileID: -1598859546, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   DownFullUpRightCorner: {fileID: -1725511530, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   DownLeftFullUpRightCorner: {fileID: 972206056, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
-  DownFullUpCorners: {fileID: 1979297375, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  DownFullUpCorners: {fileID: 21300000, guid: 49038a9abba37464b9e4b926ccbf8308, type: 3}
   DownRightFullUpLeftCorner: {fileID: 1621551323, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
   LeftFullUpRightCorner: {fileID: 803877927, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   RightFullUpLeftCorner: {fileID: 683363467, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}

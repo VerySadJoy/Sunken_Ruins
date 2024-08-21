@@ -15,12 +15,25 @@ SpriteAtlas:
       compressionQuality: 50
       maxTextureSize: 2048
       textureCompression: 0
-      filterMode: 1
+      filterMode: 0
       generateMipMaps: 0
       readable: 0
       crunchedCompression: 0
       sRGB: 1
-    platformSettings: []
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
       padding: 4
@@ -42,6 +55,7 @@ SpriteAtlas:
     - 63ba8868829a8454896385f2cf9ef19f: 1931659443
     - 63ba8868829a8454896385f2cf9ef19f: 661032426
     - 63ba8868829a8454896385f2cf9ef19f: 1621551323
+    - 49038a9abba37464b9e4b926ccbf8308: 21300000
     - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -621447791
     - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 963815487
     - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1321699211
@@ -94,6 +108,7 @@ SpriteAtlas:
   - {fileID: 1931659443, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
   - {fileID: 661032426, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
   - {fileID: 1621551323, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
+  - {fileID: 21300000, guid: 49038a9abba37464b9e4b926ccbf8308, type: 3}
   - {fileID: -621447791, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   - {fileID: 963815487, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   - {fileID: -1321699211, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
@@ -145,6 +160,7 @@ SpriteAtlas:
   - tileSet_2_1
   - tileSet_2_0
   - tileSet_2_4
+  - tilemap_new
   - sunken_Ruins_tileset_38
   - sunken_Ruins_tileset_39
   - sunken_Ruins_tileset_29

@@ -9,11 +9,20 @@ namespace SunkenRuins
 {
     public class ElectricAttack : MonoBehaviour
     {
+        private static int totalObjectNumber = 0;
+        [SerializeField] private int thisObjectNumber; 
+        public int ThisObjectNumber { get { return thisObjectNumber; } }  
+
         private const string playerLayerString = "Player";
         [SerializeField] private GameObject attackSpriteObject;
         [SerializeField] private GameObject attackRangeObject;
         [SerializeField] private float showSpriteTime = 0.1f;
         private bool isAttack = false;
+
+        private void Start()
+        {
+            thisObjectNumber = ++totalObjectNumber;
+        }
 
         public void ShowAttackRange()
         {
@@ -46,7 +55,7 @@ namespace SunkenRuins
             {
                 isAttack = false; // OnTriggerStay가 여러 번 call되는 것을 방지함
                 
-                EventManager.TriggerEvent(EventType.StingRayParalyze, null);
+                EventManager.TriggerEvent(EventType.StingRayParalyze, new Dictionary<string, object> { { "Enemy", ThisObjectNumber }});
             }
         }
     }
