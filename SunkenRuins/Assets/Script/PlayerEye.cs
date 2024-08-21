@@ -26,7 +26,7 @@ namespace SunkenRuin
         [SerializeField] private Sprite[] playerEyes;
         private SpriteRenderer spriteRenderer;
         private PlayerState playerState;
-        private float timer = 0f; private int idleEyeNumber = 0;
+        private float timer = 0f; private int idleEyeNumber = 0; private int eyeNumberIncrement = 1;
 
         private void OnEnable()
         {
@@ -54,8 +54,6 @@ namespace SunkenRuin
 
         private void Update()
         {
-            timer += Time.deltaTime;
-
             switch (playerState)
             {
                 case PlayerState.Idle:
@@ -63,21 +61,23 @@ namespace SunkenRuin
                     break;
 
                 case PlayerState.NormalBoost:
-                    ChangeEyeCoroutine(playerEyes[3]);
+                    StartCoroutine(ChangeEyeCoroutine(playerEyes[3]));
                     break;
 
                 case PlayerState.GameOver:
-                    ChangeEyeCoroutine(playerEyes[4]);
+                    StartCoroutine(ChangeEyeCoroutine(playerEyes[4]));
                     break;
 
                 case PlayerState.Effect:
-                    ChangeEyeCoroutine(playerEyes[5]);
+                    StartCoroutine(ChangeEyeCoroutine(playerEyes[5]));
                     break;
 
                 case PlayerState.PerfectBoost:
-                    ChangeEyeCoroutine(playerEyes[6]);
+                    StartCoroutine(ChangeEyeCoroutine(playerEyes[6]));
                     break;
             }
+
+            timer += Time.deltaTime;
         }
 
         private void OnNormalBoost(Dictionary<string ,object> message)
@@ -97,12 +97,13 @@ namespace SunkenRuin
 
         private void IdleAnimation()
         {
-            if (timer >= 0.5f)
+            if (timer >= 0.15f)
             {
-                spriteRenderer.sprite = playerEyes[idleEyeNumber++];
+                spriteRenderer.sprite = playerEyes[idleEyeNumber];
+                idleEyeNumber += eyeNumberIncrement;
                 timer = 0f; // reset timer
 
-                if (idleEyeNumber >= 3) idleEyeNumber = 0;
+                if (idleEyeNumber >= 2 || idleEyeNumber <= 0) eyeNumberIncrement *= -1;
             }
         }
 
@@ -112,6 +113,12 @@ namespace SunkenRuin
             yield return new WaitForSeconds(1f);
 
             playerState = PlayerState.Idle; // change animation back to idle
+            idleEyeNumber = 1; timer = 0.15f;
+        }
+
+        public void FlipEyeSprite(bool isFlip)
+        {
+            spriteRenderer.flipX = isFlip;
         }
     }
 }

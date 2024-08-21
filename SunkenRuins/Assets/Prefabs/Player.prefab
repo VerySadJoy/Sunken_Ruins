@@ -948,8 +948,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerEyes:
-  - {fileID: 1540153962, guid: 5df7bbaa5c595c94f9312d72aa44acce, type: 3}
   - {fileID: -1166863699, guid: 5df7bbaa5c595c94f9312d72aa44acce, type: 3}
+  - {fileID: 1540153962, guid: 5df7bbaa5c595c94f9312d72aa44acce, type: 3}
   - {fileID: 1411846820, guid: 5df7bbaa5c595c94f9312d72aa44acce, type: 3}
   - {fileID: 852890997, guid: 5df7bbaa5c595c94f9312d72aa44acce, type: 3}
   - {fileID: -914078019, guid: 5df7bbaa5c595c94f9312d72aa44acce, type: 3}
@@ -1099,6 +1099,7 @@ MonoBehaviour:
   boostTrajectoryLineUI: {fileID: 0}
   boostBarUI: {fileID: 7071705969447204286}
   energyBarUI: {fileID: 534058870052258045}
+  playerEye: {fileID: 0}
 --- !u!61 &2315127586796542809
 BoxCollider2D:
   m_ObjectHideFlags: 0

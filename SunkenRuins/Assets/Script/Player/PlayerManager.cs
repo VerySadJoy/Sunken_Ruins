@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using Cinemachine;
 using System;
 using Unity.Mathematics;
+using SunkenRuin;
 
 namespace SunkenRuins
 {
@@ -40,6 +41,7 @@ namespace SunkenRuins
         [SerializeField] private DottedLineUI boostTrajectoryLineUI;
         [SerializeField] private BoostBarUI boostBarUI;
         [SerializeField] private EnergyBarUI energyBarUI;
+        [SerializeField] private PlayerEye playerEye;
 
         private bool isBoosting = false;
         private bool isBoostPreparing = false;
@@ -377,6 +379,7 @@ namespace SunkenRuins
             if (moveInputX != 0f)
             {
                 isFacingRight = moveInputX > 0f;
+                playerEye.FlipEyeSprite(!isFacingRight);
             }
             spriteRenderer.flipX = !isFacingRight;
         }

@@ -25,6 +25,7 @@ namespace SunkenRuins
     {
         NormalBoost,
         PerfectBoost,
+        Dead,
         
 
         PlayerToStartPosition,
