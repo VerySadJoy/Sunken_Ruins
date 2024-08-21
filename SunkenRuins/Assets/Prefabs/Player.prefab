@@ -982,13 +982,63 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraFollowTarget: {fileID: 0}
   cameraLookAheadDistance: 1
-  zoomSpeed: 2
+  zoomSpeed: 3
   playerStat: {fileID: 0}
-  defaultOrthographicSize: 8
-  zoomOrthographicSize: 5
+  defaultOrthographicSize: 10
+  zoomOrthographicSize: 6
   boostTrajectoryLineUI: {fileID: 8795542549390698633}
   boostBarUI: {fileID: 7071705969447204286}
   energyBarUI: {fileID: 534058870052258045}
+  boostEffectRing: {fileID: 4577420816402854436, guid: 463135f87a6ae7f4bbcffbb5a3fd8c92, type: 3}
+  ringAppearDelay: 0.08
+  ringSizeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1.0000038
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  ringColorCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.2
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!61 &2315127586796542809
 BoxCollider2D:
   m_ObjectHideFlags: 0
