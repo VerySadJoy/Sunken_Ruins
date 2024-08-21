@@ -16,6 +16,8 @@ namespace SunkenRuin
             GameOver,
             Effect,
             PerfectBoost,
+            FaceUp,
+            FaceDown,
         }
 
         // 0~2nd - Idle
@@ -26,13 +28,15 @@ namespace SunkenRuin
         [SerializeField] private Sprite[] playerEyes;
         private SpriteRenderer spriteRenderer;
         private PlayerState playerState;
-        private float timer = 0f; private int idleEyeNumber = 0; private int eyeNumberIncrement = 1;
 
         private void OnEnable()
         {
             EventManager.StartListening(SunkenRuins.EventType.NormalBoost, OnNormalBoost);
             EventManager.StartListening(SunkenRuins.EventType.PerfectBoost, OnPerfectBoost);
             EventManager.StartListening(SunkenRuins.EventType.PlayerDamaged, OnEffect);
+            EventManager.StartListening(SunkenRuins.EventType.MoveUp, OnMoveUp);
+            EventManager.StartListening(SunkenRuins.EventType.MoveDown, OnMoveDown);
+            EventManager.StartListening(SunkenRuins.EventType.MoveIdle, OnMoveIdle);
         }
 
         private void OnDisable()
@@ -40,6 +44,9 @@ namespace SunkenRuin
             EventManager.StopListening(SunkenRuins.EventType.NormalBoost, OnNormalBoost);
             EventManager.StopListening(SunkenRuins.EventType.PerfectBoost, OnPerfectBoost);
             EventManager.StopListening(SunkenRuins.EventType.PlayerDamaged, OnEffect);
+            EventManager.StopListening(SunkenRuins.EventType.MoveUp, OnMoveUp);
+            EventManager.StopListening(SunkenRuins.EventType.MoveDown, OnMoveDown);
+            EventManager.StopListening(SunkenRuins.EventType.MoveIdle, OnMoveIdle);
         }
 
         private void Awake()
@@ -57,7 +64,15 @@ namespace SunkenRuin
             switch (playerState)
             {
                 case PlayerState.Idle:
-                    IdleAnimation();
+                    spriteRenderer.sprite = playerEyes[1];
+                    break;
+
+                case PlayerState.FaceUp:
+                    spriteRenderer.sprite = playerEyes[0];
+                    break;
+
+                case PlayerState.FaceDown:
+                    spriteRenderer.sprite = playerEyes[2];
                     break;
 
                 case PlayerState.NormalBoost:
@@ -76,8 +91,6 @@ namespace SunkenRuin
                     StartCoroutine(ChangeEyeCoroutine(playerEyes[6]));
                     break;
             }
-
-            timer += Time.deltaTime;
         }
 
         private void OnNormalBoost(Dictionary<string ,object> message)
@@ -95,16 +108,25 @@ namespace SunkenRuin
             playerState = PlayerState.Effect;
         }
 
-        private void IdleAnimation()
+        private void OnMoveUp(Dictionary<string, object> message)
         {
-            if (timer >= 0.15f)
-            {
-                spriteRenderer.sprite = playerEyes[idleEyeNumber];
-                idleEyeNumber += eyeNumberIncrement;
-                timer = 0f; // reset timer
+            if (playerState == PlayerState.NormalBoost || playerState == PlayerState.PerfectBoost 
+                || playerState == PlayerState.Effect) return;
+            playerState = PlayerState.FaceUp;
+        }
 
-                if (idleEyeNumber >= 2 || idleEyeNumber <= 0) eyeNumberIncrement *= -1;
-            }
+        private void OnMoveDown(Dictionary<string, object> message)
+        {
+            if (playerState == PlayerState.NormalBoost || playerState == PlayerState.PerfectBoost 
+                || playerState == PlayerState.Effect) return;
+            playerState = PlayerState.FaceDown;
+        }
+
+        private void OnMoveIdle(Dictionary<string ,object> message)
+        {
+            if (playerState == PlayerState.NormalBoost || playerState == PlayerState.PerfectBoost 
+                || playerState == PlayerState.Effect) return;
+            playerState = PlayerState.Idle;
         }
 
         private IEnumerator ChangeEyeCoroutine(Sprite sprite)
@@ -113,7 +135,6 @@ namespace SunkenRuin
             yield return new WaitForSeconds(1f);
 
             playerState = PlayerState.Idle; // change animation back to idle
-            idleEyeNumber = 1; timer = 0.15f;
         }
 
         public void FlipEyeSprite(bool isFlip)

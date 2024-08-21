@@ -26,7 +26,9 @@ namespace SunkenRuins
         NormalBoost,
         PerfectBoost,
         Dead,
-        
+        MoveUp,
+        MoveDown,
+        MoveIdle,
 
         PlayerToStartPosition,
         StingRayParalyze,

@@ -369,6 +369,20 @@ namespace SunkenRuins
             float updatedVelocityX = Mathf.MoveTowards(rb.velocity.x, desiredVelocityX, accelerationX * Time.deltaTime);
             float updatedVelocityY = Mathf.MoveTowards(rb.velocity.y, desiredVelocityY, accelerationY * Time.deltaTime);
             rb.velocity = new Vector2(updatedVelocityX, updatedVelocityY);
+
+            if (rb.velocity.y > 0)
+            {
+                EventManager.TriggerEvent(EventType.MoveUp, null);
+            }
+            else if (rb.velocity.y < 0)
+            {
+                EventManager.TriggerEvent(EventType.MoveDown, null);
+            }
+            else
+            {
+                EventManager.TriggerEvent(EventType.MoveIdle, null);
+            }
+
             //HandleBoost(moveInput);
 
             if (!isBoosting && !isBoostPreparing) UpdateFacingDirection(moveInput.x); // 부?�트???�는 마우??방향만이 Sprite flip??결정??
