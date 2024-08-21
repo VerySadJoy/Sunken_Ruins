@@ -12,12 +12,18 @@ namespace SunkenRuins
         [SerializeField] private ShellCircleDetection shellCircleDetection;
         [SerializeField] private ShellAttackDetection shellAttackDetection;
         private bool isAbsorbingPlayer { get { return player != null; } }
+        [SerializeField] private Sprite [] sprites;
+        private SpriteRenderer shellSpriteRenderer;
+        private int spriteIndex = 9;
         // private bool isEscape { get { return keyPressCount >= totalKeyAmount; } }
 
         // State 변??
         private bool canAttack = true;
         private bool isEngulfing = false;
         private int keyPressCount = 0;
+        private void Awake() {
+            shellSpriteRenderer = GetComponent<SpriteRenderer>();
+        }
 
         protected override void Start()
         {
@@ -28,7 +34,7 @@ namespace SunkenRuins
         {
             EventManager.StartListening(EventType.ShellAbsorb, OnPlayerDetection_AbsorbPlayer);
             EventManager.StartListening(EventType.ShellRelease, OnPlayerEscape_ReleasePlayer);
-            EventManager.StartListening(EventType.ShellSwallow, PrepareAttack);            
+            EventManager.StartListening(EventType.ShellSwallow, PrepareAttack);          
         }
 
         private void OnDisable()
@@ -40,7 +46,8 @@ namespace SunkenRuins
 
         private void Update()
         {
-            if (canAttack && isAbsorbingPlayer)
+            
+            if (canAttack)
             {
                 if (isEngulfing) // ?�켜???��?지�?�????�으�?
                 {
@@ -49,24 +56,65 @@ namespace SunkenRuins
                 }
                 else // 그�? 빨아?�이??중이?�면
                 {                    
-                    if (timer > shellStat.EngulfTime)
-                    {
-                        // 빨아?�이�?중단
-                        StartCoroutine(StopEngulfingCoroutine());
-
-                        // TODO:
-                        // Idle Animation
-                    }
+                    
                 }
 
+                //timer += Time.deltaTime;
+                
+            }
+            if (timer > shellStat.EngulfTime)
+            {
+                // 빨아들이기 중단
+                StartCoroutine(StopEngulfingCoroutine());
+
+                // TODO:
+                // Idle Animation
+                StartCoroutine(ShellClose());
+                
+            }
+            //Debug.Log(timer);
+        }
+        private IEnumerator StartTimer(){
+            while (timer > shellStat.EngulfTime) {
                 timer += Time.deltaTime;
             }
+            yield return null;
+        }
+        private IEnumerator ShellOpen(){
+            for (int i = 0; i < 8; i++) {
+                shellSpriteRenderer.sprite = sprites[i];
+                yield return new WaitForSeconds(0.1f);
+            }
+            StartCoroutine(ShellAbsorb());
+            yield return null;
+        }
+        private IEnumerator ShellAbsorb() {
+            while (timer <= shellStat.EngulfTime) {
+                shellSpriteRenderer.sprite = sprites[spriteIndex];
+                spriteIndex++;
+                if (spriteIndex > 14) {
+                    spriteIndex = 9;
+                }
+                yield return new WaitForSeconds(0.15f);
+            }
+            timer = 0f;
+            yield return null;
+        }
+
+        private IEnumerator ShellClose(){
+            for (int i = 8; i >= 0; i--) {
+                shellSpriteRenderer.sprite = sprites[i];
+                yield return new WaitForSeconds(0.1f);
+            }
+            yield return null;
         }
 
         private void OnPlayerDetection_AbsorbPlayer(Dictionary<string, object> message)
         {
-            // ?�?�머 ?�시??
-            timer = 0f;
+            StartCoroutine(ShellOpen());
+            StartCoroutine(StartTimer());
+            // 타이머 재시작
+            //timer = 0f;
         }
 
         private void OnPlayerDetection_AttackPlayer(Dictionary<string, object> message)
@@ -76,15 +124,12 @@ namespace SunkenRuins
             // 공격?�는가?
             isEngulfing = true;
 
-            // ?�?�머 ?�시??
-            timer = 0f;
+            // 타이머 재시작
+            //timer = 0f;
         }
 
         private void OnPlayerEscape_ReleasePlayer(Dictionary<string, object> message)
         {
-            // 공격 ?�정 ?�간?�안 중�?
-            // + 모든 �?초기??
-            StartCoroutine(StopEngulfingCoroutine()); // 공격받�? ?�고 ?�출?�을 ?�만 발동
 
             // ?�?�머 ?�시??
             timer = 0f;
@@ -92,12 +137,15 @@ namespace SunkenRuins
 
         private IEnumerator StopEngulfingCoroutine()
         {
+            timer = 0f;
             keyPressCount = 0;
             isEngulfing = false;
             canAttack = false;
             EventManager.TriggerEvent(EventType.ShellEscape, null);
-
+            shellCircleDetection.gameObject.GetComponent<CircleCollider2D>().enabled = false;
+            StartCoroutine(ShellClose());
             yield return new WaitForSeconds(shellStat.EngulfDelayTime);
+            shellCircleDetection.gameObject.GetComponent<CircleCollider2D>().enabled = true;
             canAttack = true;
         }
 
@@ -124,21 +172,6 @@ namespace SunkenRuins
                 }
             }
         }
-
-        // private void StopEngulf()
-        // {
-        //     Debug.Log("?�릭 많이 ?�서 공격 �???);
-
-        //     isEngulfing = false;
-        //     keyPressCount = 0;
-        //     canAttack = false;
-        //     Invoke(nameof(ResetAttack), engulfDelayTime); // ???�간 ?�안 공격 금�?
-        // }
-
-        // private void ResetAttack()
-        // {
-        //     canAttack = true;
-        // }
     }
 
 }

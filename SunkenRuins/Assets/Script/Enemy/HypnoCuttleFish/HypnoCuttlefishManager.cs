@@ -69,7 +69,6 @@ namespace SunkenRuins
                             StartCoroutine(StopHypnotizeCoroutine());
                         }
                     }
-
                     // TODO:
                     // 텍스트로 누른 키 횟수 표시
                 }
@@ -105,8 +104,8 @@ namespace SunkenRuins
         
         private void AttackPlayer()
         {
-            Debug.LogError("갑오징어가 플레이어를 공격함");
-            EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", damagePerAttack } });
+            player.GetComponent<PlayerStat>().Damage(damagePerAttack);
+            Debug.Log("갑오징어가 플레이어를 공격함"); //이거 왜 로그 에러임? 이거 나오면 안됨????
             StartCoroutine(StopHypnotizeCoroutine());
 
             // TODO:

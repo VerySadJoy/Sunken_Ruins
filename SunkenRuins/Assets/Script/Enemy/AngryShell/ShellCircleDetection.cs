@@ -30,12 +30,10 @@ namespace SunkenRuins
                 Vector2 dirToPlayerNormalized = (other.gameObject.transform.position - transform.position + Vector3.down).normalized;
                 temp = dirToPlayerNormalized;
 
-                RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, dirToPlayerNormalized, rayCastDistance, playerLayerMask);
-                if (raycastHit2D)
-                {
-                    Debug.Log("원: 플레이어 감지!");
-                    EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "dirToPlayerNormalized", (transform.position - other.gameObject.transform.position).normalized } });
-                }
+                //RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, dirToPlayerNormalized, rayCastDistance, playerLayerMask);
+
+                EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "dirToPlayerNormalized", (transform.position - other.gameObject.transform.position).normalized } });
+                
             }
         }
 
@@ -44,7 +42,6 @@ namespace SunkenRuins
         {
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
-                Debug.Log("플레이어 탈출!");
                 EventManager.TriggerEvent(EventType.ShellRelease, null);
             }
         }

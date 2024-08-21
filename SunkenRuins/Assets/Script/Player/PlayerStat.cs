@@ -12,7 +12,7 @@ namespace SunkenRuins {
         public float playerMaxEnergy;
         public float playerCurrentEnergy;
         public int healthDecreaseRate;
-        public float energyDecreaseRate;
+        public float energyDecreaseRate = 1f;
         public TeamType teamType { get; set; }
         [SerializeField] private int invincibleTime = 1; // Invincibility
         [SerializeField] private float paralyzeTime = 2f;
@@ -44,7 +44,7 @@ namespace SunkenRuins {
 
         private void FixedUpdate()
         {
-            Debug.Log($"현재 체력: {playerCurrentHealth} / {playerMaxHealth}");
+            //Debug.Log($"현재 체력: {playerCurrentHealth} / {playerMaxHealth}");
         }
 
         void OnEnable()
@@ -61,12 +61,12 @@ namespace SunkenRuins {
             EventManager.StopListening(EventType.PlayerDamaged, Damage);
         }
 
-        private System.Collections.IEnumerator DecreaseHealthOverTime() {
+        private IEnumerator DecreaseHealthOverTime() {
             while (playerCurrentHealth > 0) {
                 if (!isInvincible) {
-                    yield return new WaitForSeconds(100f);
+                    yield return new WaitForSeconds(1f);
                     playerCurrentHealth -= healthDecreaseRate;
-                    Debug.LogWarning("무적이 아닐 때 체력 꾸준히 감소");
+                    //Debug.LogWarning("무적이 아닐 때 체력 꾸준히 감소");
                 }
                 else {
                     yield return null;
@@ -100,7 +100,7 @@ namespace SunkenRuins {
             StartCoroutine(BeInvincibleOverInvincibleTime(invincibleTime));
         }
 
-        private System.Collections.IEnumerator BeInvincibleOverInvincibleTime(int invincibleTime) {
+        private IEnumerator BeInvincibleOverInvincibleTime(int invincibleTime) {
             // Player의 BoxCollider를 가져와서 끈다 <-- 이거 안 좋은 구조 같은데 의견 부탁해요...
             BoxCollider2D tempPlayerCollider = this.GetComponent<BoxCollider2D>();
             isInvincible = true;

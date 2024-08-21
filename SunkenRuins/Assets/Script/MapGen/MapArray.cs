@@ -1963,7 +1963,7 @@ namespace SunkenRuins
                 {
                     row += baseMap[i, j].ToString() + " ";
                 }
-                Debug.Log(row);
+                //Debug.Log(row);
                 row = null;
             }
         }

@@ -25,11 +25,11 @@ namespace SunkenRuins
         //Component
         private Rigidbody2D rb;
         private SpriteRenderer spriteRenderer;
-        private PlayerStat playerStat;
+        public PlayerStat playerStat;
         private CinemachineVirtualCamera virtualCamera;
         [SerializeField] private float defaultOrthographicSize = 8f;
         [SerializeField] private float zoomOrthographicSize = 5f;
-        private PlayerControl playerControl; // Input System
+        private PlayerControl playerControl { get; set; } // Input System
         private bool isFacingRight = true;
 
         // Layermask String
@@ -39,6 +39,7 @@ namespace SunkenRuins
         //Boost
         [SerializeField] private DottedLineUI boostTrajectoryLineUI;
         [SerializeField] private BoostBarUI boostBarUI;
+        [SerializeField] private EnergyBarUI energyBarUI;
 
         private bool isBoosting = false;
         private bool isBoostPreparing = false;
@@ -57,7 +58,7 @@ namespace SunkenRuins
             spriteRenderer = GetComponent<SpriteRenderer>();
             playerStat = GetComponent<PlayerStat>();
             virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-            virtualCamera.m_Lens.OrthographicSize = 8f;
+            virtualCamera.m_Lens.OrthographicSize = defaultOrthographicSize;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -73,7 +74,7 @@ namespace SunkenRuins
                             playerStat.RestoreHealth(100);
                             break;
                         case ItemType.PowerBattery:
-                            playerStat.RestoreEnergy(100f);
+                            playerStat.RestoreEnergy(3f);
                             break;
                         case ItemType.BubbleShield:
                             playerStat.BeInvincible(2); // ?�단?� ?�드코딩?�로 invincibleTime ?�자�?받음
@@ -84,6 +85,9 @@ namespace SunkenRuins
                     }
                 }
                 Destroy(other.gameObject); //?�이????��
+            }
+            else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString)) {
+                playerStat.playerCurrentHealth -= 20;
             }
             // else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString))
             // {
@@ -116,9 +120,14 @@ namespace SunkenRuins
         }
 
         private Vector3 dirFromShellNormalized;
-        private bool isAbsorbed = false; private bool isSwallowed = false;
+        private bool isAbsorbed = false;
+        private bool isSwallowed = false;
         private void Update()
         {
+            if (Time.timeScale == 0) {
+                Debug.Log("Stopped");
+                return;
+            }
             HandleMoveInput();
             BoostInput();
             UpdateCameraFollowTarget();
@@ -126,6 +135,12 @@ namespace SunkenRuins
             if (isAbsorbed)
             {
                 transform.Translate(playerStat.absorbSpeed * dirFromShellNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
+            }
+            if (playerStat.playerCurrentEnergy > playerStat.playerMaxEnergy) { 
+                playerStat.playerCurrentEnergy = playerStat.playerMaxEnergy;
+            }
+            if (playerStat.playerCurrentHealth > playerStat.playerMaxHealth) { 
+                playerStat.playerCurrentHealth = playerStat.playerMaxHealth;
             }
         }
 
@@ -172,7 +187,6 @@ namespace SunkenRuins
             UpdateFacingDirection(boostInput);
             if (temp && boostInput > 0)
             {
-                // Debug.Log("hi");
                 boostInput = 0;
             }
             else if (temp && boostInput == 0)
@@ -201,7 +215,6 @@ namespace SunkenRuins
                 //?�거 ?�중??Input System?�로 ?�정?�야??
                 CancelBoost();
             }
-
         }
 
         private void PrepareBoost()
@@ -210,13 +223,13 @@ namespace SunkenRuins
             Time.timeScale = 0.5f;
             if (!hasBoostEventBeenInvoked)
             {
-                boostBarUI.SetNewScrollandImageValue();
+                //boostBarUI.SetNewScrollandImageValue();
                 hasBoostEventBeenInvoked = true;
-            } // ?�레?�어가 부?�트�??�도?�는 것을 UI???�림
+            }
             virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, zoomOrthographicSize, zoomSpeed * Time.deltaTime); ; //Zoom In
-            // TODO:
-            // UI 보이�?
+
             boostBarUI.SetUIActive(true);
+            energyBarUI.SetUIActive(true);
 
             // 부?�트 준�?중에??Sprite 방향 ?�경?�기
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System?�로 변경해?�한?�면 변�?
@@ -233,10 +246,12 @@ namespace SunkenRuins
             isBoostPreparing = false;
             isBoosting = true;
             lastBoostTime = Time.time;
-            playerStat.playerCurrentEnergy--;
+            playerStat.playerCurrentEnergy -= 1;
             hasBoostEventBeenInvoked = false;
             boostBarUI.SetUIActive(false);
+            energyBarUI.SetUIActive(false);
             boostTrajectoryLineUI.LineDisable();
+            Debug.Log("발사");
 
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System?�로 변경해?�한?�면 변�?
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
@@ -296,18 +311,18 @@ namespace SunkenRuins
             Debug.Log("취소");
         }
 
-        private IEnumerator ZoomOutCoroutine(float targetOrthographicSize, float zoomSpeed)
-        {
+        private IEnumerator ZoomOutCoroutine(float targetOrthographicSize, float zoomSpeed) {
             float initialOrthographicSize = virtualCamera.m_Lens.OrthographicSize;
 
-            while (virtualCamera.m_Lens.OrthographicSize > targetOrthographicSize)
+            while (Mathf.Abs(virtualCamera.m_Lens.OrthographicSize - targetOrthographicSize) > 0.01f)
             {
                 float newOrthographicSize = Mathf.MoveTowards(virtualCamera.m_Lens.OrthographicSize, targetOrthographicSize, zoomSpeed * Time.deltaTime);
                 virtualCamera.m_Lens.OrthographicSize = newOrthographicSize;
                 yield return null;
             }
-            virtualCamera.m_Lens.OrthographicSize = targetOrthographicSize; //최종?�행
+            virtualCamera.m_Lens.OrthographicSize = targetOrthographicSize;
         }
+
 
         private void Hypnotize(Dictionary<string, object> message)
         {
