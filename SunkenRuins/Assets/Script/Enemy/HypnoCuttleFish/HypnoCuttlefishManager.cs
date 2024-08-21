@@ -115,7 +115,7 @@ namespace SunkenRuins
         private void MoveToPlayer()
         {
             lerpAmount += Time.deltaTime / hypnotizeTime;
-            transform.position = Vector2.Lerp(startPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);
+            //transform.position = Vector2.Lerp(startPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);
         }
 
         private void OnPlayerDetection_Hypnotize(Dictionary<string, object> message)
@@ -128,6 +128,24 @@ namespace SunkenRuins
             // 쫒아갈 플레이어 reference 받기
             player = (Transform)message["Player"];
         }
+
+        private void SquidAnimation () {
+            //rb.velocity = Vector2.left;
+            StartCoroutine(ApplyImpulse());
+            Debug.Log(rb.velocity);
+        }
+        private IEnumerator ApplyImpulse() {
+            float ccibal = 0f;
+            Vector2 impulseVelocity = Vector2.left * 5f;
+             while (ccibal < 1f)
+            {
+                rb.velocity = Vector2.Lerp(impulseVelocity, Vector2.zero, ccibal);
+                ccibal += Time.deltaTime;
+                yield return null;
+            }
+            rb.velocity = Vector2.zero;
+        }
+
 
         // private void StopEngulf()
         // {

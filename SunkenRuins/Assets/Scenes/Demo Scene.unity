@@ -509,6 +509,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThrowingCrab (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1371259693188626941, guid: 1231d0bc922b1e54290efd01141ae5a3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5727191240336264604, guid: 1231d0bc922b1e54290efd01141ae5a3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -23.3
@@ -682,6 +686,10 @@ PrefabInstance:
     - target: {fileID: 1371259693188626941, guid: 1231d0bc922b1e54290efd01141ae5a3, type: 3}
       propertyPath: m_Name
       value: ThrowingCrab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1371259693188626941, guid: 1231d0bc922b1e54290efd01141ae5a3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5727191240336264604, guid: 1231d0bc922b1e54290efd01141ae5a3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1246,12 +1254,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6479025950604634040, guid: 1444110cdbaf9f54c956065999e2da69, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8164341707400573675, guid: 1444110cdbaf9f54c956065999e2da69, type: 3}
       propertyPath: m_Name
       value: HypnoCuttleFish
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5867995370089119299, guid: 1444110cdbaf9f54c956065999e2da69, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1444110cdbaf9f54c956065999e2da69, type: 3}
@@ -1266,6 +1279,10 @@ PrefabInstance:
     - target: {fileID: 2623653881379105391, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       propertyPath: m_Name
       value: ElectricStingray
+      objectReference: {fileID: 0}
+    - target: {fileID: 2623653881379105391, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8962237979625893998, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1363,6 +1380,10 @@ PrefabInstance:
     - target: {fileID: 4784678540410205240, guid: d2479636ad35507499994cfcfafb9649, type: 3}
       propertyPath: m_Name
       value: AngryShell
+      objectReference: {fileID: 0}
+    - target: {fileID: 4784678540410205240, guid: d2479636ad35507499994cfcfafb9649, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5783719899696567945, guid: d2479636ad35507499994cfcfafb9649, type: 3}
       propertyPath: m_IsActive
