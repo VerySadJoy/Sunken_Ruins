@@ -101,6 +101,7 @@ namespace SunkenRuins
             playerControl = new PlayerControl();
             playerControl.Player.Enable();
 
+            EventManager.StartListening(EventType.PlayerToStartPosition, MoveToStartPosition);
             EventManager.StartListening(EventType.PlayerDamaged, Damage);
             EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
             EventManager.StartListening(EventType.ShellAbsorb, GetAbsorbed);
@@ -110,6 +111,7 @@ namespace SunkenRuins
 
         private void OnDisable()
         {
+            EventManager.StopListening(EventType.PlayerToStartPosition, MoveToStartPosition);
             EventManager.StopListening(EventType.PlayerDamaged, Damage);
             EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
             EventManager.StopListening(EventType.ShellAbsorb, GetAbsorbed);
@@ -140,6 +142,11 @@ namespace SunkenRuins
             if (playerStat.playerCurrentHealth > playerStat.playerMaxHealth) { 
                 playerStat.playerCurrentHealth = playerStat.playerMaxHealth;
             }
+        }
+
+        private void MoveToStartPosition(Dictionary<string, object> message)
+        {
+            transform.position = (Vector3)message["StartPosition"];
         }
 
         public void ShellSwallow(Dictionary<string, object> message)

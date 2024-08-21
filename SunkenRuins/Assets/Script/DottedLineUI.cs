@@ -13,6 +13,7 @@ namespace SunkenRuins
         void Start()
         {
             dottedLineRenderer = GetComponent<LineRenderer>();
+            dottedLineRenderer.textureMode = LineTextureMode.Tile;
         }
 
         // Update is called once per frame

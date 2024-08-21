@@ -1,0 +1,195 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Sprite_Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 15b141b80b430df4395a33e0687f33ec, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 63ba8868829a8454896385f2cf9ef19f: -133131046
+    - 63ba8868829a8454896385f2cf9ef19f: 972206056
+    - 63ba8868829a8454896385f2cf9ef19f: 1931659443
+    - 63ba8868829a8454896385f2cf9ef19f: 661032426
+    - 63ba8868829a8454896385f2cf9ef19f: 1621551323
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -621447791
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 963815487
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1321699211
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 884142
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 683363467
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1695917611
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 803877927
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 114564699
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1808572498
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1800145067
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -2121161635
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 226934514
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1997373460
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1725511530
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -564164369
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 124977813
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1787824536
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1816499946
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 325794107
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1900611191
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 876024140
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 2034745425
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1598859546
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 448823775
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 44903338
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 974861771
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1219619007
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1672351764
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1387286055
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1729953285
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1798808456
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 280884242
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1444252023
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 101732780
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -501679150
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -525952677
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -848136312
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -2104367736
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1363028821
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 1979297375
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1382098752
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -752707432
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: 928278999
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -1483268136
+    - a4c4f6eb8f7ef7b4bba050a1c5bb48b5: -957394907
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: -133131046, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
+  - {fileID: 972206056, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
+  - {fileID: 1931659443, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
+  - {fileID: 661032426, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
+  - {fileID: 1621551323, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
+  - {fileID: -621447791, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 963815487, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1321699211, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 884142, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 683363467, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1695917611, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 803877927, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 114564699, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1808572498, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1800145067, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -2121161635, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 226934514, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1997373460, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1725511530, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -564164369, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 124977813, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1787824536, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1816499946, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 325794107, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1900611191, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 876024140, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 2034745425, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1598859546, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 448823775, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 44903338, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 974861771, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1219619007, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1672351764, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1387286055, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1729953285, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1798808456, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 280884242, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1444252023, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 101732780, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -501679150, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -525952677, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -848136312, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -2104367736, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1363028821, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 1979297375, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1382098752, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -752707432, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: 928278999, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -1483268136, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  - {fileID: -957394907, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - tileSet_2_3
+  - tileSet_2_2
+  - tileSet_2_1
+  - tileSet_2_0
+  - tileSet_2_4
+  - sunken_Ruins_tileset_38
+  - sunken_Ruins_tileset_39
+  - sunken_Ruins_tileset_29
+  - sunken_Ruins_tileset_28
+  - sunken_Ruins_tileset_30
+  - sunken_Ruins_tileset_31
+  - sunken_Ruins_tileset_32
+  - sunken_Ruins_tileset_33
+  - sunken_Ruins_tileset_23
+  - sunken_Ruins_tileset_34
+  - sunken_Ruins_tileset_22
+  - sunken_Ruins_tileset_35
+  - sunken_Ruins_tileset_21
+  - sunken_Ruins_tileset_36
+  - sunken_Ruins_tileset_20
+  - sunken_Ruins_tileset_44
+  - sunken_Ruins_tileset_37
+  - sunken_Ruins_tileset_27
+  - sunken_Ruins_tileset_26
+  - sunken_Ruins_tileset_25
+  - sunken_Ruins_tileset_41
+  - sunken_Ruins_tileset_24
+  - sunken_Ruins_tileset_40
+  - sunken_Ruins_tileset_43
+  - sunken_Ruins_tileset_42
+  - sunken_Ruins_tileset_9
+  - sunken_Ruins_tileset_8
+  - sunken_Ruins_tileset_3
+  - sunken_Ruins_tileset_2
+  - sunken_Ruins_tileset_1
+  - sunken_Ruins_tileset_0
+  - sunken_Ruins_tileset_7
+  - sunken_Ruins_tileset_6
+  - sunken_Ruins_tileset_5
+  - sunken_Ruins_tileset_4
+  - sunken_Ruins_tileset_18
+  - sunken_Ruins_tileset_19
+  - sunken_Ruins_tileset_16
+  - sunken_Ruins_tileset_17
+  - sunken_Ruins_tileset_14
+  - sunken_Ruins_tileset_15
+  - sunken_Ruins_tileset_12
+  - sunken_Ruins_tileset_13
+  - sunken_Ruins_tileset_10
+  - sunken_Ruins_tileset_11
+  m_RenderDataMap: {}
+  m_Tag: Sprite_Atlas
+  m_IsVariant: 0

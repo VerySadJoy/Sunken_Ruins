@@ -23,6 +23,7 @@ namespace SunkenRuins
     /// </summary>
     public enum EventType
     {
+        PlayerToStartPosition,
         StingRayParalyze,
         StingRayMoveTowardsPlayer,
         StingRayPrepareAttack,

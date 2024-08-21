@@ -31,9 +31,9 @@ public class Tile : MonoBehaviour
     public virtual void checkTileBoundaries()
     {
         // Checking Each Side
-        isUpFull = Physics2D.OverlapCircle(transform.position + Vector3.up, 0.1f, tileLayerMask);
-        isLeftFull = Physics2D.OverlapCircle(transform.position + Vector3.left, 0.1f, tileLayerMask);
-        isRightFull = Physics2D.OverlapCircle(transform.position + Vector3.right, 0.1f, tileLayerMask);
-        isDownFull = Physics2D.OverlapCircle(transform.position + Vector3.down, 0.1f, tileLayerMask);
+        isUpFull = Physics2D.OverlapCircle(transform.position + 2 * Vector3.up, 0.1f, tileLayerMask);
+        isLeftFull = Physics2D.OverlapCircle(transform.position + 2 * Vector3.left, 0.1f, tileLayerMask);
+        isRightFull = Physics2D.OverlapCircle(transform.position + 2 * Vector3.right, 0.1f, tileLayerMask);
+        isDownFull = Physics2D.OverlapCircle(transform.position + 2 * Vector3.down, 0.1f, tileLayerMask);
     }
 }

@@ -50,6 +50,13 @@ MonoBehaviour:
   tileLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  coralReefPrefabs:
+  - {fileID: 5546639767209606403, guid: 7dcda91e6b8474643849438b40b4e14b, type: 3}
+  - {fileID: 5546639767209606403, guid: 19f8f1f220d6607478e2cfcc7af1df1a, type: 3}
+  - {fileID: 5546639767209606403, guid: 2f6e4856493b031499af2e475c15e64b, type: 3}
+  - {fileID: 5546639767209606403, guid: e50e1f57d86b25c458422d212b750b00, type: 3}
+  - {fileID: 5546639767209606403, guid: 71e4f015302dffd4093d002a999f02f8, type: 3}
+  - {fileID: 5546639767209606403, guid: 4186fc551836912449411406d3b7678e, type: 3}
   NoBlank: {fileID: 448823775, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   RightBlank: {fileID: 963815487, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   LeftBlank: {fileID: -1382098752, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
@@ -72,7 +79,7 @@ MonoBehaviour:
   DownFullUpLeftCorner: {fileID: -1598859546, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   DownFullUpRightCorner: {fileID: -1725511530, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   DownLeftFullUpRightCorner: {fileID: 972206056, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
-  DownFullUpCorners: {fileID: -133131046, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
+  DownFullUpCorners: {fileID: 1979297375, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   DownRightFullUpLeftCorner: {fileID: 1621551323, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
   LeftFullUpRightCorner: {fileID: 803877927, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
   RightFullUpLeftCorner: {fileID: 683363467, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
@@ -103,8 +110,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4251749796745360164}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -235,5 +242,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0

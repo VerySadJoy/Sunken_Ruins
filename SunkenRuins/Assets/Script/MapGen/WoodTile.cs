@@ -11,6 +11,9 @@ public class WoodTile : Tile
     private bool isDownLeftFull;
     private bool isDownRightFull;
 
+    // Coral Reef Prefabs
+    [SerializeField] private GameObject[] coralReefPrefabs;
+
     [Space(10)]
 
     [SerializeField]
@@ -96,46 +99,100 @@ public class WoodTile : Tile
     private void Start()
     {
         // Checking Each Side
-        GetComponent<Tile>().checkTileBoundaries();
+        checkTileBoundaries();
 
         bool areFourSidesFull = isUpFull || isLeftFull || isRightFull || isDownFull;
         bool areFourCornersFull = isUpLeftFull || isUpRightFull || isDownLeftFull || isDownRightFull;
         if (areFourSidesFull)
         {
+            // When a block is above this block, no coral reef is instantiated
             if (isUpFull)
             {
+                if (!isUpLeftFull)
+                {
+                    if (!isDownFull)
+                    {
+                        spriteRenderer.sprite = DownFullUpLeftCorner;
+                    }
+                    else if (!isRightFull)
+                    {
+                        spriteRenderer.sprite = RightFullUpLeftCorner;
+                    }
+                    else if (!isLeftFull)
+                    {
+                    }
+                    else
+                    {
+                        spriteRenderer.sprite = UpLeftCorner;
+                        spriteRenderer.sprite = LeftBlank;
+                    }
+                }
+                else if (!isUpRightFull)
+                {
+                    if (!isDownFull && !isLeftFull)
+                    {
+                        // 오른쪽 대각선 + 왼쪽 and 아래 테두리
+                    }
+                    else if (!isDownFull)
+                    {
+                        spriteRenderer.sprite = DownFullUpRightCorner;
+                    }
+                    else if (!isLeftFull)
+                    {
+                        spriteRenderer.sprite = DownFullUpRightCorner;
+                    }
+                    else if (!isRightFull)
+                    {
+                    }
+                    else
+                    {
+                        spriteRenderer.sprite = UpRightCorner;
+                        spriteRenderer.sprite = RightBlank;
+                    }
+                }
+
                 if (isDownFull)
                 {
                     if (isRightFull && isLeftFull)
                     {
-                        // �̶� ���� ������ �𼭸��� ���� �� �ֱ⿡
-                        // ���� ���� ����� ���� �����Ѵ�.
-                        checkOnlyForCorners(areFourCornersFull);
-                    }
-                    else if (isRightFull)
-                    {
-                        if (isDownRightFull && isUpRightFull)
+                        if (isUpLeftFull)
                         {
-                            spriteRenderer.sprite = UpDownRightBlank;
-                        }
-                        else if (isDownRightFull)
-                        {
-                            spriteRenderer.sprite = LeftFullUpRightCorner;
+                            if (isUpRightFull)
+                            {
+                                spriteRenderer.sprite = AllBlank;
+                            }
+                            else
+                            {
+                                spriteRenderer.sprite = UpRightCorner;
+                            }
                         }
                         else if (isUpRightFull)
                         {
+                            spriteRenderer.sprite = UpLeftCorner;
+                        }
+                        else 
+                        {
+                            spriteRenderer.sprite = UpCorners;
+                        }
+                    }
+                    else if (isRightFull)
+                    {
+                        if (isUpRightFull)
+                        {
+                            spriteRenderer.sprite = UpDownRightBlank;
+                        }
+                        else
+                        {
+                            spriteRenderer.sprite = LeftFullUpRightCorner;
                         }
                     }
                     else if (isLeftFull)
                     {
-                        if (isUpLeftFull && isDownLeftFull)
+                        if (isUpLeftFull)
                         {
                             spriteRenderer.sprite = UpDownLeftBlank;
                         }
-                        else if (isUpLeftFull)
-                        {
-                        }
-                        else if (isDownLeftFull)
+                        else
                         {
                             spriteRenderer.sprite = RightFullUpLeftCorner;
                         }
@@ -164,7 +221,7 @@ public class WoodTile : Tile
                         else
                             spriteRenderer.sprite = DownFullUpCorners;
                     }
-                    else if (isLeftFull)
+                    else if (isLeftFull) // 아래랑 오른쪽이 비었음
                     {
                         if (!isUpLeftFull)
                         {
@@ -172,7 +229,7 @@ public class WoodTile : Tile
                         }
                         else spriteRenderer.sprite = UpLeftBlank;
                     }
-                    else if (isRightFull)
+                    else if (isRightFull) // 아래랑 왼쪽이 비었음
                     {
                         if (!isUpRightFull)
                         {
@@ -180,54 +237,61 @@ public class WoodTile : Tile
                         }
                         else spriteRenderer.sprite = UpRightBlank;
                     }
-                    else
+                    else // 위를 제외하고 다 비었음
                     {
                         spriteRenderer.sprite = UpBlank;
                     }
                 }
             }
-            else if (isLeftFull)
+            else // Since there is no block above this block, we can instantiate coral reef
             {
-                if (isRightFull)
+                RandomInstantiateCoralReef();
+
+                if (isLeftFull) // 위가 비었음
                 {
-                    if (isDownFull)
+                    if (!isUpLeftFull && !isUpRightFull)
                     {
-                        if (isDownLeftFull && isDownRightFull)
+                        spriteRenderer.sprite = UpCorners;
+                    }
+
+                    if (isRightFull)
+                    {
+                        if (isDownFull)
                         {
                             spriteRenderer.sprite = DownLeftRightBlank; 
                         }
+                        else
+                        {
+                            spriteRenderer.sprite = LeftRightBlank;
+                        }
                     }
-                    else
+                    else // 위랑 오른쪽이 비었음
                     {
-                        spriteRenderer.sprite = LeftRightBlank;
+                        if (isDownFull)
+                        {
+                            spriteRenderer.sprite = DownLeftBlank;
+                        }
+                        else
+                        {
+                            spriteRenderer.sprite = LeftBlank;
+                        }
                     }
                 }
-                else
+                else if (isRightFull) // 위랑 왼쪽이 비었음
                 {
                     if (isDownFull)
                     {
-                        spriteRenderer.sprite = DownLeftBlank;
+                        spriteRenderer.sprite = DownRightBlank;
                     }
                     else
                     {
-                        spriteRenderer.sprite = LeftBlank;
+                        spriteRenderer.sprite = RightBlank;
                     }
                 }
-            }
-            else if (isRightFull)
-            {
-                if (isDownFull)
+                else if (isDownFull) // 위, 왼, 오가 비었음
                 {
-                    spriteRenderer.sprite = DownRightBlank;
+                    spriteRenderer.sprite = DownBlank;
                 }
-                else
-                {
-                    spriteRenderer.sprite = RightBlank;
-                }
-            }
-            else if (isDownFull)
-            {
-                spriteRenderer.sprite = DownBlank;
             }
         }
         else
@@ -242,70 +306,51 @@ public class WoodTile : Tile
         {
             if (isUpLeftFull)
             {
-                if (isDownLeftFull)
+                if (isUpRightFull)
                 {
-                    if (isUpRightFull && isDownRightFull)
-                    {
-                        spriteRenderer.sprite = AllBlank;
-                    }
-                    else if (isUpRightFull)
-                    {
-                    }
-                    else if (isDownRightFull)
-                    {
-                        spriteRenderer.sprite = UpRightCorner;
-                    }
+                    spriteRenderer.sprite = AllBlank;
                 }
                 else
                 {
-                    if (isUpRightFull && isDownRightFull)
-                    {
-                    }
-                    else if (isUpRightFull)
-                    {
-                    }
-                    else if (isDownRightFull)
-                    {
-                    }
+                    spriteRenderer.sprite = UpRightCorner;
                 }
             }
-            // UpLeftCorner �ʼ�
             else if (isUpRightFull)
             {
-                if (isDownRightFull && isDownLeftFull)
-                {
-                    spriteRenderer.sprite = UpLeftCorner;
-                }
-                else if (isDownRightFull)
-                {
-                }
-                else if (isDownLeftFull)
-                {
-                }
+                spriteRenderer.sprite = UpLeftCorner;
             }
-            else if (isDownLeftFull)
+            else 
             {
-                if (isDownRightFull)
-                {
-                    spriteRenderer.sprite = UpCorners;
-                }
-            }
-            else if (isDownRightFull)
-            {
+                spriteRenderer.sprite = UpCorners;
             }
         }
         else
         {
+            Debug.Log("Error in Tile Creation: Script [WoodTile] Line 298");
         }
     }
 
-    // WoodTile�� �밢�� ��ġ�� Ȯ���ؾ� ��
     public override void checkTileBoundaries()
     {
         base.checkTileBoundaries();
-        isUpLeftFull = Physics2D.OverlapCircle(transform.position + Vector3.left + Vector3.up, 0.1f, tileLayerMask);
-        isUpRightFull = Physics2D.OverlapCircle(transform.position + Vector3.right + Vector3.up, 0.1f, tileLayerMask);
-        isDownLeftFull = Physics2D.OverlapCircle(transform.position + Vector3.left + Vector3.down, 0.1f, tileLayerMask);
-        isDownRightFull = Physics2D.OverlapCircle(transform.position + Vector3.right + Vector3.down, 0.1f, tileLayerMask);
+        isUpLeftFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.left + 2*Vector3.up, 0.1f, tileLayerMask);
+        isUpRightFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.right + 2*Vector3.up, 0.1f, tileLayerMask);
+        isDownLeftFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.left + 2*Vector3.down, 0.1f, tileLayerMask);
+        isDownRightFull = Physics2D.OverlapCircle(transform.position + 2*Vector3.right + 2*Vector3.down, 0.1f, tileLayerMask);
+    }
+
+    private void RandomInstantiateCoralReef()
+    {
+        // Probability of having coral reef above block = 20%
+        bool isInstantiate = Random.Range(0, 10) < 2;
+
+        if (isInstantiate)
+        {
+            // Randomly select coral reef from coralReefPrefabs
+            int randomIndex = Random.Range(0, coralReefPrefabs.Length);
+            float coralReefHeight = 1.6f;
+            
+            Instantiate(coralReefPrefabs[randomIndex], this.transform.position + coralReefHeight * Vector3.up, Quaternion.identity);
+        }
     }
 }

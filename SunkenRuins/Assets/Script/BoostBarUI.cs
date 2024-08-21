@@ -60,7 +60,7 @@ namespace SunkenRuins
             scrollbar.value = UnityEngine.Random.Range(0f, 1f);
 
             // Highlighted Image Reposition
-            highlightImageTransform.localPosition = Vector3.right * UnityEngine.Random.Range(-80f, 80f);
+            highlightImageTransform.localPosition = Vector3.right * UnityEngine.Random.Range(-60f, 60f);
         }
 
         private void Update()
