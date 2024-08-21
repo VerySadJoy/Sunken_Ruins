@@ -259,12 +259,14 @@ namespace SunkenRuins
             if (boostBarUI.IsPerfectBoost)
             {
                 StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
-                Debug.Log("?�벽 부?�트");
+                EventManager.TriggerEvent(EventType.PerfectBoost, null);
+                Debug.Log("Perfect Boost");
             }
             else
             {
                 StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed));
-                Debug.Log("?�말 부?�트");
+                EventManager.TriggerEvent(EventType.NormalBoost, null);
+                Debug.Log("Normal Boost");
             }
         }
 
