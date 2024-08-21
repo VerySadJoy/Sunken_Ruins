@@ -60,7 +60,7 @@ namespace SunkenRuins
                 if (isPrepareAttack)
                 {
                     // 플레이어한테 서서히 움직이는 모션 (그러다 속도 = 0이 됨)
-                    rb.velocity = dirToPlayerNormalized * stingRayStat.dashMoveSpeed * Mathf.Pow(0.3f, timer);
+                    rb.velocity = Vector2.zero;//dirToPlayerNormalized * stingRayStat.dashMoveSpeed * Mathf.Pow(0.3f, timer);
 
                     // 움직이면서 공격 범위를 보여줌
                     electricAttack.ShowAttackRange();
