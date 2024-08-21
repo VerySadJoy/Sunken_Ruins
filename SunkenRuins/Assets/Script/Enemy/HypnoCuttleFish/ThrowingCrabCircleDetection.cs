@@ -29,7 +29,6 @@ namespace SunkenRuins
         {
             if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                Debug.Log("detect");
                 EventManager.TriggerEvent(EventType.ThrowingCrabThrowRock, new Dictionary<string, object> { { "Player", other.gameObject.transform } });
             }
         }

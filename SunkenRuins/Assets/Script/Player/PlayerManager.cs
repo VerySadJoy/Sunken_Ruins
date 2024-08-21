@@ -120,27 +120,35 @@ namespace SunkenRuins
         }
 
         private Vector3 dirFromShellNormalized;
+        private Vector3 shellPosition;
         private bool isAbsorbed = false;
         private bool isSwallowed = false;
         private void Update()
         {
             if (Time.timeScale == 0) {
-                Debug.Log("Stopped");
+                //Debug.Log("Stopped");
                 return;
             }
             HandleMoveInput();
             BoostInput();
             UpdateCameraFollowTarget();
 
-            if (isAbsorbed)
-            {
-                transform.Translate(playerStat.absorbSpeed * dirFromShellNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
-            }
+
             if (playerStat.playerCurrentEnergy > playerStat.playerMaxEnergy) { 
                 playerStat.playerCurrentEnergy = playerStat.playerMaxEnergy;
             }
             if (playerStat.playerCurrentHealth > playerStat.playerMaxHealth) { 
                 playerStat.playerCurrentHealth = playerStat.playerMaxHealth;
+            }
+        }
+        private void FixedUpdate (){
+            if (isAbsorbed)
+            {
+                dirFromShellNormalized = (shellPosition - this.transform.position).normalized;
+                //Debug.Log($"Moving towards shell. Current Position: {transform.position}, Shell Position: {shellPosition}");
+                //rb.AddForce(dirFromShellNormalized * 10);
+                //rb.velocity = Vector2.ClampMagnitude(rb.velocity, 10);
+                transform.position = Vector3.MoveTowards(transform.position, shellPosition, playerStat.absorbSpeed * Time.deltaTime);
             }
         }
 
@@ -161,14 +169,14 @@ namespace SunkenRuins
         public void GetAbsorbed(Dictionary<string, object> message)
         {
             // rb.constraints = RigidbodyConstraints2D.FreezeAll;
-            SetInputEnabled(false);
+            SetBoostInputEnable(false);
             isAbsorbed = true;
-            dirFromShellNormalized = (Vector3)message["dirToPlayerNormalized"];
+            shellPosition = (Vector3)message["position"];
         }
         public void EscapeFromEnemy(Dictionary<string, object> message)
         {
             isAbsorbed = false;
-            SetInputEnabled(true);
+            SetBoostInputEnable(true);
             rb.constraints = RigidbodyConstraints2D.None;
         }
 
@@ -251,7 +259,6 @@ namespace SunkenRuins
             boostBarUI.SetUIActive(false);
             energyBarUI.SetUIActive(false);
             boostTrajectoryLineUI.LineDisable();
-            Debug.Log("발사");
 
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System?�로 변경해?�한?�면 변�?
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
@@ -346,6 +353,16 @@ namespace SunkenRuins
             else
             {
                 playerControl.Player.Disable();
+            }
+        }
+        public void SetBoostInputEnable(bool enable) {
+            if (enable)
+            {
+                playerControl.Player.Mouse.Enable();
+            }
+            else
+            {
+                playerControl.Player.Mouse.Disable();
             }
         }
 
