@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using Cinemachine;
 using System;
 using Unity.Mathematics;
+using SunkenRuin;
 
 namespace SunkenRuins
 {
@@ -40,6 +41,7 @@ namespace SunkenRuins
         [SerializeField] private DottedLineUI boostTrajectoryLineUI;
         [SerializeField] private BoostBarUI boostBarUI;
         [SerializeField] private EnergyBarUI energyBarUI;
+        [SerializeField] private PlayerEye playerEye;
 
         private bool isBoosting = false;
         private bool isBoostPreparing = false;
@@ -272,12 +274,14 @@ namespace SunkenRuins
             if (boostBarUI.IsPerfectBoost)
             {
                 StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
-                Debug.Log("?�벽 부?�트");
+                EventManager.TriggerEvent(EventType.PerfectBoost, null);
+                Debug.Log("Perfect Boost");
             }
             else
             {
                 StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed));
-                Debug.Log("?�말 부?�트");
+                EventManager.TriggerEvent(EventType.NormalBoost, null);
+                Debug.Log("Normal Boost");
             }
         }
 
@@ -436,6 +440,20 @@ namespace SunkenRuins
             float updatedVelocityX = Mathf.MoveTowards(rb.velocity.x, desiredVelocityX, accelerationX * Time.deltaTime);
             float updatedVelocityY = Mathf.MoveTowards(rb.velocity.y, desiredVelocityY, accelerationY * Time.deltaTime);
             rb.velocity = new Vector2(updatedVelocityX, updatedVelocityY);
+
+            if (rb.velocity.y > 0)
+            {
+                EventManager.TriggerEvent(EventType.MoveUp, null);
+            }
+            else if (rb.velocity.y < 0)
+            {
+                EventManager.TriggerEvent(EventType.MoveDown, null);
+            }
+            else
+            {
+                EventManager.TriggerEvent(EventType.MoveIdle, null);
+            }
+
             //HandleBoost(moveInput);
 
             if (!isBoosting && !isBoostPreparing) UpdateFacingDirection(moveInput.x); // 부?�트???�는 마우??방향만이 Sprite flip??결정??
@@ -446,6 +464,7 @@ namespace SunkenRuins
             if (moveInputX != 0f)
             {
                 isFacingRight = moveInputX > 0f;
+                playerEye.FlipEyeSprite(!isFacingRight);
             }
             spriteRenderer.flipX = !isFacingRight;
         }

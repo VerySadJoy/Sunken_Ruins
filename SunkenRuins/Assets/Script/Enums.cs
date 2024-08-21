@@ -23,6 +23,13 @@ namespace SunkenRuins
     /// </summary>
     public enum EventType
     {
+        NormalBoost,
+        PerfectBoost,
+        Dead,
+        MoveUp,
+        MoveDown,
+        MoveIdle,
+
         PlayerToStartPosition,
         StingRayParalyze,
         StingRayMoveTowardsPlayer,
@@ -35,6 +42,5 @@ namespace SunkenRuins
         ShellEscape,
         ShellSwallow,
         PlayerDamaged,
-        
     }
 }

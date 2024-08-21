@@ -1601,7 +1601,7 @@ namespace SunkenRuins
                 }
             }
 
-            // CheckMonsterGenerationByTile(); // change int[] array instead of using collision detection
+            CheckMonsterGenerationByTile(); // change int[] array instead of using collision detection
             TilePlacement(realMap);
         }
 
@@ -1846,33 +1846,6 @@ namespace SunkenRuins
             }
 
             TestBaseMapGeneration();
-
-            // For maps with consecutive "DownLeftRight" rooms vertically
-            // for (int y = 1; y < baseMap.GetLength(0); ++y)
-            // {
-            //     if (baseMap[y - 1, 0] == 3 && baseMap[y, 0] == 3)
-            //     {
-            //         baseMap[y - 1, 0] = (int)RoomType.AllSides;
-            //         baseMap[y, 0] = (int)RoomType.AllSides;
-            //     }
-            //     else if (baseMap[y - 1, 1] == 3 && baseMap[y, 1] == 3)
-            //     {
-            //         baseMap[y - 1, 0] = (int)RoomType.AllSides;
-            //         baseMap[y, 0] = (int)RoomType.AllSides;
-            //     }
-            //     else if (baseMap[y - 1, 2] == 3 && baseMap[y, 2] == 3)
-            //     {
-            //         baseMap[y - 1, 0] = (int)RoomType.AllSides;
-            //         baseMap[y, 0] = (int)RoomType.AllSides;
-            //     }
-            //     else if (baseMap[y - 1, 3] == 3 && baseMap[y, 3] == 3)
-            //     {
-            //         baseMap[y - 1, 0] = (int)RoomType.AllSides;
-            //         baseMap[y, 0] = (int)RoomType.AllSides;
-            //     }
-            //     else continue;
-            // }
-            // TestBaseMapGeneration();
         }
 
         private void TilePlacement(int[,] realMap)
