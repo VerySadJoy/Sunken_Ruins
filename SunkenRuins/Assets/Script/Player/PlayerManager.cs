@@ -49,6 +49,12 @@ namespace SunkenRuins
         private bool temp = false;
         private bool hasBoostEventBeenInvoked = false;
 
+        //BoostAnimation
+        [SerializeField] GameObject boostEffectRing;
+        [SerializeField] float ringAppearDelay; //부스트 링이 생기는 사이 시간간격
+        [SerializeField] AnimationCurve ringSizeCurve;
+        [SerializeField] AnimationCurve ringColorCurve;
+
         private void Awake()
         {
             if (Instance != null) Debug.LogError("There is more than one player instance");
@@ -280,6 +286,11 @@ namespace SunkenRuins
             // 부?�트 방향 버그 ?�정
             UpdateFacingDirection(direction.x);
 
+            IEnumerator boostEffectCor = makeBoostRing(direction);
+
+            boostEffectOffset = 0f;
+            StartCoroutine(boostEffectCor);
+
             float elapsed = 0f;
             while (elapsed < boostDuration)
             {
@@ -290,17 +301,20 @@ namespace SunkenRuins
             }
             elapsed = 0f;
             Vector2 initialVelocity = direction * speed;
-
             while (elapsed < boostDuration)
             {
                 float t = elapsed / boostDuration;
                 Vector2 velocity = Vector2.Lerp(initialVelocity, Vector2.zero, t);
                 transform.Translate(velocity * Time.deltaTime, Space.World);
                 elapsed += Time.deltaTime;
+
+                boostEffectOffset = t; //오프셋 줄어듦
                 yield return null;
             }
 
             isBoosting = false;
+            StopCoroutine(boostEffectCor);
+
         }
 
         private void CancelBoost()
@@ -316,6 +330,47 @@ namespace SunkenRuins
             //TODO:
             //UI 가리기
             Debug.Log("취소");
+        }
+
+        float boostEffectOffset;
+        IEnumerator makeBoostRing(Vector2 boostDir)
+        {
+            float boostTimer = ringAppearDelay;
+
+            while (true)
+            {
+                boostTimer += Time.deltaTime;
+
+                //일정 주기로 실행
+                if(boostTimer >= ringAppearDelay)
+                {
+                    boostTimer = 0f;
+                    GameObject targetEffectRing = Instantiate(boostEffectRing);
+                    boostEffectRing targetScript = targetEffectRing.GetComponent<boostEffectRing>();
+
+                    //커브 애니메이션 할당 
+                    targetScript.scaleCurve = ringSizeCurve;
+                    targetScript.colorCurve = ringColorCurve;
+
+                    //부스트 방향 기반으로 각도 구하기 
+                    float boostAngle;
+                    boostAngle = Mathf.Atan2(boostDir.y, boostDir.x) * Mathf.Rad2Deg;
+                    Debug.Log(boostAngle);
+
+                    /*
+                    if(boostAngle < 0f)
+                    {
+                        //부스트 방향이 2,3사분면에 있으면
+                        boostAngle += 180f; //반대쪽 사분면으로 넘기기
+                        targetEffectRing.GetComponent<SpriteRenderer>().flipX = true;
+                    }
+                    */
+
+                    targetEffectRing.transform.eulerAngles = new Vector3(0, 0, boostAngle); //각도 조절
+                    targetEffectRing.transform.position = transform.position - (Vector3)boostDir.normalized * boostEffectOffset - new Vector3(0, 0.25f); //위치 조절 
+                }
+                yield return null;
+            }
         }
 
         private IEnumerator ZoomOutCoroutine(float targetOrthographicSize, float zoomSpeed) {
