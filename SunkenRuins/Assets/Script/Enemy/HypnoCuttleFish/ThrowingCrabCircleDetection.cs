@@ -27,7 +27,11 @@ namespace SunkenRuins
         // Player 감지
         private void OnTriggerEnter2D(Collider2D other)
         {
-            EventManager.TriggerEvent(EventType.ThrowingCrabThrowRock, new Dictionary<string, object>{ { "Player", other.gameObject.transform } });
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                Debug.Log("detect");
+                EventManager.TriggerEvent(EventType.ThrowingCrabThrowRock, new Dictionary<string, object> { { "Player", other.gameObject.transform } });
+            }
         }
     }
 }
