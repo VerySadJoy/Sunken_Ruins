@@ -355,7 +355,6 @@ namespace SunkenRuins
                     //부스트 방향 기반으로 각도 구하기 
                     float boostAngle;
                     boostAngle = Mathf.Atan2(boostDir.y, boostDir.x) * Mathf.Rad2Deg;
-                    Debug.Log(boostAngle);
 
                     /*
                     if(boostAngle < 0f)
