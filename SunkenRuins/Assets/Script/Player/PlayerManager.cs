@@ -53,9 +53,18 @@ namespace SunkenRuins
 
         //BoostAnimation
         [SerializeField] GameObject boostEffectRing;
-        [SerializeField] float ringAppearDelay; //부스트 링이 생기는 사이 시간간격
+        [SerializeField] float ringAppearDelay_default; //부스트 링이 생기는 사이 시간간격
+        [SerializeField] float ringAppearDelay_power; //파워 부스트 링 시간간격 
+
         [SerializeField] AnimationCurve ringSizeCurve;
         [SerializeField] AnimationCurve ringColorCurve;
+
+        [SerializeField] Color ringColor_default;
+        [SerializeField] Color ringColor_power;
+
+        //bubble particle
+        [SerializeField] ParticleSystem bubble;
+
 
         private void Awake()
         {
@@ -273,24 +282,28 @@ namespace SunkenRuins
             StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed)); // Zoom Out
             if (boostBarUI.IsPerfectBoost)
             {
-                StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
+                StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed, true));
                 EventManager.TriggerEvent(EventType.PerfectBoost, null);
                 Debug.Log("Perfect Boost");
             }
             else
             {
-                StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed));
+                StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed, false));
                 EventManager.TriggerEvent(EventType.NormalBoost, null);
                 Debug.Log("Normal Boost");
             }
         }
 
-        private IEnumerator BoostMovement(Vector2 direction, float speed)
+        private IEnumerator BoostMovement(Vector2 direction, float speed, bool isPerfect)
         {
             // 부?�트 방향 버그 ?�정
             UpdateFacingDirection(direction.x);
 
-            IEnumerator boostEffectCor = makeBoostRing(direction);
+            IEnumerator boostEffectCor = makeBoostRing(direction, isPerfect);
+
+            var ps = bubble.emission;
+            ps.enabled = true;
+            ps.rateOverTime = 15f; //버블 발생량 늘림 
 
             boostEffectOffset = 0f;
             StartCoroutine(boostEffectCor);
@@ -305,6 +318,8 @@ namespace SunkenRuins
             }
             elapsed = 0f;
             Vector2 initialVelocity = direction * speed;
+            isPlayerDecellerating = true;
+
             while (elapsed < boostDuration)
             {
                 float t = elapsed / boostDuration;
@@ -319,6 +334,8 @@ namespace SunkenRuins
             isBoosting = false;
             StopCoroutine(boostEffectCor);
 
+            ps.rateOverTime = 5f;
+            isPlayerDecellerating = false;
         }
 
         private void CancelBoost()
@@ -337,17 +354,38 @@ namespace SunkenRuins
         }
 
         float boostEffectOffset;
-        IEnumerator makeBoostRing(Vector2 boostDir)
+        bool isPlayerDecellerating = false;
+
+        IEnumerator makeBoostRing(Vector2 boostDir, bool isPower)
         {
-            float boostTimer = ringAppearDelay;
+            float ringDelay;
+            Color ringColor;
+           
+            if (isPower)
+            {
+                ringDelay = ringAppearDelay_power;
+                ringColor = ringColor_power;
+            }
+            else
+            {
+                ringDelay = ringAppearDelay_default;
+                ringColor = ringColor_default;
+            }
+
+            float boostTimer = ringDelay;
 
             while (true)
             {
                 boostTimer += Time.deltaTime;
 
                 //일정 주기로 실행
-                if(boostTimer >= ringAppearDelay)
+                if(boostTimer >= ringDelay)
                 {
+                    if (isPlayerDecellerating)
+                    {
+                        ringDelay = ringDelay * 1.5f;
+                    }
+
                     boostTimer = 0f;
                     GameObject targetEffectRing = Instantiate(boostEffectRing);
                     boostEffectRing targetScript = targetEffectRing.GetComponent<boostEffectRing>();
@@ -355,6 +393,7 @@ namespace SunkenRuins
                     //커브 애니메이션 할당 
                     targetScript.scaleCurve = ringSizeCurve;
                     targetScript.colorCurve = ringColorCurve;
+                    targetScript.emitColor = ringColor;
 
                     //부스트 방향 기반으로 각도 구하기 
                     float boostAngle;
