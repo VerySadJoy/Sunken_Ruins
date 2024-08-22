@@ -9,7 +9,7 @@ namespace SunkenRuins
         // Time
         public float dashContinueTime { get { return 2f; } }
         public float dashDelayTime { get { return 2f; } } 
-        public float fullChargeTime { get { return 1.5f; } } 
+        public float fullChargeTime { get { return 1f; } } 
 
         // Movement
         public float dashMoveSpeed { get { return 7f; } } // 이동 속도가 즉시 변경된다 해서 그냥 변수로 보관함

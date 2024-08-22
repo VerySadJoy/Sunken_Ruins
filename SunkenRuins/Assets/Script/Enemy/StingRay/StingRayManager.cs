@@ -22,11 +22,13 @@ namespace SunkenRuins
         private Vector3 initialPosition;
         [SerializeField] private StingRayStat stingRayStat;
         private BoxCollider2D boxCollider2D;
+        private Animator animator;
 
         // Used for StingRay Attack CoolTime
         private Time attackTime;
         private void Awake() {
             boxCollider2D = GetComponent<BoxCollider2D>();
+            animator = GetComponent<Animator>();
         }
 
         protected override void Start()
@@ -65,7 +67,7 @@ namespace SunkenRuins
                 {
                     // 플레이어한테 서서히 움직이는 모션 (그러다 속도 = 0이 됨)
                     rb.velocity = Vector2.zero;//dirToPlayerNormalized * stingRayStat.dashMoveSpeed * Mathf.Pow(0.3f, timer);
-
+                    
                     // 움직이면서 공격 범위를 보여줌
                     electricAttack.ShowAttackRange();
 
@@ -82,6 +84,7 @@ namespace SunkenRuins
                 }
                 else // 그저 쫓아가는 것이면
                 {
+                    //animator.SetBool("Warning", false);
                     rb.velocity = dirToPlayerNormalized * stingRayStat.dashMoveSpeed; // 대시 속도로 변경
 
                     // 추격에 주어진 시간이 다하면
@@ -155,7 +158,7 @@ namespace SunkenRuins
             {
                 return; // 몹 중간에 플레이어가 있을 때 발생하는 버그 수정
             }
-
+            animator.SetTrigger("Warning");
             // EventArgs e에 플레이어 매니저 클래스를 받는다
             player = (Transform)message["Player"];
 

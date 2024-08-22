@@ -16,7 +16,7 @@ namespace SunkenRuins
         private const string playerLayerString = "Player";
         [SerializeField] private GameObject attackSpriteObject;
         [SerializeField] private GameObject attackRangeObject;
-        public float showSpriteTime = 1f;
+        public float showSpriteTime = 3f;
         private bool isAttack = false;
 
         private void Start()

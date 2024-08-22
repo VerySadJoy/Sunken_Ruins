@@ -143,29 +143,6 @@ namespace SunkenRuins
                 rb.velocity = Vector3.zero;
             }
             // Start the deceleration coroutine
-            //StartCoroutine(DecelerateVelocity());
-        }
-
-        private IEnumerator DecelerateVelocity()
-        {
-            float elapsedTime = 0f;
-
-            while (elapsedTime < decelerationDuration)
-            {
-                // Gradually reduce the velocity over time
-                rb.velocity = Vector2.Lerp(detectionVelocity, Vector2.zero, elapsedTime / decelerationDuration);
-
-                // Increment the elapsed time
-                elapsedTime += Time.deltaTime;
-
-                // Wait for the next frame
-                yield return null;
-            }
-
-            // Ensure the velocity is set to zero at the end
-            rb.velocity = Vector2.zero;
-
-            Debug.Log("Movement stopped.");
         }
 
         private void OnPlayerDetection_Hypnotize(Dictionary<string, object> message)
@@ -179,8 +156,11 @@ namespace SunkenRuins
             player = (Transform)message["Player"];
         }
 
-        private void SquidAnimation () {
+        private void SquidAnimation() {
             if (isRetreat) {
+                return;
+            }
+            if (canAttack && isHypnotize) {
                 return;
             }
             StartCoroutine(ApplyImpulse());
