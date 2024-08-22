@@ -89,6 +89,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae4a31b369c75345ae02399e30b70b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256
   rockPrefab: {fileID: 7515262236776795520, guid: ea0c203c42057354b97378610ddf3a0d, type: 3}
   sprites:
   - {fileID: -1980102874, guid: 8419ee37bcc8cc34e8ba1d89e7607d59, type: 3}

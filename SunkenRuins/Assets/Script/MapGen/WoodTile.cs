@@ -47,10 +47,25 @@ public class WoodTile : Tile
     protected Sprite UpDownLeftBlank;
 
     [SerializeField]
+    protected Sprite RightPartialSideUpDownRightBlank;
+
+    [SerializeField]
+    protected Sprite LeftPartialSideUpDownLeftBlank;
+
+    [SerializeField]
     protected Sprite UpDownBlank;
 
     [SerializeField]
     protected Sprite AllBlank;
+
+    [SerializeField]
+    protected Sprite PartialSidesAllBlank;
+
+    [SerializeField]
+    protected Sprite RightPartialSideAllBlank;
+
+    [SerializeField]
+    protected Sprite LeftPartialSideAllBlank;
 
     [SerializeField]
     protected Sprite DownRightBlank;
@@ -59,7 +74,22 @@ public class WoodTile : Tile
     protected Sprite DownLeftBlank;
 
     [SerializeField]
+    protected Sprite RightPartialSideDownRightBlank;
+
+    [SerializeField]
+    protected Sprite LeftPartialSideDownLeftBlank;
+
+    [SerializeField]
     protected Sprite DownLeftRightBlank;
+
+    [SerializeField]
+    protected Sprite PartialSidesDownLeftRightBlank;
+
+    [SerializeField]
+    protected Sprite RightPartialSideDownLeftRightBlank;
+
+    [SerializeField]
+    protected Sprite LeftPartialSideDownLeftRightBlank;
 
     [SerializeField]
     protected Sprite DownBlank;
@@ -71,6 +101,12 @@ public class WoodTile : Tile
 
     [SerializeField]
     protected Sprite UpRightCorner;
+
+    [SerializeField]
+    protected Sprite PartialSideUpRightCorner;
+
+    [SerializeField]
+    protected Sprite PartialSideUpLeftCorner;
 
     [SerializeField]
     protected Sprite UpCorners;
@@ -159,7 +195,14 @@ public class WoodTile : Tile
                         {
                             if (isUpRightFull)
                             {
-                                spriteRenderer.sprite = AllBlank;
+                                if (!isDownLeftFull && !isDownRightFull) spriteRenderer.sprite = PartialSidesAllBlank;
+                                else if (!isDownLeftFull) spriteRenderer.sprite = LeftPartialSideAllBlank;
+                                else if (!isDownRightFull) spriteRenderer.sprite = RightPartialSideAllBlank;
+                                else spriteRenderer.sprite = AllBlank;
+                            }
+                            else if (!isDownRightFull)
+                            {
+                                spriteRenderer.sprite = PartialSideUpRightCorner;
                             }
                             else
                             {
@@ -168,7 +211,11 @@ public class WoodTile : Tile
                         }
                         else if (isUpRightFull)
                         {
-                            spriteRenderer.sprite = UpLeftCorner;
+                            if (!isDownLeftFull)
+                            {
+                                spriteRenderer.sprite = PartialSideUpLeftCorner;
+                            }
+                            else spriteRenderer.sprite = UpLeftCorner;
                         }
                         else 
                         {
@@ -179,7 +226,8 @@ public class WoodTile : Tile
                     {
                         if (isUpRightFull)
                         {
-                            spriteRenderer.sprite = UpDownRightBlank;
+                            if (!isDownRightFull) spriteRenderer.sprite = RightPartialSideUpDownRightBlank;
+                            else spriteRenderer.sprite = UpDownRightBlank;
                         }
                         else
                         {
@@ -190,7 +238,8 @@ public class WoodTile : Tile
                     {
                         if (isUpLeftFull)
                         {
-                            spriteRenderer.sprite = UpDownLeftBlank;
+                            if (!isDownLeftFull) spriteRenderer.sprite = LeftPartialSideUpDownLeftBlank;
+                            else spriteRenderer.sprite = UpDownLeftBlank;
                         }
                         else
                         {
@@ -258,7 +307,10 @@ public class WoodTile : Tile
                     {
                         if (isDownFull)
                         {
-                            spriteRenderer.sprite = DownLeftRightBlank; 
+                            if (!isDownLeftFull && !isDownRightFull) spriteRenderer.sprite = PartialSidesDownLeftRightBlank;
+                            else if (!isDownLeftFull) spriteRenderer.sprite = LeftPartialSideDownLeftRightBlank;
+                            else if (!isDownRightFull) spriteRenderer.sprite = RightPartialSideDownLeftRightBlank;
+                            else spriteRenderer.sprite = DownLeftRightBlank; 
                         }
                         else
                         {
@@ -269,7 +321,8 @@ public class WoodTile : Tile
                     {
                         if (isDownFull)
                         {
-                            spriteRenderer.sprite = DownLeftBlank;
+                            if (!isDownLeftFull) spriteRenderer.sprite = LeftPartialSideDownLeftBlank;
+                            else spriteRenderer.sprite = DownLeftBlank;
                         }
                         else
                         {
@@ -281,7 +334,8 @@ public class WoodTile : Tile
                 {
                     if (isDownFull)
                     {
-                        spriteRenderer.sprite = DownRightBlank;
+                        if (!isDownRightFull) spriteRenderer.sprite = RightPartialSideDownRightBlank;
+                        else spriteRenderer.sprite = DownRightBlank;
                     }
                     else
                     {
