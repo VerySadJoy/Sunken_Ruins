@@ -122,7 +122,15 @@ namespace SunkenRuins
         private void PerformPatrolMovement()
         {
             float offsetFromInitialPosition = transform.position.x - initialPosition.x;
-            UpdateFacingDirection(offsetFromInitialPosition < -stingRayStat.patrolRange ? Vector2.right : Vector2.left);
+            if (offsetFromInitialPosition < -stingRayStat.patrolRange)
+            {
+                UpdateFacingDirection(Vector2.right);
+            }
+            else if (offsetFromInitialPosition > stingRayStat.patrolRange)
+            {
+                UpdateFacingDirection(Vector2.left);
+            }
+            // UpdateFacingDirection(offsetFromInitialPosition < -stingRayStat.patrolRange ? Vector2.right : Vector2.left);
             // 속도 설정
             rb.velocity = new Vector2(stingRayStat.initialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
         }
