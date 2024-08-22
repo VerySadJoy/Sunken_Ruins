@@ -24,15 +24,16 @@ namespace SunkenRuins
         // Player 감지
         private void OnTriggerEnter2D(Collider2D other)
         {
+            Debug.Log("call");
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
                 // Player을 향하는 벡터 구하기
-                Vector2 dirToPlayerNormalized = (other.gameObject.transform.position - transform.position + Vector3.down).normalized;
-                temp = dirToPlayerNormalized;
+                Vector3 position = this.transform.position;
+                temp = position;
 
-                //RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, dirToPlayerNormalized, rayCastDistance, playerLayerMask);
+                //RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, position, rayCastDistance, playerLayerMask);
 
-                EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "dirToPlayerNormalized", (transform.position - other.gameObject.transform.position).normalized } });
+                EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "position", position } });
                 
             }
         }

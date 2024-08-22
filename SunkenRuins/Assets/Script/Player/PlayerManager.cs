@@ -51,6 +51,21 @@ namespace SunkenRuins
         private bool temp = false;
         private bool hasBoostEventBeenInvoked = false;
 
+        //BoostAnimation
+        [SerializeField] GameObject boostEffectRing;
+        [SerializeField] float ringAppearDelay_default; //부스트 링이 생기는 사이 시간간격
+        [SerializeField] float ringAppearDelay_power; //파워 부스트 링 시간간격 
+
+        [SerializeField] AnimationCurve ringSizeCurve;
+        [SerializeField] AnimationCurve ringColorCurve;
+
+        [SerializeField] Color ringColor_default;
+        [SerializeField] Color ringColor_power;
+
+        //bubble particle
+        [SerializeField] ParticleSystem bubble;
+
+
         private void Awake()
         {
             if (Instance != null) Debug.LogError("There is more than one player instance");
@@ -122,27 +137,35 @@ namespace SunkenRuins
         }
 
         private Vector3 dirFromShellNormalized;
+        private Vector3 shellPosition;
         private bool isAbsorbed = false;
         private bool isSwallowed = false;
         private void Update()
         {
             if (Time.timeScale == 0) {
-                Debug.Log("Stopped");
+                //Debug.Log("Stopped");
                 return;
             }
             HandleMoveInput();
             BoostInput();
             UpdateCameraFollowTarget();
 
-            if (isAbsorbed)
-            {
-                transform.Translate(playerStat.absorbSpeed * dirFromShellNormalized * Time.deltaTime, Space.World); // Move dirToOtherNormalized per second
-            }
+
             if (playerStat.playerCurrentEnergy > playerStat.playerMaxEnergy) { 
                 playerStat.playerCurrentEnergy = playerStat.playerMaxEnergy;
             }
             if (playerStat.playerCurrentHealth > playerStat.playerMaxHealth) { 
                 playerStat.playerCurrentHealth = playerStat.playerMaxHealth;
+            }
+        }
+        private void FixedUpdate (){
+            if (isAbsorbed)
+            {
+                dirFromShellNormalized = (shellPosition - this.transform.position).normalized;
+                //Debug.Log($"Moving towards shell. Current Position: {transform.position}, Shell Position: {shellPosition}");
+                //rb.AddForce(dirFromShellNormalized * 10);
+                //rb.velocity = Vector2.ClampMagnitude(rb.velocity, 10);
+                transform.position = Vector3.MoveTowards(transform.position, shellPosition, playerStat.absorbSpeed * Time.deltaTime);
             }
         }
 
@@ -163,14 +186,14 @@ namespace SunkenRuins
         public void GetAbsorbed(Dictionary<string, object> message)
         {
             // rb.constraints = RigidbodyConstraints2D.FreezeAll;
-            SetInputEnabled(false);
+            SetBoostInputEnable(false);
             isAbsorbed = true;
-            dirFromShellNormalized = (Vector3)message["dirToPlayerNormalized"];
+            shellPosition = (Vector3)message["position"];
         }
         public void EscapeFromEnemy(Dictionary<string, object> message)
         {
             isAbsorbed = false;
-            SetInputEnabled(true);
+            SetBoostInputEnable(true);
             rb.constraints = RigidbodyConstraints2D.None;
         }
 
@@ -253,29 +276,37 @@ namespace SunkenRuins
             boostBarUI.SetUIActive(false);
             energyBarUI.SetUIActive(false);
             boostTrajectoryLineUI.LineDisable();
-            Debug.Log("발사");
 
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System?�로 변경해?�한?�면 변�?
             Vector2 boostDirection = ((finalMousePosition) - ((Vector2)transform.position)).normalized;
             StartCoroutine(ZoomOutCoroutine(defaultOrthographicSize, zoomSpeed)); // Zoom Out
             if (boostBarUI.IsPerfectBoost)
             {
-                StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed));
+                StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed, true));
                 EventManager.TriggerEvent(EventType.PerfectBoost, null);
                 Debug.Log("Perfect Boost");
             }
             else
             {
-                StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed));
+                StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed, false));
                 EventManager.TriggerEvent(EventType.NormalBoost, null);
                 Debug.Log("Normal Boost");
             }
         }
 
-        private IEnumerator BoostMovement(Vector2 direction, float speed)
+        private IEnumerator BoostMovement(Vector2 direction, float speed, bool isPerfect)
         {
             // 부?�트 방향 버그 ?�정
             UpdateFacingDirection(direction.x);
+
+            IEnumerator boostEffectCor = makeBoostRing(direction, isPerfect);
+
+            var ps = bubble.emission;
+            ps.enabled = true;
+            ps.rateOverTime = 15f; //버블 발생량 늘림 
+
+            boostEffectOffset = 0f;
+            StartCoroutine(boostEffectCor);
 
             float elapsed = 0f;
             while (elapsed < boostDuration)
@@ -287,6 +318,7 @@ namespace SunkenRuins
             }
             elapsed = 0f;
             Vector2 initialVelocity = direction * speed;
+            isPlayerDecellerating = true;
 
             while (elapsed < boostDuration)
             {
@@ -294,10 +326,16 @@ namespace SunkenRuins
                 Vector2 velocity = Vector2.Lerp(initialVelocity, Vector2.zero, t);
                 transform.Translate(velocity * Time.deltaTime, Space.World);
                 elapsed += Time.deltaTime;
+
+                boostEffectOffset = t; //오프셋 줄어듦
                 yield return null;
             }
 
             isBoosting = false;
+            StopCoroutine(boostEffectCor);
+
+            ps.rateOverTime = 5f;
+            isPlayerDecellerating = false;
         }
 
         private void CancelBoost()
@@ -313,6 +351,68 @@ namespace SunkenRuins
             //TODO:
             //UI 가리기
             Debug.Log("취소");
+        }
+
+        float boostEffectOffset;
+        bool isPlayerDecellerating = false;
+
+        IEnumerator makeBoostRing(Vector2 boostDir, bool isPower)
+        {
+            float ringDelay;
+            Color ringColor;
+           
+            if (isPower)
+            {
+                ringDelay = ringAppearDelay_power;
+                ringColor = ringColor_power;
+            }
+            else
+            {
+                ringDelay = ringAppearDelay_default;
+                ringColor = ringColor_default;
+            }
+
+            float boostTimer = ringDelay;
+
+            while (true)
+            {
+                boostTimer += Time.deltaTime;
+
+                //일정 주기로 실행
+                if(boostTimer >= ringDelay)
+                {
+                    if (isPlayerDecellerating)
+                    {
+                        ringDelay = ringDelay * 1.5f;
+                    }
+
+                    boostTimer = 0f;
+                    GameObject targetEffectRing = Instantiate(boostEffectRing);
+                    boostEffectRing targetScript = targetEffectRing.GetComponent<boostEffectRing>();
+
+                    //커브 애니메이션 할당 
+                    targetScript.scaleCurve = ringSizeCurve;
+                    targetScript.colorCurve = ringColorCurve;
+                    targetScript.emitColor = ringColor;
+
+                    //부스트 방향 기반으로 각도 구하기 
+                    float boostAngle;
+                    boostAngle = Mathf.Atan2(boostDir.y, boostDir.x) * Mathf.Rad2Deg;
+
+                    /*
+                    if(boostAngle < 0f)
+                    {
+                        //부스트 방향이 2,3사분면에 있으면
+                        boostAngle += 180f; //반대쪽 사분면으로 넘기기
+                        targetEffectRing.GetComponent<SpriteRenderer>().flipX = true;
+                    }
+                    */
+
+                    targetEffectRing.transform.eulerAngles = new Vector3(0, 0, boostAngle); //각도 조절
+                    targetEffectRing.transform.position = transform.position - (Vector3)boostDir.normalized * boostEffectOffset - new Vector3(0, 0.25f); //위치 조절 
+                }
+                yield return null;
+            }
         }
 
         private IEnumerator ZoomOutCoroutine(float targetOrthographicSize, float zoomSpeed) {
@@ -350,6 +450,16 @@ namespace SunkenRuins
             else
             {
                 playerControl.Player.Disable();
+            }
+        }
+        public void SetBoostInputEnable(bool enable) {
+            if (enable)
+            {
+                playerControl.Player.Mouse.Enable();
+            }
+            else
+            {
+                playerControl.Player.Mouse.Disable();
             }
         }
 
