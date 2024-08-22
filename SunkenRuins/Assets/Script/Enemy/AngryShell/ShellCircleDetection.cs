@@ -24,7 +24,6 @@ namespace SunkenRuins
         // Player 감지
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log("call");
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
                 // Player을 향하는 벡터 구하기
