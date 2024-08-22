@@ -1928,7 +1928,7 @@ namespace SunkenRuins
             {
                 for (int x = 1; x < realMap.GetLength(1) - 1; ++x)
                 {
-                    
+                    // if ()
 
                 }
             }
