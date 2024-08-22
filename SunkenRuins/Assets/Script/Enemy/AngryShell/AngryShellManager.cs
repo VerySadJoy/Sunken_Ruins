@@ -10,19 +10,15 @@ namespace SunkenRuins
         [SerializeField] private ShellStat shellStat;
         [SerializeField] private ShellCircleDetection shellCircleDetection;
         [SerializeField] private ShellAttackDetection shellAttackDetection;
+        [SerializeField] private SpriteRenderer shellSpriteRenderer;
         private bool isAbsorbingPlayer { get { return player != null; } }
         [SerializeField] private Sprite[] sprites;
-        private SpriteRenderer shellSpriteRenderer;
         private int spriteIndex = 9;
         
         private bool canAttack = true;
         private bool isEngulfing = false;
         private int keyPressCount = 0;
         private float lastAbsorbTime = 0f; // Time since the last absorb
-
-        private void Awake() {
-            shellSpriteRenderer = GetComponent<SpriteRenderer>();
-        }
 
         protected override void Start()
         {
@@ -91,7 +87,6 @@ namespace SunkenRuins
 
         private void OnPlayerDetection_AbsorbPlayer(Dictionary<string, object> message)
         {
-
             StartCoroutine(ShellOpen());
             StartCoroutine(StartTimer());
         }

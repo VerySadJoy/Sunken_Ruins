@@ -1610,6 +1610,7 @@ namespace SunkenRuins
             }
 
             CheckEnemyGenerationByTile(); // change int[] array instead of using collision detection
+            // CheckItemGenerationByTile(); // change int[] array as well
             TilePlacement(realMap);
         }
 
@@ -1928,7 +1929,41 @@ namespace SunkenRuins
             {
                 for (int x = 1; x < realMap.GetLength(1) - 1; ++x)
                 {
-                    // if ()
+                    // HealthPotion
+                    if (!isObjectInArea(y, x, 7, 7, TileType.HealthPotion))
+                    {
+                        // Summon Probability = 50%
+                        bool isInstantiate = Random.Range(0, 100) < 50;
+                        if (isInstantiate)
+                        {
+                            realMap[y, x] = (int)TileType.HealthPotion;
+                            continue;
+                        }
+                    }
+
+                    // PowerBattery
+                    if (!isObjectInArea(y, x, 7, 7, TileType.PowerBattery))
+                    {
+                        // Summon Probability = 50%
+                        bool isInstantiate = Random.Range(0, 100) < 50;
+                        if (isInstantiate)
+                        {
+                            realMap[y, x] = (int)TileType.PowerBattery;
+                            continue;
+                        }
+                    }
+
+                    // BubbleShield
+                    if (!isObjectInArea(y, x, 7, 7, TileType.BubbleShield))
+                    {
+                        // Summon Probability = 50%
+                        bool isInstantiate = Random.Range(0, 100) < 50;
+                        if (isInstantiate)
+                        {
+                            realMap[y, x] = (int)TileType.BubbleShield;
+                            continue;
+                        }
+                    }
 
                 }
             }
@@ -1941,10 +1976,10 @@ namespace SunkenRuins
                 for (int x = 1; x < realMap.GetLength(1) - 1; ++x)
                 {
                     // AngryShell
-                    if (y >= realMap.GetLength(0)/2 && CheckArea(y + 1, x, 0, 5, TileType.Block) && CheckArea(y - 2, x, 6, 5, TileType.Blank) && !isMonsterInArea(y, x, 0, 7, TileType.AngryShell))
+                    if (y >= realMap.GetLength(0)/2 && CheckArea(y + 1, x, 0, 5, TileType.Block) && CheckArea(y - 2, x, 6, 5, TileType.Blank) && !isObjectInArea(y, x, 0, 7, TileType.AngryShell))
                     {
                         // Summon Probability = 33%
-                        bool isInstantiate = Random.Range(0, 100) < 40;
+                        bool isInstantiate = Random.Range(0, 100) < 33;
                         if (isInstantiate)
                         {
                             realMap[y, x] = (int)TileType.AngryShell;
@@ -1953,10 +1988,10 @@ namespace SunkenRuins
                     }
 
                     // Electric StingRay
-                    if (y >= 2*realMap.GetLength(0)/3 && CheckArea(y, x, 6, 6, TileType.Blank) && !isMonsterInArea(y, x, 10, 10, TileType.ElectricStingRay))
+                    if (y >= 2*realMap.GetLength(0)/3 && CheckArea(y, x, 6, 6, TileType.Blank) && !isObjectInArea(y, x, 14, 14, TileType.ElectricStingRay))
                     {
                         // Summon Probability = 50%
-                        bool isInstantiate = Random.Range(0, 100) < 12;
+                        bool isInstantiate = Random.Range(0, 100) < 18;
                         if (isInstantiate)
                         {
                             realMap[y, x] = (int)TileType.ElectricStingRay;
@@ -1965,7 +2000,7 @@ namespace SunkenRuins
                     }
 
                     // Hypno-CuttleFish
-                    if (y >= realMap.GetLength(0)/2 && CheckArea(y, x, 8, 8, TileType.Blank) && !isMonsterInArea(y, x, 5, 5, TileType.HypnoCuttleFish))
+                    if (y >= realMap.GetLength(0)/2 && CheckArea(y, x, 8, 8, TileType.Blank) && !isObjectInArea(y, x, 12, 12, TileType.HypnoCuttleFish))
                     {
                         // Summon Probability = 50%
                         bool isInstantiate = Random.Range(0, 100) < 50;
@@ -1977,7 +2012,7 @@ namespace SunkenRuins
                     }
 
                     // Throwing Crab                - 빈 공간 체크                               - 바닥 체크                               - 꽃게 최소 간격 체크
-                    if (CheckArea(y - 2, x, 5, 5, TileType.Blank) && CheckArea(y + 1, x, 0, 5, TileType.Block) && !isMonsterInArea(y, x, 0, 7, TileType.ThrowingCrab) && !isMonsterInArea(y, x, 0, 7, TileType.AngryShell))
+                    if (CheckArea(y - 2, x, 5, 5, TileType.Blank) && CheckArea(y + 1, x, 0, 5, TileType.Block) && !isObjectInArea(y, x, 0, 14, TileType.ThrowingCrab) && !isObjectInArea(y, x, 0, 10, TileType.AngryShell))
                     {
                         // Summon Probability = 50%
                         bool isInstantiate = Random.Range(0, 100) < 50;
@@ -1992,7 +2027,7 @@ namespace SunkenRuins
             }
         }
 
-        private bool isMonsterInArea(int EnemyY, int EnemyX, int RangeY, int RangeX, TileType tileType)
+        private bool isObjectInArea(int EnemyY, int EnemyX, int RangeY, int RangeX, TileType tileType)
         {
             // IndexOutOfRangeException
             if (EnemyY - RangeY/2 < 0 || EnemyY + RangeY/2 >= mapYLength * mapHeight
@@ -2200,7 +2235,6 @@ namespace SunkenRuins
                 {
                     row += baseMap[i, j].ToString() + " ";
                 }
-                //Debug.Log(row);
                 row = null;
             }
         }
