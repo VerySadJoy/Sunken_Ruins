@@ -168,7 +168,7 @@ MonoBehaviour:
   retreatSpeed: 4
   distanceFromPlayer: 3
   boostTime: 1
-  boostVelocity: 5
+  boostVelocity: 8
   maxBoostAmount: 3
   decelerationDuration: 1
 --- !u!114 &8736321649684762203

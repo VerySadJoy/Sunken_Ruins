@@ -10,10 +10,6 @@ namespace SunkenRuins
         [SerializeField] private ShellStat shellStat;
         [SerializeField] private ShellCircleDetection shellCircleDetection;
         [SerializeField] private ShellAttackDetection shellAttackDetection;
-        [SerializeField] private SpriteRenderer shellSpriteRenderer;
-        private bool isAbsorbingPlayer { get { return player != null; } }
-        [SerializeField] private Sprite[] sprites;
-        private int spriteIndex = 9;
         private Animator animator;
         
         private int keyPressCount = 0;
