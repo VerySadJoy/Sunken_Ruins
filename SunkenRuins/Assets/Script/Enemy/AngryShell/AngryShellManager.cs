@@ -37,11 +37,6 @@ namespace SunkenRuins
             EventManager.StopListening(EventType.ShellRelease, OnPlayerEscape_ReleasePlayer);
         }
 
-        private void Update()
-        {
-
-        }
-
         private IEnumerator StartTimer()
         {
             while (timer <= shellStat.EngulfTime) {
