@@ -1035,6 +1035,14 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 418955424}
+    - target: {fileID: 4032099713048291100, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 4032099713048291100, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.45
+      objectReference: {fileID: 0}
     - target: {fileID: 6584809685606741137, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1278,6 +1286,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HypnoCuttleFish
       objectReference: {fileID: 0}
+    - target: {fileID: 8164341707400573675, guid: 1444110cdbaf9f54c956065999e2da69, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5867995370089119299, guid: 1444110cdbaf9f54c956065999e2da69, type: 3}
@@ -1298,7 +1310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2623653881379105391, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8962237979625893998, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
       propertyPath: m_LocalPosition.x
