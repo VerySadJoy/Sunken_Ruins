@@ -28,7 +28,7 @@ namespace SunkenRuins {
         public float moveDecceleration = 50f;
         public float normalBoostSpeed = 10f;
         public float perfectBoostSpeed = 15f;
-        public float absorbSpeed = 6f;
+        public float absorbSpeed = 1f;
 
         //Bool
         private bool isInvincible = false; public bool IsInvincible { get { return isInvincible;} }

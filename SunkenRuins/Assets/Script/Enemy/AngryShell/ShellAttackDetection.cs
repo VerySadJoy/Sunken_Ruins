@@ -30,7 +30,7 @@ namespace SunkenRuins
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
                 //Debug.Log("네모: 플레이어 감지!");
-                EventManager.TriggerEvent(EventType.ShellSwallow, new Dictionary<string, object>() { {"shellPos", transform.position } });
+                //EventManager.TriggerEvent(EventType.ShellSwallow, new Dictionary<string, object>() { {"shellPos", transform.position } });
                 // EventManager.TriggerEvent(EventType.ShellAttack, null);
             }
         }

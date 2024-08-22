@@ -21,6 +21,11 @@ namespace SunkenRuins
         private Vector2 startPosition;
         private float lerpAmount;
         [SerializeField] private float distanceFromPlayer = 3.0f;
+        [Header("Boost")]
+        private int boostCount = 0;
+        public float boostTime = 1f;
+        public float boostVelocity = 5f;
+        public int maxBoostAmount = 3;
 
         // State 변수
         // private bool isEscape { get { return keyPressCount >= totalKeyAmount; } }
@@ -115,7 +120,7 @@ namespace SunkenRuins
         private void MoveToPlayer()
         {
             lerpAmount += Time.deltaTime / hypnotizeTime;
-            transform.position = Vector2.Lerp(startPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);
+            //transform.position = Vector2.Lerp(startPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);
         }
 
         private void OnPlayerDetection_Hypnotize(Dictionary<string, object> message)
@@ -128,6 +133,29 @@ namespace SunkenRuins
             // 쫒아갈 플레이어 reference 받기
             player = (Transform)message["Player"];
         }
+
+        private void SquidAnimation () {
+            //rb.velocity = Vector2.left;
+            StartCoroutine(ApplyImpulse());
+        }
+        private IEnumerator ApplyImpulse() {
+            float ccibal = 0f;
+            Vector2 impulseVelocity = (boostCount % (2 * maxBoostAmount) < maxBoostAmount ? 1 : -1) * Vector2.left * boostVelocity;
+            boostCount++;
+            while (ccibal < boostTime)
+            {
+                rb.velocity = Vector2.Lerp(impulseVelocity, Vector2.zero, ccibal);
+                ccibal += Time.deltaTime;
+                yield return null;
+            }
+            rb.velocity = Vector2.zero;
+            
+        }
+        private void ChangeDirection() {
+            Debug.Log(boostCount);
+            UpdateFacingDirection(boostCount % (2 * maxBoostAmount) < maxBoostAmount ? Vector2.right : Vector2.left);
+        }
+
 
         // private void StopEngulf()
         // {

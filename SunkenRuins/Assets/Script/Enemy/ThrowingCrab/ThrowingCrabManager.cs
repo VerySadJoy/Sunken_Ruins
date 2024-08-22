@@ -73,7 +73,7 @@ namespace SunkenRuins
 
         private void OnPlayerDetection_ThrowRock(Dictionary<string, object> message)
         {
-            if (currentState == CrabState.Patrolling)
+            if (currentState == CrabState.Patrolling && this.GetComponentInChildren<ThrowingCrabCircleDetection>().GetInstanceID() == (int)message["ObjectID"])
             {
                 currentState = CrabState.Throwing;
                 player = (Transform)message["Player"];

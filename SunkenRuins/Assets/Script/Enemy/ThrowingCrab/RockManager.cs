@@ -34,7 +34,9 @@ namespace SunkenRuins
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.gameObject.CompareTag("Player"))
+            Debug.Log(LayerMask.LayerToName(collision.gameObject.layer));
+
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Player" || LayerMask.LayerToName(collision.gameObject.layer) == "Wall")
             {
                 Destroy(gameObject);
             }
