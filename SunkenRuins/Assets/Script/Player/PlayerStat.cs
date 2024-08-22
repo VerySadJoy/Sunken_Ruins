@@ -104,13 +104,13 @@ namespace SunkenRuins {
             // Player의 BoxCollider를 가져와서 끈다 <-- 이거 안 좋은 구조 같은데 의견 부탁해요...
             BoxCollider2D tempPlayerCollider = this.GetComponent<BoxCollider2D>();
             isInvincible = true;
-            Debug.Log("무적 시작");
+            //Debug.Log("무적 시작");
             tempPlayerCollider.enabled = false;
             yield return new WaitForSeconds(invincibleTime); // 인자로 받은 무적 시간이 끝나면
 
             // Player의 BoxCollider를 다시 켠다
             isInvincible = false;
-            Debug.Log("무적 풀림");
+            //Debug.Log("무적 풀림");
             tempPlayerCollider.enabled = true;
             
             // TODO:
@@ -161,7 +161,6 @@ namespace SunkenRuins {
 
         public void Damage(int damageAmount)
         {
-            Debug.Log("체력 손실");
             playerCurrentHealth -= damageAmount;
             playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
 

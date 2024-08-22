@@ -107,16 +107,7 @@ namespace SunkenRuins
 
             yield return new WaitForSeconds(electricAttack.showSpriteTime); // 잠깐 멈춘다 (공격 모션 등의 이유)
             rb.velocity = (initialPosition - transform.position).normalized * stingRayStat.initialMoveSpeed;
-            if (initialPosition.x > transform.position.x)
-            {
-                // Initial position is to the right
-                UpdateFacingDirection(Vector2.right);
-            }
-            else if (initialPosition.x < transform.position.x)
-            {
-                // Initial position is to the left
-                UpdateFacingDirection(Vector2.left);
-            }
+            UpdateFacingDirection(initialPosition.x > transform.position.x ? Vector2.right : Vector2.left);
             while (Vector3.Distance(transform.position, initialPosition) > 0.1f)
             {
                 yield return null; // Wait for the next frame
@@ -131,21 +122,7 @@ namespace SunkenRuins
         private void PerformPatrolMovement()
         {
             float offsetFromInitialPosition = transform.position.x - initialPosition.x;
-
-            // 순찰 경계를 넘어서면 방향 전환
-            if (offsetFromInitialPosition < -stingRayStat.patrolRange)
-            {
-                // Collider도 같이 뒤집어야 해서 각도 회전하는 게 맞는 듯!
-                // 방향 전환하기
-                UpdateFacingDirection(Vector2.right); // collider도 맞추어서 회전
-
-                // spriteRenderer.flipX = false;
-            }
-            else if (offsetFromInitialPosition > stingRayStat.patrolRange)
-            {
-                UpdateFacingDirection(Vector2.left); // collider도 맞추어서 회전
-            }
-
+            UpdateFacingDirection(offsetFromInitialPosition < -stingRayStat.patrolRange ? Vector2.right : Vector2.left);
             // 속도 설정
             rb.velocity = new Vector2(stingRayStat.initialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
         }

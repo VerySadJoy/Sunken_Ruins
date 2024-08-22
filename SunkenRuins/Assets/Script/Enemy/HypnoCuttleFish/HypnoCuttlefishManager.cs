@@ -18,7 +18,7 @@ namespace SunkenRuins
         public float retreatSpeed = 4f;
         // public bool isHypnotizePlayer { get { return player != null; } }
         private float retreatTime = 3f;
-        private Vector2 startPosition;
+        private Vector3 initialPosition;
         private float lerpAmount;
         [SerializeField] private float distanceFromPlayer = 3.0f;
         [Header("Boost")]
@@ -37,7 +37,7 @@ namespace SunkenRuins
         protected override void Start()
         {
             base.Start();
-            startPosition = transform.position;
+            initialPosition = transform.position;
             // retreatSpeed = (오브젝트 길이) * time.deltatime / (이동할 시간) <== 상의 필요
         }
 
@@ -88,11 +88,14 @@ namespace SunkenRuins
 
         private IEnumerator retreatCoroutine()
         {
-            rb.velocity = retreatSpeed * Vector2.left;
-            yield return new WaitForSeconds(retreatTime); // 일단 하드코딩으로 1초 후퇴한다고 설정함
-            rb.velocity = Vector2.zero;
+            rb.velocity = (initialPosition - transform.position).normalized * retreatSpeed;
+            UpdateFacingDirection(initialPosition.x > transform.position.x ? Vector2.right : Vector2.left);
+            while (Vector3.Distance(transform.position, initialPosition) > 0.1f)
+            {
+                yield return null; // Wait for the next frame
+            }
+            rb.velocity = Vector3.zero;
             isRetreat = false;
-            // rb.constraints = RigidbodyConstraints2D.FreezeAll; // 일단 하드코딩으로 아예 못 움직이게 만듦
         }
 
         private IEnumerator StopHypnotizeCoroutine()
@@ -100,7 +103,8 @@ namespace SunkenRuins
             // EventManager.TriggerEvent(EventType.ShellEscape, null);
             timer = 0f;
             keyPressCount = 0;
-            canAttack = false; isHypnotize = false;
+            canAttack = false;
+            isHypnotize = false;
             player = null;
 
             yield return new WaitForSeconds(hypnotizeDelayTime);
@@ -109,8 +113,9 @@ namespace SunkenRuins
         
         private void AttackPlayer()
         {
+            UpdateFacingDirection(player.transform.position.x > this.transform.position.x ? Vector2.right : Vector2.left);
             player.GetComponent<PlayerStat>().Damage(damagePerAttack);
-            Debug.Log("갑오징어가 플레이어를 공격함"); //이거 왜 로그 에러임? 이거 나오면 안됨????
+            Debug.Log("갑오징어가 플레이어를 공격함");
             StartCoroutine(StopHypnotizeCoroutine());
 
             // TODO:
@@ -120,7 +125,7 @@ namespace SunkenRuins
         private void MoveToPlayer()
         {
             lerpAmount += Time.deltaTime / hypnotizeTime;
-            //transform.position = Vector2.Lerp(startPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);
+            transform.position = Vector3.Lerp(initialPosition, player.position + distanceFromPlayer * Vector3.left, lerpAmount);
         }
 
         private void OnPlayerDetection_Hypnotize(Dictionary<string, object> message)
@@ -135,25 +140,27 @@ namespace SunkenRuins
         }
 
         private void SquidAnimation () {
-            //rb.velocity = Vector2.left;
+            if (isRetreat) {
+                return;
+            }
             StartCoroutine(ApplyImpulse());
         }
         private IEnumerator ApplyImpulse() {
+
             float ccibal = 0f;
-            Vector2 impulseVelocity = (boostCount % (2 * maxBoostAmount) < maxBoostAmount ? 1 : -1) * Vector2.left * boostVelocity;
+            Vector3 impulseVelocity = (boostCount % (2 * maxBoostAmount) < maxBoostAmount ? 1 : -1) * Vector3.left * boostVelocity;
             boostCount++;
             while (ccibal < boostTime)
             {
-                rb.velocity = Vector2.Lerp(impulseVelocity, Vector2.zero, ccibal);
+                rb.velocity = Vector3.Lerp(impulseVelocity, Vector3.zero, ccibal);
                 ccibal += Time.deltaTime;
                 yield return null;
             }
-            rb.velocity = Vector2.zero;
+            rb.velocity = Vector3.zero;
             
         }
         private void ChangeDirection() {
-            Debug.Log(boostCount);
-            UpdateFacingDirection(boostCount % (2 * maxBoostAmount) < maxBoostAmount ? Vector2.right : Vector2.left);
+            UpdateFacingDirection(boostCount % (2 * maxBoostAmount) < maxBoostAmount ? Vector3.right : Vector3.left);
         }
 
 

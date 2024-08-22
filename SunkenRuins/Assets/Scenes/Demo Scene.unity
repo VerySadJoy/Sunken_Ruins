@@ -237,6 +237,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HealthPotion
       objectReference: {fileID: 0}
+    - target: {fileID: 7011223438221127244, guid: 8358104773ec2364db16f3ef012ec84d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8483417001115487759, guid: 8358104773ec2364db16f3ef012ec84d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.1100006
@@ -748,6 +752,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BubbleShield
       objectReference: {fileID: 0}
+    - target: {fileID: 969599016839738218, guid: 4d0278170f447b84cb350254329e5854, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2314725387229111044, guid: 4d0278170f447b84cb350254329e5854, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12.013518
@@ -804,6 +812,10 @@ PrefabInstance:
     - target: {fileID: 1368620166249159327, guid: 65b36e02f259b704eb89c85ed588a6b8, type: 3}
       propertyPath: m_Name
       value: PowerBattery
+      objectReference: {fileID: 0}
+    - target: {fileID: 1368620166249159327, guid: 65b36e02f259b704eb89c85ed588a6b8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7029357296713279848, guid: 65b36e02f259b704eb89c85ed588a6b8, type: 3}
       propertyPath: m_LocalPosition.x
