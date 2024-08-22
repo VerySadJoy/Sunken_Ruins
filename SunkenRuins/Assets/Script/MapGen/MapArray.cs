@@ -1905,53 +1905,120 @@ namespace SunkenRuins
             {
                 for (int x = 1; x < realMap.GetLength(1) - 1; ++x)
                 {
-                    // Check Boundaries
-                    bool isUpBlank = realMap[y + 1, x] == 0;
-                    bool isDownBlank = realMap[y - 1, x] == 0;
-                    bool isLeftBlank = realMap[y, x - 1] == 0;
-                    bool isRightBlank = realMap[y, x + 1] == 0;
-
-                    // Electric StingRay & HypnoCuttleFish
-                    if (isUpBlank && isDownBlank && isLeftBlank && isRightBlank)
+                    // Throwing Crab                - 빈 공간 체크                               - 바닥 체크                               - 꽃게 최소 간격 체크
+                    if (CheckArea(y - 2, x, 5, 5, TileType.Blank) && CheckArea(y + 1, x, 0, 5, TileType.Block) && !CheckArea(y + 1, x, 0, 5, TileType.ThrowingCrab))
                     {
-                        // Summon Probability = 20%
-                        bool isInstantiate = Random.Range(0, 100) < 2;
+                        // Summon Probability = 50%
+                        bool isInstantiate = Random.Range(0, 100) < 50;
                         if (isInstantiate)
                         {
-                            realMap[y, x] = (int)TileType.ElectricStingRay;
+                            Debug.LogWarning("Instantiate Crab");
+                            realMap[y, x] = (int)TileType.ThrowingCrab;
                         }
                     }
-
-                    // AngryShell
-                    if (isUpBlank && isBlank(y, 2, x, 0) && isLeftBlank && isRightBlank && !isDownBlank)
-                    {
-                        // Summon Probability = 20%
-                        bool isInstantiate = Random.Range(0, 100) < 2;
-                        if (isInstantiate)
-                        {
-                            realMap[y, x] = (int)TileType.AngryShell;
-                        }
-                    }
-
-                    // Throwing Crab
-
 
                 }
             }
         }
 
-        private bool isBlank(int y, int changeY, int x, int changeX)
+        // If Range is Even ==> Above is 1 more than Below is (ex: 6 tiles --> 3 tiles above, 2 tiles below)
+        private bool CheckArea(int EnemyY, int EnemyX, int RangeY, int RangeX, TileType tileType)
         {
-            if (y + changeY >= 0 && y + changeY < realMap.GetLength(0))
+            // IndexOutOfRangeException
+            if (EnemyY - RangeY/2 < 0 || EnemyY + RangeY/2 >= mapYLength * mapHeight
+                || EnemyX - RangeX/2 < 0 || EnemyX + RangeX/2 >= mapXLength * mapWidth)
             {
-                if (x + changeX >= 0 && x + changeX < realMap.GetLength(1))
+                return false;
+            }
+
+            bool isRangeYEven = RangeY % 2 == 0; bool isRangeXEven = RangeX % 2 == 0;
+            if (RangeY == 0)
+            {
+                if (isRangeXEven)
                 {
-                    return realMap[y + changeY, x + changeX] == 0;
+                    for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2; ++x)
+                    {
+                        if (realMap[EnemyY, x] != (int)tileType) return false;
+                        else continue;
+                    }
+                }
+                else // CheckArea(y, x, 0, 5, TileType.Block))
+                {
+                    for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2 + 1; ++x)
+                    {
+                        if (realMap[EnemyY, x] != (int)tileType) return false;
+                        else continue;
+                    }
+                }
+            }
+            else if (RangeX == 0)
+            {
+                if (isRangeYEven)
+                {
+                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2; ++y)
+                    {
+                        if (realMap[y, EnemyX] != (int)tileType) return false;
+                        else continue;
+                    }
+                }
+                else
+                {
+                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2 + 1; ++y)
+                    {
+                        if (realMap[y, EnemyX] != (int)tileType) return false;
+                        else continue;
+                    }
+                }
+            }
+            else
+            {
+                if (isRangeYEven && isRangeXEven)
+                {
+                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2; ++y)
+                    {
+                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2; ++x)
+                        {
+                            if (realMap[y, x] != (int)tileType) return false;
+                            else continue;
+                        }
+                    }
+                }
+                else if (isRangeYEven)
+                {
+                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2; ++y)
+                    {
+                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2 + 1; ++x)
+                        {
+                            if (realMap[y, x] != (int)tileType) return false;
+                            else continue;
+                        }
+                    }
+                }
+                else if (isRangeXEven)
+                {
+                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2 + 1; ++y)
+                    {
+                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2; ++x)
+                        {
+                            if (realMap[y, x] != (int)tileType) return false;
+                            else continue;
+                        }
+                    }
+                }
+                else // both ranges are odd
+                {
+                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2 + 1; ++y)
+                    {
+                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2 + 1; ++x)
+                        {
+                            if (realMap[y, x] != (int)tileType) return false;
+                            else continue;
+                        }
+                    }
                 }
             }
 
-            // IndexOutOfBounds
-            return true;
+            return true; // area is all blank!
         }
 
         private void TestBaseMapGeneration()

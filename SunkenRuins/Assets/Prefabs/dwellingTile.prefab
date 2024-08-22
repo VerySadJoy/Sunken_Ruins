@@ -67,14 +67,26 @@ MonoBehaviour:
   UpLeftBlank: {fileID: -1299587043, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   UpDownRightBlank: {fileID: 833445371, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   UpDownLeftBlank: {fileID: 1170976214, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightPartialSideUpDownRightBlank: {fileID: -885937409, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftPartialSideUpDownLeftBlank: {fileID: -754635692, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   UpDownBlank: {fileID: 1969527567, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   AllBlank: {fileID: -723288260, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  PartialSidesAllBlank: {fileID: -104792901, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightPartialSideAllBlank: {fileID: -1667299755, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftPartialSideAllBlank: {fileID: 1426582824, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   DownRightBlank: {fileID: 2026483991, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   DownLeftBlank: {fileID: 284746599, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightPartialSideDownRightBlank: {fileID: -392121655, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftPartialSideDownLeftBlank: {fileID: 203979784, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   DownLeftRightBlank: {fileID: 864830220, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  PartialSidesDownLeftRightBlank: {fileID: 864830220, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightPartialSideDownLeftRightBlank: {fileID: 5308002, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftPartialSideDownLeftRightBlank: {fileID: -1408306278, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   DownBlank: {fileID: -313496942, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   UpLeftCorner: {fileID: -1179209146, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   UpRightCorner: {fileID: -44101788, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  PartialSideUpRightCorner: {fileID: 1748918994, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  PartialSideUpLeftCorner: {fileID: -938410110, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   UpCorners: {fileID: -1259038996, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   DownFullUpLeftCorner: {fileID: -1832336387, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   DownFullUpRightCorner: {fileID: 1856236933, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
