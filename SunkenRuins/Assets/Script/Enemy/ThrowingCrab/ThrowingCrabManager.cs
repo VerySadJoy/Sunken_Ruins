@@ -22,8 +22,9 @@ namespace SunkenRuins
         // Components
         private ThrowingCrabStat throwingCrabStat;
 
-        // Wall LayerMask
+        // LayerMasks
         [SerializeField] private LayerMask wallLayer;
+        [SerializeField] private LayerMask enemyLayer;
         
         // State Management
         private CrabState currentState;
@@ -50,7 +51,8 @@ namespace SunkenRuins
 
         private void Update(){
             if (!Physics2D.Raycast(transform.position + (isFacingRight ? 1.6f : -1.6f) * Vector3.right + 1.5f * Vector3.down, Vector3.down, 0.6f, wallLayer)
-                || Physics2D.Raycast(transform.position + (isFacingRight ? 1.6f : -1.6f) * Vector3.right, Vector3.down, 0.6f, wallLayer))
+                || Physics2D.Raycast(transform.position + (isFacingRight ? 1.6f : -1.6f) * Vector3.right, Vector3.down, 0.6f, wallLayer)
+                || Physics2D.Raycast(transform.position + (isFacingRight ? 1.6f : -1.6f) * Vector3.right, Vector3.down, 0.6f, enemyLayer))
             {
                 UpdateFacingDirection(isFacingRight ? Vector3.left : Vector3.right);
             }
