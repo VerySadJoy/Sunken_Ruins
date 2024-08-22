@@ -57,32 +57,44 @@ MonoBehaviour:
   - {fileID: 5546639767209606403, guid: e50e1f57d86b25c458422d212b750b00, type: 3}
   - {fileID: 5546639767209606403, guid: 71e4f015302dffd4093d002a999f02f8, type: 3}
   - {fileID: 5546639767209606403, guid: 4186fc551836912449411406d3b7678e, type: 3}
-  NoBlank: {fileID: 448823775, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  RightBlank: {fileID: 963815487, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  LeftBlank: {fileID: -1382098752, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  LeftRightBlank: {fileID: 1695917611, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpBlank: {fileID: 124977813, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpRightBlank: {fileID: -2104367736, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpLeftRightBlank: {fileID: 1363028821, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpLeftBlank: {fileID: -525952677, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpDownRightBlank: {fileID: -1900611191, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpDownLeftBlank: {fileID: 325794107, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpDownBlank: {fileID: -621447791, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  AllBlank: {fileID: 280884242, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  DownRightBlank: {fileID: -1798808456, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  DownLeftBlank: {fileID: 1387286055, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  DownLeftRightBlank: {fileID: -752707432, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  DownBlank: {fileID: 2034745425, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpLeftCorner: {fileID: -1483268136, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpRightCorner: {fileID: -957394907, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  UpCorners: {fileID: 1979297375, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  DownFullUpLeftCorner: {fileID: -1598859546, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  DownFullUpRightCorner: {fileID: -1725511530, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  DownLeftFullUpRightCorner: {fileID: 972206056, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
-  DownFullUpCorners: {fileID: 21300000, guid: 49038a9abba37464b9e4b926ccbf8308, type: 3}
-  DownRightFullUpLeftCorner: {fileID: 1621551323, guid: 63ba8868829a8454896385f2cf9ef19f, type: 3}
-  LeftFullUpRightCorner: {fileID: 803877927, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
-  RightFullUpLeftCorner: {fileID: 683363467, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  NoBlank: {fileID: -1271273878, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightBlank: {fileID: 1391834629, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftBlank: {fileID: -373796074, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftRightBlank: {fileID: -441680877, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpBlank: {fileID: 1900289934, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpRightBlank: {fileID: 2097358943, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpLeftRightBlank: {fileID: 1204484967, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpLeftBlank: {fileID: -1299587043, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpDownRightBlank: {fileID: 833445371, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpDownLeftBlank: {fileID: 1170976214, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightPartialSideUpDownRightBlank: {fileID: -885937409, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftPartialSideUpDownLeftBlank: {fileID: -754635692, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpDownBlank: {fileID: 1969527567, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  AllBlank: {fileID: -723288260, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  PartialSidesAllBlank: {fileID: -104792901, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightPartialSideAllBlank: {fileID: -1667299755, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftPartialSideAllBlank: {fileID: 1426582824, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  DownRightBlank: {fileID: 2026483991, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  DownLeftBlank: {fileID: 284746599, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightPartialSideDownRightBlank: {fileID: -392121655, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftPartialSideDownLeftBlank: {fileID: 203979784, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  DownLeftRightBlank: {fileID: 864830220, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  PartialSidesDownLeftRightBlank: {fileID: 864830220, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightPartialSideDownLeftRightBlank: {fileID: 5308002, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftPartialSideDownLeftRightBlank: {fileID: -1408306278, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  DownBlank: {fileID: -313496942, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpLeftCorner: {fileID: -1179209146, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpRightCorner: {fileID: -44101788, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  PartialSideUpRightCorner: {fileID: 1748918994, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  PartialSideUpLeftCorner: {fileID: -938410110, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  UpCorners: {fileID: -1259038996, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  DownFullUpLeftCorner: {fileID: -1832336387, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  DownFullUpRightCorner: {fileID: 1856236933, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  DownLeftFullUpRightCorner: {fileID: 1856236933, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  DownFullUpCorners: {fileID: 1888629982, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  DownRightFullUpLeftCorner: {fileID: -1832336387, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  LeftFullUpRightCorner: {fileID: -1636272859, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
+  RightFullUpLeftCorner: {fileID: -2035594732, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
 --- !u!1 &4875374364117775661
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,7 +168,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 280884242, guid: a4c4f6eb8f7ef7b4bba050a1c5bb48b5, type: 3}
+  m_Sprite: {fileID: 826286346, guid: 2a94053120b224f4fb206140255bfc1d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

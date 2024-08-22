@@ -22,10 +22,14 @@ namespace SunkenRuins
         // Components
         private ThrowingCrabStat throwingCrabStat;
 
+        // LayerMasks
+        [SerializeField] private LayerMask wallLayer;
+        [SerializeField] private LayerMask enemyLayer;
+        
         // State Management
         private CrabState currentState;
         [SerializeField] private GameObject rockPrefab;
-
+        
         // Sprite Handling
         private SpriteRenderer crabSpriteRenderer;
         [SerializeField] private Sprite[] sprites;
@@ -46,6 +50,13 @@ namespace SunkenRuins
         }
 
         private void Update(){
+            if (!Physics2D.Raycast(transform.position + (isFacingRight ? 1.6f : -1.6f) * Vector3.right + 1.5f * Vector3.down, Vector3.down, 0.6f, wallLayer)
+                || Physics2D.Raycast(transform.position + (isFacingRight ? 1.6f : -1.6f) * Vector3.right, Vector3.down, 0.6f, wallLayer)
+                || Physics2D.Raycast(transform.position + (isFacingRight ? 1.6f : -1.6f) * Vector3.right, Vector3.down, 0.6f, enemyLayer))
+            {
+                UpdateFacingDirection(isFacingRight ? Vector3.left : Vector3.right);
+            }
+
             if (currentState == CrabState.Patrolling)
             {
                 PerformPatrolMovement();
@@ -130,7 +141,6 @@ namespace SunkenRuins
             float offsetFromInitialPosition = transform.position.x - startPosition.x;
             if (offsetFromInitialPosition < -throwingCrabStat.patrolRange)
             {
-
                 UpdateFacingDirection(Vector2.right);
             }
             else if (offsetFromInitialPosition > throwingCrabStat.patrolRange)
