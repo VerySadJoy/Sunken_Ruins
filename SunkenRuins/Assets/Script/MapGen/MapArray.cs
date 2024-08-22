@@ -1601,7 +1601,7 @@ namespace SunkenRuins
                 }
             }
 
-            CheckMonsterGenerationByTile(); // change int[] array instead of using collision detection
+            CheckEnemyGenerationByTile(); // change int[] array instead of using collision detection
             TilePlacement(realMap);
         }
 
@@ -1899,7 +1899,7 @@ namespace SunkenRuins
             }
         }
 
-        private void CheckMonsterGenerationByTile()
+        private void CheckEnemyGenerationByTile()
         {
             for (int y = 1; y < realMap.GetLength(0) - 1; ++y)
             {
