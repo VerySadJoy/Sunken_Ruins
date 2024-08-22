@@ -63,6 +63,11 @@ namespace SunkenRuins
             highlightImageTransform.localPosition = Vector3.right * UnityEngine.Random.Range(-60f, 60f);
         }
 
+        private void OnEnable()
+        {
+            SetNewScrollandImageValue();
+        }
+
         private void Update()
         {
             if (scrollbar.value >= 1)

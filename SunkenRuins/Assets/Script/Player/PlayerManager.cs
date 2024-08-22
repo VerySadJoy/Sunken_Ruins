@@ -165,7 +165,7 @@ namespace SunkenRuins
                 //Debug.Log($"Moving towards shell. Current Position: {transform.position}, Shell Position: {shellPosition}");
                 //rb.AddForce(dirFromShellNormalized * 10);
                 //rb.velocity = Vector2.ClampMagnitude(rb.velocity, 10);
-                transform.position = Vector3.MoveTowards(transform.position, shellPosition, playerStat.absorbSpeed * Time.deltaTime);
+                rb.velocity += 1/10 * new Vector2(rb.velocity.x * dirFromShellNormalized.x, rb.velocity.y * dirFromShellNormalized.y);
             }
         }
 
@@ -284,13 +284,13 @@ namespace SunkenRuins
             {
                 StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed, true));
                 EventManager.TriggerEvent(EventType.PerfectBoost, null);
-                Debug.Log("Perfect Boost");
+                // Debug.Log("Perfect Boost");
             }
             else
             {
                 StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed, false));
                 EventManager.TriggerEvent(EventType.NormalBoost, null);
-                Debug.Log("Normal Boost");
+                // Debug.Log("Normal Boost");
             }
         }
 
@@ -445,11 +445,11 @@ namespace SunkenRuins
             // 컷신?�나 뭐할??Input 죽이????
             if (enable)
             {
-                playerControl.Player.Enable();
+                playerControl.Player.Mouse.Enable();
             }
             else
             {
-                playerControl.Player.Disable();
+                playerControl.Player.Mouse.Disable();
             }
         }
         public void SetBoostInputEnable(bool enable) {
