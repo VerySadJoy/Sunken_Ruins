@@ -30,8 +30,7 @@ namespace SunkenRuins
                 // Player을 향하는 벡터 구하기
                 Vector2 dirToPlayerNormalized = (other.gameObject.transform.position - transform.position).normalized;
                 temp = dirToPlayerNormalized;
-
-                RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, dirToPlayerNormalized, rayCastDistance, playerLayerMask);
+                RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, dirToPlayerNormalized, circleCollider2D.radius, playerLayerMask);
                 if (raycastHit2D)
                 {
                     EventManager.TriggerEvent(EventType.HypnoCuttleFishHypnotize, new Dictionary<string, object>{ { "Player", other.gameObject.transform } });
