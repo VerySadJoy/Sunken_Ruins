@@ -36,9 +36,12 @@ namespace SunkenRuins
 
         private IEnumerator StartTimer()
         {
-            while (timer <= shellStat.EngulfTime) {
-                timer += Time.deltaTime;
+            float sibal = 0f;
+            while (sibal <= shellStat.EngulfTime) {
+                sibal += Time.deltaTime;
+                yield return null;
             }
+            Debug.Log("done");
             StartCoroutine(StopEngulfingCoroutine());
             yield return null;
         }
@@ -46,9 +49,8 @@ namespace SunkenRuins
         private void OnPlayerDetection_AbsorbPlayer(Dictionary<string, object> message)
         {
             animator.SetBool("Absorb", true);
-            
-            Debug.Log(animator.GetBool("Absorb"));
             StartCoroutine(StartTimer());
+            shellCircleDetection.gameObject.GetComponent<CircleCollider2D>().enabled = false;
         }
 
         private void OnPlayerDetection_AttackPlayer(Dictionary<string, object> message)
@@ -64,7 +66,7 @@ namespace SunkenRuins
         {
             keyPressCount = 0;
             EventManager.TriggerEvent(EventType.ShellEscape, null);
-            shellCircleDetection.gameObject.GetComponent<CircleCollider2D>().enabled = false;
+            
             animator.SetBool("Absorb", false);
             yield return new WaitForSeconds(shellStat.EngulfDelayTime);
             shellCircleDetection.gameObject.GetComponent<CircleCollider2D>().enabled = true;
