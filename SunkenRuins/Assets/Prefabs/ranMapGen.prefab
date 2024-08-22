@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6140244800990440775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8244512904257440539}
+  - component: {fileID: 9076053876961462086}
+  m_Layer: 0
+  m_Name: ranMapGen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8244512904257440539
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6140244800990440775}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5, y: -5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9076053876961462086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6140244800990440775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87e4f4aab2b4fa14f9d30cff8aea4f9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapHeight: 16
+  mapWidth: 8
+  dwellingTile: {fileID: 253773865271393366, guid: dd029d911005b38478dcfcf771b6dddb, type: 3}
+  ElectricStingRay: {fileID: 2623653881379105391, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
+  HypnoCuttleFish: {fileID: 8164341707400573675, guid: 1444110cdbaf9f54c956065999e2da69, type: 3}
+  AngryShell: {fileID: 4784678540410205240, guid: d2479636ad35507499994cfcfafb9649, type: 3}
+  ThrowingCrab: {fileID: 1371259693188626941, guid: 1231d0bc922b1e54290efd01141ae5a3, type: 3}
+  HealthPotion: {fileID: 7011223438221127244, guid: 8358104773ec2364db16f3ef012ec84d, type: 3}
+  BubbleShield: {fileID: 969599016839738218, guid: 4d0278170f447b84cb350254329e5854, type: 3}
+  PowerBattery: {fileID: 1368620166249159327, guid: 65b36e02f259b704eb89c85ed588a6b8, type: 3}

@@ -1892,6 +1892,21 @@ namespace SunkenRuins
                             Instantiate(ThrowingCrab, new Vector3(tileTraceX, tileTraceY), Quaternion.identity);
                             tileTraceX += 2;
                             break;
+                        
+                        case TileType.HealthPotion:
+                            Instantiate(HealthPotion, new Vector3(tileTraceX, tileTraceY), Quaternion.identity);
+                            tileTraceX += 2;
+                            break;
+
+                        case TileType.BubbleShield:
+                            Instantiate(BubbleShield, new Vector3(tileTraceX, tileTraceY), Quaternion.identity);
+                            tileTraceX += 2;
+                            break;
+
+                        case TileType.PowerBattery:
+                            Instantiate(PowerBattery, new Vector3(tileTraceX, tileTraceY), Quaternion.identity);
+                            tileTraceX += 2;
+                            break;
 
                         case TileType.StartPosition:
                             EventManager.TriggerEvent(EventType.PlayerToStartPosition, new Dictionary<string, object>{{"StartPosition", new Vector3(tileTraceX, tileTraceY)}});
@@ -1904,6 +1919,18 @@ namespace SunkenRuins
                     }
                 }
                 tileTraceX = startTileX; tileTraceY -= 2;
+            }
+        }
+
+        private void CheckItemGenerationByTile()
+        {
+            for (int y = 1; y < realMap.GetLength(0) - 1; ++y)
+            {
+                for (int x = 1; x < realMap.GetLength(1) - 1; ++x)
+                {
+                    
+
+                }
             }
         }
 
@@ -1950,7 +1977,7 @@ namespace SunkenRuins
                     }
 
                     // Throwing Crab                - 빈 공간 체크                               - 바닥 체크                               - 꽃게 최소 간격 체크
-                    if (CheckArea(y - 2, x, 5, 5, TileType.Blank) && CheckArea(y + 1, x, 0, 5, TileType.Block) && !CheckArea(y, x, 0, 7, TileType.ThrowingCrab) && !isMonsterInArea(y, x, 0, 7, TileType.AngryShell))
+                    if (CheckArea(y - 2, x, 5, 5, TileType.Blank) && CheckArea(y + 1, x, 0, 5, TileType.Block) && !isMonsterInArea(y, x, 0, 7, TileType.ThrowingCrab) && !isMonsterInArea(y, x, 0, 7, TileType.AngryShell))
                     {
                         // Summon Probability = 50%
                         bool isInstantiate = Random.Range(0, 100) < 50;
