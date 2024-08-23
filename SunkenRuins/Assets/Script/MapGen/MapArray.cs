@@ -12,10 +12,10 @@ namespace SunkenRuins
         int[,] baseMap; int[,] realMap;
         int startX; int startY;
         int endX; int endY;
-        int tileTraceX = 10; int tileTraceY = 10;
+        int tileTraceX = -70; int tileTraceY = 145;
 
         // Tile Boundaries
-        int startTileX = 10; int startTileY = 10;
+        int startTileX = -70; int startTileY = 145;
         // int endTileX; int endTileY;
         int mapXLength = 10; int mapYLength = 12;
 
