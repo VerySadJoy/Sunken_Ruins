@@ -277,12 +277,14 @@ namespace SunkenRuins
             {
                 StartCoroutine(BoostMovement(boostDirection, playerStat.perfectBoostSpeed, true));
                 EventManager.TriggerEvent(EventType.PerfectBoost, null);
+                SFXManager.instance.PlaySFX(1);
                 // Debug.Log("Perfect Boost");
             }
             else
             {
                 StartCoroutine(BoostMovement(boostDirection, playerStat.normalBoostSpeed, false));
                 EventManager.TriggerEvent(EventType.NormalBoost, null);
+                SFXManager.instance.PlaySFX(0);
                 // Debug.Log("Normal Boost");
             }
         }
