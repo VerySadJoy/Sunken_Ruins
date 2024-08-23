@@ -28,12 +28,15 @@ namespace SunkenRuins
         [SerializeField] GameObject ElectricStingRay;
         [SerializeField] GameObject HypnoCuttleFish;
         [SerializeField] GameObject AngryShell;
-        [SerializeField] GameObject ThrowingCrab;   
+        [SerializeField] GameObject ThrowingCrab;
 
         // Items
-        [SerializeField] GameObject HealthPotion; 
-        [SerializeField] GameObject BubbleShield; 
-        [SerializeField] GameObject PowerBattery; 
+        [SerializeField] GameObject HealthPotion;
+        [SerializeField] GameObject BubbleShield;
+        [SerializeField] GameObject PowerBattery;
+
+        // Item Instantiate Range (RealMap)
+        List<int[]> itemRanges;
 
         enum RoomType
         {
@@ -55,6 +58,7 @@ namespace SunkenRuins
             AllSidesRoom = 15,
             StartRoom = 16,
             EndRoom = 17,
+            ItemRoom = 18,
         }
 
         enum TileType
@@ -215,7 +219,7 @@ namespace SunkenRuins
                 {1, 1, 1, 1, 0, 0, 0, 1, 1, 1},
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             },
-        
+
             {
                 {1, 1, 1, 1, 1, 0, 0, 0, 0, 1},
                 {1, 1, 0, 0, 0, 0, 0, 0, 1, 1},
@@ -230,7 +234,7 @@ namespace SunkenRuins
                 {1, 1, 1, 0, 1, 0, 0, 1, 1, 1},
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             },
-        
+
             {
                 {1, 1, 1, 0, 0, 0, 0, 1, 1, 1},
                 {1, 1, 1, 1, 0, 0, 0, 0, 1, 1},
@@ -261,7 +265,7 @@ namespace SunkenRuins
                 {1, 1, 0, 0, 0, 0, 0, 0, 1, 1},
                 {1, 1, 1, 0, 0, 0, 0, 1, 1, 1},
             },
-        
+
             {
                 {1, 1, 1, 1, 0, 0, 0, 0, 0, 1},
                 {1, 1, 0, 0, 0, 0, 0, 0, 1, 1},
@@ -276,7 +280,7 @@ namespace SunkenRuins
                 {1, 1, 1, 0, 0, 0, 0, 1, 1, 1},
                 {1, 1, 0, 0, 0, 0, 0, 0, 1, 1},
             },
-        
+
             {
                 {1, 1, 1, 1, 0, 0, 0, 0, 1, 1},
                 {1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
@@ -773,7 +777,7 @@ namespace SunkenRuins
                 { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
             },
         };
-        
+
         int[,,] LeftRightRoom = new int[3, 12, 10]{
             {
                 { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -1137,6 +1141,8 @@ namespace SunkenRuins
 
         private void Start()
         {
+            itemRanges = new List<int[]>();
+
             MakeRealMap();
         }
 
@@ -1203,16 +1209,16 @@ namespace SunkenRuins
                             break;
 
                         case RoomType.UpRoom:
-                        break;
+                            break;
 
                         case RoomType.RightRoom:
-                        break;
+                            break;
 
                         case RoomType.DownRoom:
-                        break;
+                            break;
 
                         case RoomType.LeftRoom:
-                        break;
+                            break;
 
                         case RoomType.UpRightRoom:
                             flipProb = Random.Range(0, 3);
@@ -1403,7 +1409,7 @@ namespace SunkenRuins
                             break;
 
                         case RoomType.UpDownRoom:
-                        break;
+                            break;
 
                         case RoomType.LeftRightRoom:
                             flipProb = Random.Range(0, 3);
@@ -1453,10 +1459,10 @@ namespace SunkenRuins
                             break;
 
                         case RoomType.UpDownRightRoom:
-                        break;
+                            break;
 
                         case RoomType.UpDownLeftRoom:
-                        break;
+                            break;
 
                         case RoomType.DownLeftRightRoom:
                             flipProb = Random.Range(0, 3);
@@ -1607,7 +1613,8 @@ namespace SunkenRuins
             }
 
             CheckEnemyGenerationByTile(); // change int[] array instead of using collision detection
-            // CheckItemGenerationByTile(); // change int[] array as well
+            CheckItemGenerationByTile(); // change int[] array as well
+            TestBaseMapGeneration();
             TilePlacement(realMap);
         }
 
@@ -1651,7 +1658,7 @@ namespace SunkenRuins
                                     case 1:
                                         baseMap[basetraceY, basetraceX] = (int)RoomType.DownLeftRightRoom;
                                         break;
-                                    
+
                                     default:
                                         Debug.LogError("Error with LeftRight(Up/Down) Room Generation");
                                         break;
@@ -1690,7 +1697,7 @@ namespace SunkenRuins
                                 baseMap[basetraceY, basetraceX] = (int)RoomType.DownLeftRoom;
                                 baseMap[++basetraceY, basetraceX] = (int)RoomType.UpLeftRoom;
                             }
-                            else 
+                            else
                             {
                                 // Prob of having room with 3 open sides = 50%
                                 bool isThreeSidesOpen = Random.Range(0, 10) < 5;
@@ -1738,69 +1745,69 @@ namespace SunkenRuins
 
                     // Move Up
                     case 2:
-                        // CANNOT Move Up
-                        // bool canMoveUp = basetraceY > 1 && (basetraceX <= 0 || basetraceX >= mapWidth && 
-                        //                     (baseMap[basetraceY - 1, basetraceX - 1] != (int)RoomType.RandomRoom || baseMap[basetraceY - 1, basetraceX + 1] != (int)RoomType.RandomRoom));
-                        // if (!canMoveUp) 
-                        // {
-                        //     do moveProb = Random.Range(0, 4); while (moveProb == 2);
-                        // }
+                    // CANNOT Move Up
+                    // bool canMoveUp = basetraceY > 1 && (basetraceX <= 0 || basetraceX >= mapWidth && 
+                    //                     (baseMap[basetraceY - 1, basetraceX - 1] != (int)RoomType.RandomRoom || baseMap[basetraceY - 1, basetraceX + 1] != (int)RoomType.RandomRoom));
+                    // if (!canMoveUp) 
+                    // {
+                    //     do moveProb = Random.Range(0, 4); while (moveProb == 2);
+                    // }
 
-                        // else if (baseMap[basetraceY - 1, basetraceX] == (int)RoomType.RandomRoom)
-                        // {
-                        //     // Determine whether next move is left or right
-                        //     do moveProb = Random.Range(0, 4); while (moveProb == 1 || moveProb == 2);
+                    // else if (baseMap[basetraceY - 1, basetraceX] == (int)RoomType.RandomRoom)
+                    // {
+                    //     // Determine whether next move is left or right
+                    //     do moveProb = Random.Range(0, 4); while (moveProb == 1 || moveProb == 2);
 
-                        //     // Check for Room Open-ness
-                        //     // if (basetraceX - 1 < 0) // if left is void
-                        //     // {
-                        //     //     baseMap[basetraceY, basetraceX] = (int)RoomType.UpRightRoom;
-                        //     //     baseMap[--basetraceY, basetraceX] = (int)RoomType.DownRightRoom;
-                        //     // }
-                        //     // else if (basetraceX + 1 >= mapWidth) // if right is void
-                        //     // {
-                        //     //     baseMap[basetraceY, basetraceX] = (int)RoomType.UpLeftRoom;
-                        //     //     baseMap[--basetraceY, basetraceX] = (int)RoomType.DownLeftRoom;
-                        //     // }
-                        //     // else 
-                        //     // {
-                        //     // Prob of having room with 3 open sides = 40%
-                        //     bool isThreeSidesOpen = Random.Range(0, 10) < 4;
-                        //     if (isThreeSidesOpen)
-                        //     {
-                        //         baseMap[basetraceY, basetraceX] = (int)RoomType.UpLeftRightRoom;
-                        //         baseMap[--basetraceY, basetraceX] = (int)RoomType.DownLeftRightRoom;
-                        //     }
-                        //     else // open only two sides depending on next move
-                        //     {
-                        //         // Check for Below Room
-                        //         if (baseMap[basetraceY, basetraceX - 1] != (int)RoomType.RandomRoom) // If Left is NOT a RandomRoom,
-                        //         {
-                        //             baseMap[basetraceY, basetraceX] = (int)RoomType.UpLeftRoom;
-                        //         }
-                        //         else if (baseMap[basetraceY, basetraceX + 1] != (int)RoomType.RandomRoom) // If Right is NOT a RandomRoom,
-                        //         {
-                        //             baseMap[basetraceY, basetraceX] = (int)RoomType.UpRightRoom;
-                        //         }
-                        //         else
-                        //         {
-                        //             Debug.LogError("Error: Both Sides are NOT void and NOT randomRooms at the same time");
-                        //         }
+                    //     // Check for Room Open-ness
+                    //     // if (basetraceX - 1 < 0) // if left is void
+                    //     // {
+                    //     //     baseMap[basetraceY, basetraceX] = (int)RoomType.UpRightRoom;
+                    //     //     baseMap[--basetraceY, basetraceX] = (int)RoomType.DownRightRoom;
+                    //     // }
+                    //     // else if (basetraceX + 1 >= mapWidth) // if right is void
+                    //     // {
+                    //     //     baseMap[basetraceY, basetraceX] = (int)RoomType.UpLeftRoom;
+                    //     //     baseMap[--basetraceY, basetraceX] = (int)RoomType.DownLeftRoom;
+                    //     // }
+                    //     // else 
+                    //     // {
+                    //     // Prob of having room with 3 open sides = 40%
+                    //     bool isThreeSidesOpen = Random.Range(0, 10) < 4;
+                    //     if (isThreeSidesOpen)
+                    //     {
+                    //         baseMap[basetraceY, basetraceX] = (int)RoomType.UpLeftRightRoom;
+                    //         baseMap[--basetraceY, basetraceX] = (int)RoomType.DownLeftRightRoom;
+                    //     }
+                    //     else // open only two sides depending on next move
+                    //     {
+                    //         // Check for Below Room
+                    //         if (baseMap[basetraceY, basetraceX - 1] != (int)RoomType.RandomRoom) // If Left is NOT a RandomRoom,
+                    //         {
+                    //             baseMap[basetraceY, basetraceX] = (int)RoomType.UpLeftRoom;
+                    //         }
+                    //         else if (baseMap[basetraceY, basetraceX + 1] != (int)RoomType.RandomRoom) // If Right is NOT a RandomRoom,
+                    //         {
+                    //             baseMap[basetraceY, basetraceX] = (int)RoomType.UpRightRoom;
+                    //         }
+                    //         else
+                    //         {
+                    //             Debug.LogError("Error: Both Sides are NOT void and NOT randomRooms at the same time");
+                    //         }
 
-                        //         // Check for Above Room
-                        //         if (moveProb == 0) // next move = LEFT
-                        //         {
-                        //             baseMap[--basetraceY, basetraceX] = (int)RoomType.DownLeftRoom;
-                        //         }
-                        //         else if (moveProb == 3) // next move = RIGHT
-                        //         {
-                        //             baseMap[--basetraceY, basetraceX] = (int)RoomType.DownRightRoom;
-                        //         }
-                        //         else Debug.LogError("Next Move Error with MapGen");
-                        //     }
-                        //     // }
-                        // }
-                        // break;
+                    //         // Check for Above Room
+                    //         if (moveProb == 0) // next move = LEFT
+                    //         {
+                    //             baseMap[--basetraceY, basetraceX] = (int)RoomType.DownLeftRoom;
+                    //         }
+                    //         else if (moveProb == 3) // next move = RIGHT
+                    //         {
+                    //             baseMap[--basetraceY, basetraceX] = (int)RoomType.DownRightRoom;
+                    //         }
+                    //         else Debug.LogError("Next Move Error with MapGen");
+                    //     }
+                    //     // }
+                    // }
+                    // break;
 
                     // Move Right
                     case 3:
@@ -1828,7 +1835,7 @@ namespace SunkenRuins
                                     case 1:
                                         baseMap[basetraceY, basetraceX] = (int)RoomType.DownLeftRightRoom;
                                         break;
-                                    
+
                                     default:
                                         Debug.LogError("Error with LeftRight(Up/Down) Room Generation");
                                         break;
@@ -1851,7 +1858,7 @@ namespace SunkenRuins
                 }
             }
 
-            TestBaseMapGeneration();
+            // TestBaseMapGeneration();
         }
 
         private void TilePlacement(int[,] realMap)
@@ -1885,12 +1892,12 @@ namespace SunkenRuins
                             Instantiate(AngryShell, new Vector3(tileTraceX, tileTraceY), Quaternion.identity);
                             tileTraceX += 2;
                             break;
-                        
+
                         case TileType.ThrowingCrab:
                             Instantiate(ThrowingCrab, new Vector3(tileTraceX, tileTraceY), Quaternion.identity);
                             tileTraceX += 2;
                             break;
-                        
+
                         case TileType.HealthPotion:
                             Instantiate(HealthPotion, new Vector3(tileTraceX, tileTraceY), Quaternion.identity);
                             tileTraceX += 2;
@@ -1907,7 +1914,7 @@ namespace SunkenRuins
                             break;
 
                         case TileType.StartPosition:
-                            EventManager.TriggerEvent(EventType.PlayerToStartPosition, new Dictionary<string, object>{{"StartPosition", new Vector3(tileTraceX, tileTraceY)}});
+                            EventManager.TriggerEvent(EventType.PlayerToStartPosition, new Dictionary<string, object> { { "StartPosition", new Vector3(tileTraceX, tileTraceY) } });
                             tileTraceX += 2;
                             break;
 
@@ -1927,58 +1934,222 @@ namespace SunkenRuins
             int areaHeight = mapYLength * mapHeight / areaNum; // what if map height is NOT 4*n?
             int areaWidth = mapXLength * mapWidth;
 
-            // Items per each Area
-            int healthPotionNumPerArea = 1;
-            int powerBatteryNumPerArea = 1;
-            // int bubbleShieldNumPerArea = 1;
-
             // Check BaseMap for each Area
-            
-
-
-            for (int y = 1; y < realMap.GetLength(0) - 1; ++y)
+            for (int y = 1; y < baseMap.GetLength(0); ++y)
             {
-                for (int x = 1; x < realMap.GetLength(1) - 1; ++x)
+                // 가로 체크
+                for (int x = 0; x < baseMap.GetLength(1) - 1; ++x)
                 {
-                    // HealthPotion
-                    if (!isObjectInArea(y, x, 7, 7, TileType.HealthPotion))
-                    {
-                        // Summon Probability = 50%
-                        bool isInstantiate = Random.Range(0, 100) < 50;
-                        if (isInstantiate)
-                        {
-                            realMap[y, x] = (int)TileType.HealthPotion;
-                            continue;
-                        }
-                    }
+                    int rightBlankNum = 0; int leftBlankNum = 0; int minBlankNum = 2;
+                    int realMapX = x * mapXLength + mapXLength - 1;
 
-                    // PowerBattery
-                    if (!isObjectInArea(y, x, 7, 7, TileType.PowerBattery))
+                    // 비정석 루트 체크 - 각각 오른쪽, 왼쪽이 비어있어야 함
+                    if (baseMap[y, x] == (int)RoomType.RandomRoom && baseMap[y, x + 1] != (int)RoomType.RandomRoom)
                     {
-                        // Summon Probability = 50%
-                        bool isInstantiate = Random.Range(0, 100) < 50;
-                        if (isInstantiate)
+                        for (int i = y * mapYLength; i < y * mapYLength + mapYLength; i += 2)
                         {
-                            realMap[y, x] = (int)TileType.PowerBattery;
-                            continue;
-                        }
-                    }
+                            // 3칸 이상 오른쪽이 비어있으면
+                            if (realMap[i, realMapX] == (int)TileType.Blank)
+                            {
+                                rightBlankNum += 1;
+                            }
 
-                    // BubbleShield
-                    if (!isObjectInArea(y, x, 7, 7, TileType.BubbleShield))
-                    {
-                        // Summon Probability = 50%
-                        bool isInstantiate = Random.Range(0, 100) < 50;
-                        if (isInstantiate)
-                        {
-                            realMap[y, x] = (int)TileType.BubbleShield;
-                            continue;
+                            // 3칸 이상 왼쪽이 비어있으면
+                            if (realMap[i, realMapX + 1] == (int)TileType.Blank)
+                            {
+                                leftBlankNum += 1;
+                            }
+
+                            // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                            if (rightBlankNum >= minBlankNum && leftBlankNum >= minBlankNum)
+                            {
+                                baseMap[y, x] = (int)RoomType.ItemRoom;
+                            }
                         }
                     }
+                    else if (baseMap[y, x] != (int)RoomType.RandomRoom && baseMap[y, x + 1] == (int)RoomType.RandomRoom)
+                    {
+                        for (int i = y * mapYLength; i < y * mapYLength + mapYLength; i += 2)
+                        {
+                            // 3칸 이상 오른쪽이 비어있으면
+                            if (realMap[i, realMapX] == (int)TileType.Blank)
+                            {
+                                rightBlankNum += 1;
+                            }
+
+                            // 3칸 이상 왼쪽이 비어있으면
+                            if (realMap[i, realMapX + 1] == (int)TileType.Blank)
+                            {
+                                leftBlankNum += 1;
+                            }
+
+                            // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                            if (rightBlankNum >= minBlankNum && leftBlankNum >= minBlankNum)
+                            {
+                                baseMap[y, x + 1] = (int)RoomType.ItemRoom;
+                            }
+                        }
+                    }
+                    // else if (baseMap[y, x] == (int)RoomType.RandomRoom && baseMap[y, x+1] == (int)RoomType.RandomRoom)
+                    // {
+                    //     for (int i = y * mapYLength; i < y * mapYLength + mapYLength; i+=2)
+                    //     {
+                    //         // 3칸 이상 오른쪽이 비어있으면
+                    //         if (realMap[i, realMapX] == (int)TileType.Blank)
+                    //         {
+                    //             rightBlankNum += 1;
+                    //         }
+
+                    //         // 3칸 이상 왼쪽이 비어있으면
+                    //         if (realMap[i, realMapX + 1] == (int)TileType.Blank)
+                    //         {
+                    //             leftBlankNum += 1;
+                    //         }
+
+                    //         // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                    //         if (rightBlankNum >= minBlankNum && leftBlankNum >= minBlankNum)
+                    //         {
+                    //             baseMap[y, x] = (int)RoomType.ItemRoom;
+                    //             baseMap[y, x+1] = (int)RoomType.ItemRoom;
+                    //         }
+                    //     }
+                    // }
+                }
+
+                // 세로 체크
+                for (int x = 0; x < baseMap.GetLength(1); ++x)
+                {
+                    int upBlankNum = 0; int downBlankNum = 0; int minBlankNum = 2;
+                    int realMapY = y * mapYLength - 1;
+
+                    // 비정석 루트 체크 - 각각 위, 아래가 비어있어야 함
+                    if (baseMap[y, x] == (int)RoomType.RandomRoom && baseMap[y - 1, x] != (int)RoomType.RandomRoom)
+                    {
+                        for (int i = x * mapXLength; i < x * mapXLength + mapXLength; i += 2)
+                        {
+                            // 3칸 이상 위가 비어있으면
+                            if (realMap[realMapY, i] == (int)TileType.Blank)
+                            {
+                                upBlankNum += 1;
+                            }
+
+                            // 3칸 이상 아래가 비어있으면
+                            if (realMap[realMapY + 1, i] == (int)TileType.Blank)
+                            {
+                                downBlankNum += 1;
+                            }
+
+                            // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                            if (upBlankNum >= minBlankNum && downBlankNum >= minBlankNum)
+                            {
+                                baseMap[y, x] = (int)RoomType.ItemRoom;
+                            }
+                        }
+                    }
+                    else if (baseMap[y, x] != (int)RoomType.RandomRoom && baseMap[y - 1, x] == (int)RoomType.RandomRoom)
+                    {
+                        for (int i = x * mapXLength; i < x * mapXLength + mapXLength; i += 2)
+                        {
+                            // 3칸 이상 위가 비어있으면
+                            if (realMap[realMapY, i] == (int)TileType.Blank)
+                            {
+                                upBlankNum += 1;
+                            }
+
+                            // 3칸 이상 아래가 비어있으면
+                            if (realMap[realMapY + 1, i] == (int)TileType.Blank)
+                            {
+                                downBlankNum += 1;
+                            }
+
+                            // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                            if (upBlankNum >= minBlankNum && downBlankNum >= minBlankNum)
+                            {
+                                baseMap[y - 1, x] = (int)RoomType.ItemRoom;
+                            }
+                        }
+                    }
+                    // else if (baseMap[y, x] == (int)RoomType.RandomRoom && baseMap[y-1, x] == (int)RoomType.RandomRoom)
+                    // {
+                    //     for (int i = x * mapXLength; i < x * mapXLength + mapXLength; i+=2)
+                    //     {
+                    //         // 3칸 이상 위가 비어있으면
+                    //         if (realMap[realMapY, i] == (int)TileType.Blank)
+                    //         {
+                    //             upBlankNum += 1;
+                    //         }
+
+                    //         // 3칸 이상 아래가 비어있으면
+                    //         if (realMap[realMapY + 1, i] == (int)TileType.Blank)
+                    //         {
+                    //             downBlankNum += 1;
+                    //         }
+
+                    //         // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                    //         if (upBlankNum >= minBlankNum && downBlankNum >= minBlankNum)
+                    //         {
+                    //             baseMap[y, x] = (int)RoomType.ItemRoom;
+                    //             baseMap[y-1, x] = (int)RoomType.ItemRoom;
+                    //         }
+                    //     }
+                    // }
 
                 }
             }
+
+            // Instantiate Items
+            for (int y = 0; y < baseMap.GetLength(0); ++y)
+            {
+                for (int x = 0; x < baseMap.GetLength(1); ++x)
+                {
+                    if (baseMap[y, x] == (int)RoomType.ItemRoom)
+                    {
+                        itemRanges.Add(new int[4] { y * mapYLength, y * mapYLength + mapYLength, x * mapXLength, x * mapXLength + mapXLength });
+                    }
+                }
+
+                if (y != 0 && y % areaNum == 0)
+                {
+                    // Instantiate Items - Health Potion
+                    InstantiateItem(TileType.HealthPotion);
+
+                    // Power Battery
+                    InstantiateItem(TileType.PowerBattery);
+
+                    // Bubble Shield
+                    InstantiateItem(TileType.BubbleShield);
+
+                    itemRanges.Clear(); // Remove all data from one area
+                }
+
+            }
+
+
         }
+
+        private void InstantiateItem(TileType itemType)
+        {
+            if (itemRanges.Count == 0)
+            {
+                Debug.LogWarning("No ItemRooms");
+                return;
+            }
+
+            int randomRange = Random.Range(0, itemRanges.Count);
+            while (true)
+            {
+                int randomY = Random.Range(itemRanges[randomRange][0], itemRanges[randomRange][1]);
+                int randomX = Random.Range(itemRanges[randomRange][2], itemRanges[randomRange][3]);
+                
+                if (realMap[randomY, randomX] == (int)TileType.Blank)
+                {
+                    realMap[randomY, randomX] = (int)itemType;
+                    break;
+                }
+                else continue;                
+            }
+        }
+
 
         private void CheckEnemyGenerationByTile()
         {
@@ -1987,7 +2158,7 @@ namespace SunkenRuins
                 for (int x = 1; x < realMap.GetLength(1) - 1; ++x)
                 {
                     // AngryShell
-                    if (y >= realMap.GetLength(0)/2 && CheckArea(y + 1, x, 0, 5, TileType.Block) && CheckArea(y - 2, x, 6, 5, TileType.Blank) && !isObjectInArea(y, x, 0, 7, TileType.AngryShell))
+                    if (y >= realMap.GetLength(0) / 2 && CheckArea(y + 1, x, 0, 5, TileType.Block) && CheckArea(y - 2, x, 6, 5, TileType.Blank) && !isObjectInArea(y, x, 0, 7, TileType.AngryShell))
                     {
                         // Summon Probability = 33%
                         bool isInstantiate = Random.Range(0, 100) < 33;
@@ -1999,7 +2170,7 @@ namespace SunkenRuins
                     }
 
                     // Electric StingRay
-                    if (y >= 2*realMap.GetLength(0)/3 && CheckArea(y, x, 6, 6, TileType.Blank) && !isObjectInArea(y, x, 14, 14, TileType.ElectricStingRay))
+                    if (y >= 2 * realMap.GetLength(0) / 3 && CheckArea(y, x, 6, 6, TileType.Blank) && !isObjectInArea(y, x, 14, 14, TileType.ElectricStingRay))
                     {
                         // Summon Probability = 50%
                         bool isInstantiate = Random.Range(0, 100) < 18;
@@ -2011,7 +2182,7 @@ namespace SunkenRuins
                     }
 
                     // Hypno-CuttleFish
-                    if (y >= realMap.GetLength(0)/2 && CheckArea(y, x, 8, 8, TileType.Blank) && !isObjectInArea(y, x, 12, 12, TileType.HypnoCuttleFish))
+                    if (y >= realMap.GetLength(0) / 2 && CheckArea(y, x, 8, 8, TileType.Blank) && !isObjectInArea(y, x, 12, 12, TileType.HypnoCuttleFish))
                     {
                         // Summon Probability = 50%
                         bool isInstantiate = Random.Range(0, 100) < 50;
@@ -2041,8 +2212,8 @@ namespace SunkenRuins
         private bool isObjectInArea(int EnemyY, int EnemyX, int RangeY, int RangeX, TileType tileType)
         {
             // IndexOutOfRangeException
-            if (EnemyY - RangeY/2 < 0 || EnemyY + RangeY/2 >= mapYLength * mapHeight
-                || EnemyX - RangeX/2 < 0 || EnemyX + RangeX/2 >= mapXLength * mapWidth)
+            if (EnemyY - RangeY / 2 < 0 || EnemyY + RangeY / 2 >= mapYLength * mapHeight
+                || EnemyX - RangeX / 2 < 0 || EnemyX + RangeX / 2 >= mapXLength * mapWidth)
             {
                 return false;
             }
@@ -2052,7 +2223,7 @@ namespace SunkenRuins
             {
                 if (isRangeXEven)
                 {
-                    for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2; ++x)
+                    for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2; ++x)
                     {
                         if (realMap[EnemyY, x] == (int)tileType) return true;
                         else continue;
@@ -2060,7 +2231,7 @@ namespace SunkenRuins
                 }
                 else // CheckArea(y, x, 0, 5, TileType.Block))
                 {
-                    for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2 + 1; ++x)
+                    for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2 + 1; ++x)
                     {
                         if (realMap[EnemyY, x] == (int)tileType) return true;
                         else continue;
@@ -2071,7 +2242,7 @@ namespace SunkenRuins
             {
                 if (isRangeYEven)
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2; ++y)
                     {
                         if (realMap[y, EnemyX] == (int)tileType) return true;
                         else continue;
@@ -2079,7 +2250,7 @@ namespace SunkenRuins
                 }
                 else
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2 + 1; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2 + 1; ++y)
                     {
                         if (realMap[y, EnemyX] == (int)tileType) return true;
                         else continue;
@@ -2090,9 +2261,9 @@ namespace SunkenRuins
             {
                 if (isRangeYEven && isRangeXEven)
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2; ++y)
                     {
-                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2; ++x)
+                        for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2; ++x)
                         {
                             if (realMap[y, x] == (int)tileType) return true;
                             else continue;
@@ -2101,9 +2272,9 @@ namespace SunkenRuins
                 }
                 else if (isRangeYEven)
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2; ++y)
                     {
-                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2 + 1; ++x)
+                        for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2 + 1; ++x)
                         {
                             if (realMap[y, x] == (int)tileType) return true;
                             else continue;
@@ -2112,9 +2283,9 @@ namespace SunkenRuins
                 }
                 else if (isRangeXEven)
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2 + 1; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2 + 1; ++y)
                     {
-                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2; ++x)
+                        for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2; ++x)
                         {
                             if (realMap[y, x] == (int)tileType) return true;
                             else continue;
@@ -2123,9 +2294,9 @@ namespace SunkenRuins
                 }
                 else // both ranges are odd
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2 + 1; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2 + 1; ++y)
                     {
-                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2 + 1; ++x)
+                        for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2 + 1; ++x)
                         {
                             if (realMap[y, x] == (int)tileType) return true;
                             else continue;
@@ -2141,8 +2312,8 @@ namespace SunkenRuins
         private bool CheckArea(int EnemyY, int EnemyX, int RangeY, int RangeX, TileType tileType)
         {
             // IndexOutOfRangeException
-            if (EnemyY - RangeY/2 < 0 || EnemyY + RangeY/2 >= mapYLength * mapHeight
-                || EnemyX - RangeX/2 < 0 || EnemyX + RangeX/2 >= mapXLength * mapWidth)
+            if (EnemyY - RangeY / 2 < 0 || EnemyY + RangeY / 2 >= mapYLength * mapHeight
+                || EnemyX - RangeX / 2 < 0 || EnemyX + RangeX / 2 >= mapXLength * mapWidth)
             {
                 return false;
             }
@@ -2152,7 +2323,7 @@ namespace SunkenRuins
             {
                 if (isRangeXEven)
                 {
-                    for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2; ++x)
+                    for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2; ++x)
                     {
                         if (realMap[EnemyY, x] != (int)tileType) return false;
                         else continue;
@@ -2160,7 +2331,7 @@ namespace SunkenRuins
                 }
                 else // CheckArea(y, x, 0, 5, TileType.Block))
                 {
-                    for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2 + 1; ++x)
+                    for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2 + 1; ++x)
                     {
                         if (realMap[EnemyY, x] != (int)tileType) return false;
                         else continue;
@@ -2171,7 +2342,7 @@ namespace SunkenRuins
             {
                 if (isRangeYEven)
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2; ++y)
                     {
                         if (realMap[y, EnemyX] != (int)tileType) return false;
                         else continue;
@@ -2179,7 +2350,7 @@ namespace SunkenRuins
                 }
                 else
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2 + 1; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2 + 1; ++y)
                     {
                         if (realMap[y, EnemyX] != (int)tileType) return false;
                         else continue;
@@ -2190,9 +2361,9 @@ namespace SunkenRuins
             {
                 if (isRangeYEven && isRangeXEven)
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2; ++y)
                     {
-                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2; ++x)
+                        for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2; ++x)
                         {
                             if (realMap[y, x] != (int)tileType) return false;
                             else continue;
@@ -2201,9 +2372,9 @@ namespace SunkenRuins
                 }
                 else if (isRangeYEven)
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2; ++y)
                     {
-                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2 + 1; ++x)
+                        for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2 + 1; ++x)
                         {
                             if (realMap[y, x] != (int)tileType) return false;
                             else continue;
@@ -2212,9 +2383,9 @@ namespace SunkenRuins
                 }
                 else if (isRangeXEven)
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2 + 1; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2 + 1; ++y)
                     {
-                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2; ++x)
+                        for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2; ++x)
                         {
                             if (realMap[y, x] != (int)tileType) return false;
                             else continue;
@@ -2223,9 +2394,9 @@ namespace SunkenRuins
                 }
                 else // both ranges are odd
                 {
-                    for (int y = EnemyY - RangeY/2; y < EnemyY + RangeY/2 + 1; ++y)
+                    for (int y = EnemyY - RangeY / 2; y < EnemyY + RangeY / 2 + 1; ++y)
                     {
-                        for (int x = EnemyX - RangeX/2; x < EnemyX + RangeX/2 + 1; ++x)
+                        for (int x = EnemyX - RangeX / 2; x < EnemyX + RangeX / 2 + 1; ++x)
                         {
                             if (realMap[y, x] != (int)tileType) return false;
                             else continue;
@@ -2246,9 +2417,10 @@ namespace SunkenRuins
                 {
                     row += baseMap[i, j].ToString() + " ";
                 }
+                Debug.Log(row);
                 row = null;
             }
         }
-        
+
     }
 }
