@@ -16,6 +16,7 @@ namespace SunkenRuins {
         public void PlaySFX(int index) {
             AudioSource audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.clip = audioClips[index];
+            audioSource.volume = 0.5f;
             audioSource.Play();
 
             StartCoroutine(DestroyAfterPlaying(audioSource));
