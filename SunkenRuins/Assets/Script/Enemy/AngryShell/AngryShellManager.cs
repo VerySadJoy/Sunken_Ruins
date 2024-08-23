@@ -10,15 +10,12 @@ namespace SunkenRuins
         [SerializeField] private ShellStat shellStat;
         [SerializeField] private ShellCircleDetection shellCircleDetection;
         [SerializeField] private ShellAttackDetection shellAttackDetection;
-        [SerializeField] private SpriteRenderer shellSpriteRenderer;
-        private bool isAbsorbingPlayer { get { return player != null; } }
-        [SerializeField] private Sprite[] sprites;
-        private int spriteIndex = 9;
+        private Animator animator;
         
-        private bool canAttack = true;
-        private bool isEngulfing = false;
         private int keyPressCount = 0;
-        private float lastAbsorbTime = 0f; // Time since the last absorb
+        private void Awake() {
+            animator = GetComponent<Animator>();
+        }
 
         protected override void Start()
         {
@@ -39,57 +36,26 @@ namespace SunkenRuins
 
         private IEnumerator StartTimer()
         {
-            while (timer <= shellStat.EngulfTime) {
-                timer += Time.deltaTime;
-            }
-            yield return null;
-        }
-
-        private IEnumerator ShellOpen()
-        {
-            for (int i = 0; i < 8; i++) {
-                shellSpriteRenderer.sprite = sprites[i];
-                yield return new WaitForSeconds(0.1f);
-            }
-            StartCoroutine(ShellAbsorb());
-            yield return null;
-        }
-
-        private IEnumerator ShellAbsorb()
-        {
             float sibal = 0f;
             while (sibal <= shellStat.EngulfTime) {
-                shellSpriteRenderer.sprite = sprites[spriteIndex];
-                spriteIndex++;
-                if (spriteIndex > 13) {
-                    spriteIndex = 9;
-                }
-                sibal += 0.15f;
-                yield return new WaitForSeconds(0.15f);
+                sibal += Time.deltaTime;
+                yield return null;
             }
+            Debug.Log("done");
             StartCoroutine(StopEngulfingCoroutine());
-            yield return null;
-        }
-
-        private IEnumerator ShellClose()
-        {
-            for (int i = 8; i >= 0; i--) {
-                shellSpriteRenderer.sprite = sprites[i];
-                yield return new WaitForSeconds(0.1f);
-            }
             yield return null;
         }
 
         private void OnPlayerDetection_AbsorbPlayer(Dictionary<string, object> message)
         {
-            StartCoroutine(ShellOpen());
+            animator.SetBool("Absorb", true);
             StartCoroutine(StartTimer());
+            shellCircleDetection.gameObject.GetComponent<CircleCollider2D>().enabled = false;
         }
 
         private void OnPlayerDetection_AttackPlayer(Dictionary<string, object> message)
         {
             EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", shellStat.DamagePerAttack } });
-            isEngulfing = true;
         }
 
         private void OnPlayerEscape_ReleasePlayer(Dictionary<string, object> message)
@@ -99,14 +65,11 @@ namespace SunkenRuins
         private IEnumerator StopEngulfingCoroutine()
         {
             keyPressCount = 0;
-            isEngulfing = false;
-            canAttack = false;
             EventManager.TriggerEvent(EventType.ShellEscape, null);
-            shellCircleDetection.gameObject.GetComponent<CircleCollider2D>().enabled = false;
-            StartCoroutine(ShellClose());
+            
+            animator.SetBool("Absorb", false);
             yield return new WaitForSeconds(shellStat.EngulfDelayTime);
             shellCircleDetection.gameObject.GetComponent<CircleCollider2D>().enabled = true;
-            canAttack = true;
             yield return null;
         }
 

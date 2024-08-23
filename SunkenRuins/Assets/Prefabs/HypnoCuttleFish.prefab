@@ -67,7 +67,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 10
 --- !u!114 &7891716585410469335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,7 +168,7 @@ MonoBehaviour:
   retreatSpeed: 4
   distanceFromPlayer: 3
   boostTime: 1
-  boostVelocity: 5
+  boostVelocity: 8
   maxBoostAmount: 3
   decelerationDuration: 1
 --- !u!114 &8736321649684762203

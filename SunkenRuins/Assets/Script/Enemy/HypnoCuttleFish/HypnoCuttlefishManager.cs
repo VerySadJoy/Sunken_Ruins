@@ -1,26 +1,31 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace SunkenRuins
 {
+    public enum HypnoCuttlefishState
+    {
+        Idle,
+        Hypnotizing,
+        Attacking,
+        Retreating,
+    }
     public class HypnoCuttlefishManager : EnemyManager
     {
-        // 변수
         public float hypnotizeTime = 1.5f;
         public float hypnotizeDelayTime = 5f;
         public float attackTime = 1f;
         public int damagePerAttack = 10;
         public int hypnotizeEscapeKeyNum = 10;
         public float retreatSpeed = 4f;
-        // public bool isHypnotizePlayer { get { return player != null; } }
         private float retreatTime = 3f;
         private Vector3 initialPosition;
         private float lerpAmount;
         [SerializeField] private float distanceFromPlayer = 3.0f;
+
         [Header("Boost")]
         private int boostCount = 0;
         public float boostTime = 1f;
@@ -29,22 +34,21 @@ namespace SunkenRuins
         private Vector2 detectionVelocity;
         public float decelerationDuration = 1f;
 
-        // State 변수
-        // private bool isEscape { get { return keyPressCount >= totalKeyAmount; } }
-        private bool canAttack = true;
-        private bool isHypnotize = false;
-        private bool isRetreat = false;
         private int keyPressCount = 0;
         private Animator animator;
-        private void Awake() {
+        private HypnoCuttlefishState currentState;
+        private float newTimer;
+
+        private void Awake()
+        {
             animator = GetComponent<Animator>();
+            currentState = HypnoCuttlefishState.Idle;
         }
 
         protected override void Start()
         {
             base.Start();
             initialPosition = transform.position;
-            // retreatSpeed = (오브젝트 길이) * time.deltatime / (이동할 시간) <== 상의 필요
         }
 
         private void OnEnable()
@@ -59,144 +63,127 @@ namespace SunkenRuins
 
         private void FixedUpdate()
         {
-            if (canAttack && isHypnotize)
+            //Debug.Log(currentState);
+            switch (currentState)
             {
-                MoveToPlayer();
-
-                if (timer > hypnotizeTime) // 최면해서 데미지를 줄 수 있으면
-                {
-                    // TODO:
-                    // Hypnotize Damage Animation
+                case HypnoCuttlefishState.Idle:
+                    // Idle behavior (e.g., patrolling or waiting)
+                    //SquidAnimation();
+                    break;
+                case HypnoCuttlefishState.Hypnotizing:
+                    HandleHypnotizing();
+                    break;
+                case HypnoCuttlefishState.Attacking:
                     AttackPlayer();
-                }
-                else // 최면만 하고 기다리는 중이면
-                { 
-                    if (Input.anyKeyDown)
-                    {
-                        if (++keyPressCount >= hypnotizeEscapeKeyNum)
-                        {
-                            Debug.Log("연타 잘해서 탈출함");
-                            isRetreat = true; // 후퇴한다
-                            StartCoroutine(StopHypnotizeCoroutine());
-                        }
-                    }
-                    // TODO:
-                    // 텍스트로 누른 키 횟수 표시
-                }
-
-                timer += Time.deltaTime;
-            }
-            else if (isRetreat)
-            {
-                StartCoroutine(retreatCoroutine());
+                    break;
+                case HypnoCuttlefishState.Retreating:
+                    StartCoroutine(RetreatCoroutine());
+                    break;
             }
         }
 
-        private IEnumerator retreatCoroutine()
+        private void HandleHypnotizing()
+        {
+            this.GetComponentInChildren<CircleCollider2D>().enabled = false;
+            MoveToPlayer();
+
+            if ((player.position - transform.position).magnitude < 0.1f)
+            {
+                currentState = HypnoCuttlefishState.Attacking;
+            }
+            else if (Input.anyKeyDown)
+            {
+                if (++keyPressCount >= hypnotizeEscapeKeyNum)
+                {
+                    currentState = HypnoCuttlefishState.Retreating;
+                    StartCoroutine(StopHypnotizeCoroutine());
+                }
+            }
+        }
+
+        private IEnumerator RetreatCoroutine()
         {
             rb.velocity = (initialPosition - transform.position).normalized * retreatSpeed;
-            UpdateFacingDirection(initialPosition.x > transform.position.x ? Vector2.right : Vector2.left);
+            UpdateFacingDirection(initialPosition.x <= this.transform.position.x ? Vector2.right : Vector2.left);
+
             while (Vector3.Distance(transform.position, initialPosition) > 0.1f)
             {
-                yield return null; // Wait for the next frame
+                yield return null;
             }
+
             rb.velocity = Vector3.zero;
-            isRetreat = false;
+            currentState = HypnoCuttlefishState.Idle;
+            this.GetComponentInChildren<CircleCollider2D>().enabled = true;
         }
 
         private IEnumerator StopHypnotizeCoroutine()
         {
-            // EventManager.TriggerEvent(EventType.ShellEscape, null);
-            timer = 0f;
+            //yield return new WaitForSeconds(1.25f);
+            newTimer = 0f;
             keyPressCount = 0;
-            canAttack = false;
-            isHypnotize = false;
-            //player = null;
-
-            yield return new WaitForSeconds(hypnotizeDelayTime);
-            canAttack = true;
+            currentState = HypnoCuttlefishState.Retreating;
+            yield return null;
         }
-        
+
         private void AttackPlayer()
         {
+            if (currentState != HypnoCuttlefishState.Attacking) return;
             animator.SetTrigger("Attack");
-            UpdateFacingDirection(player.transform.position.x > this.transform.position.x ? Vector2.right : Vector2.left);
-            //player.gameObject.GetComponent<PlayerStat>().Damage(damagePerAttack);
-            Debug.Log("갑오징어가 플레이어를 공격함");
+            rb.velocity = Vector3.zero;
+            //StartCoroutine(StopHypnotizeCoroutine());
+        }
+        private void StopAttack() {
+            animator.ResetTrigger("Attack");
             StartCoroutine(StopHypnotizeCoroutine());
-
-            // TODO:
-            // 공격 모션
         }
 
         private void MoveToPlayer()
         {
-            // Calculate the direction towards the player
             Vector2 directionToPlayer = (player.position - transform.position).normalized;
-
-            // Set the initial velocity towards the player
             detectionVelocity = directionToPlayer * boostVelocity * directionToPlayer.magnitude;
-
-            // Apply the velocity to the Rigidbody2D
             rb.velocity = detectionVelocity;
-            if (directionToPlayer.magnitude < 0.1f) {
+            UpdateFacingDirection(-directionToPlayer);
+            if ((player.position - transform.position).magnitude < 0.1f)
+            {
                 rb.velocity = Vector3.zero;
             }
-            // Start the deceleration coroutine
         }
 
         private void OnPlayerDetection_Hypnotize(Dictionary<string, object> message)
         {
-            if (!canAttack) return;
+            if (currentState != HypnoCuttlefishState.Idle) return;
 
-            // 최면시키는 동시에 플레이어 앞으로 이동
-            isHypnotize = true;
-
-            // 쫒아갈 플레이어 reference 받기
+            //isHypnotize = true;
+            currentState = HypnoCuttlefishState.Hypnotizing;
             player = (Transform)message["Player"];
         }
 
-        private void SquidAnimation() {
-            if (isRetreat) {
-                return;
-            }
-            if (canAttack && isHypnotize) {
-                return;
-            }
+        private void SquidAnimation()
+        {
+            if (currentState != HypnoCuttlefishState.Idle) return;
             StartCoroutine(ApplyImpulse());
         }
-        private IEnumerator ApplyImpulse() {
 
-            float ccibal = 0f;
+        private IEnumerator ApplyImpulse()
+        {
+            float elapsedTime = 0f;
             Vector3 impulseVelocity = (boostCount % (2 * maxBoostAmount) < maxBoostAmount ? 1 : -1) * Vector3.left * boostVelocity;
             boostCount++;
-            while (ccibal < boostTime)
+
+            while (elapsedTime < boostTime)
             {
-                rb.velocity = Vector3.Lerp(impulseVelocity, Vector3.zero, ccibal);
-                ccibal += Time.deltaTime;
+                rb.velocity = Vector3.Lerp(impulseVelocity, Vector3.zero, elapsedTime);
+                elapsedTime += Time.deltaTime;
                 yield return null;
             }
+
             rb.velocity = Vector3.zero;
-            
         }
-        private void ChangeDirection() {
+
+        private void ChangeDirection()
+        {
+            if (currentState == HypnoCuttlefishState.Retreating) return;
             UpdateFacingDirection(boostCount % (2 * maxBoostAmount) < maxBoostAmount ? Vector3.right : Vector3.left);
         }
-
-
-        // private void StopEngulf()
-        // {
-        //     Debug.Log("클릭 많이 해서 공격 못 함");
-
-        //     isEngulfing = false;
-        //     keyPressCount = 0;
-        //     canAttack = false;
-        //     Invoke(nameof(ResetAttack), engulfDelayTime); // 이 시간 동안 공격 금지
-        // }
-
-        // private void ResetAttack()
-        // {
-        //     canAttack = true;
-        // }
     }
 }
