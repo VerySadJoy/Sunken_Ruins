@@ -104,15 +104,15 @@ namespace SunkenRuins
             {
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+               { 0, 0, 0, 1, 100, 0, 1, 0, 0, 0 },
                 { 0, 0, 1, 1, 1, 1, 1, 1, 0, 0 },
-                { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 0, 100, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 1, 1, 1, 1, 1, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-                { 0, 0, 1, 1, 1, 1, 1, 1, 0, 0 },
+                { 0, 0, 0, 1, 1, 1, 1, 0, 0, 0 },
+                { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             },
         };
@@ -120,18 +120,18 @@ namespace SunkenRuins
         int[,,] EndRoom = new int[1, 12, 10]
         {
             {
+                { 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 },
+                { 1, 1, 0, 0, 0, 0, 0, 0, 1, 1 },
+                { 0, 1, 0, 0, 0, 0, 0, 1, 1, 1 },
+                { 0, 1, 0, 0, 0, 0, 0, 1, 1, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 1, 1, 1, 1, 1, 0, 0 },
-                { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 1, 1, 1, 1, 1, 0, 0 },
-                { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 1, 1, 1, 1, 1, 1, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 1, 0, 0, 0, 1, 0 },
+                { 0, 1, 0, 1, 1, 0, 1, 1, 1, 0 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
             },
         };
 
@@ -1230,16 +1230,6 @@ namespace SunkenRuins
                             realStartX += mapXLength;
                             break;
 
-                        case RoomType.UpRoom:
-                            break;
-
-                        case RoomType.RightRoom:
-                            break;
-
-                        case RoomType.DownRoom:
-                            break;
-
-                        case RoomType.LeftRoom:
                             break;
 
                         case RoomType.UpRightRoom:
@@ -1430,9 +1420,6 @@ namespace SunkenRuins
                             realStartX += mapXLength;
                             break;
 
-                        case RoomType.UpDownRoom:
-                            break;
-
                         case RoomType.LeftRightRoom:
                             flipProb = Random.Range(0, 3);
 
@@ -1478,12 +1465,6 @@ namespace SunkenRuins
                             else Debug.LogError("FlipProb DNE Error [MapArray.cs]");
 
                             realStartX += mapXLength;
-                            break;
-
-                        case RoomType.UpDownRightRoom:
-                            break;
-
-                        case RoomType.UpDownLeftRoom:
                             break;
 
                         case RoomType.DownLeftRightRoom:
@@ -1595,31 +1576,69 @@ namespace SunkenRuins
                             break;
 
                         case RoomType.StartRoom:
-                            roomNumber = Random.Range(0, StartRoom.GetLength(0));
-                            for (int roomY = 0; roomY < mapYLength; ++roomY)
+                            flipProb = Random.Range(0, 2);
+
+                            if (flipProb == 0)
                             {
-                                for (int roomX = 0; roomX < mapXLength; ++roomX)
+                                roomNumber = Random.Range(0, StartRoom.GetLength(0));
+                                for (int roomY = 0; roomY < mapYLength; ++roomY)
                                 {
-                                    realMap[realTraceY, realTraceX++] = StartRoom[roomNumber, roomY, roomX];
+                                    for (int roomX = 0; roomX < mapXLength; ++roomX)
+                                    {
+                                        realMap[realTraceY, realTraceX++] = StartRoom[roomNumber, roomY, roomX];
+                                    }
+                                    realTraceX = realStartX;
+                                    ++realTraceY;
                                 }
-                                realTraceX = realStartX;
-                                ++realTraceY;
+                                realStartX += mapXLength;
                             }
-                            realStartX += mapXLength;
+                            else if (flipProb == 1)
+                            {
+                                roomNumber = Random.Range(0, StartRoom.GetLength(0));
+                                for (int roomY = 0; roomY < mapYLength; ++roomY)
+                                {
+                                    for (int roomX = 0; roomX < mapXLength; ++roomX)
+                                    {
+                                        realMap[realTraceY, realTraceX++] = StartRoom[roomNumber, roomY, mapXLength - roomX - 1];
+                                    }
+                                    realTraceX = realStartX;
+                                    ++realTraceY;
+                                }
+                                realStartX += mapXLength;
+                            }
                             break;
 
                         case RoomType.EndRoom:
-                            roomNumber = Random.Range(0, EndRoom.GetLength(0));
-                            for (int roomY = 0; roomY < mapYLength; ++roomY)
+                            flipProb = Random.Range(0, 2);
+
+                            if (flipProb == 0)
                             {
-                                for (int roomX = 0; roomX < mapXLength; ++roomX)
+                                roomNumber = Random.Range(0, EndRoom.GetLength(0));
+                                for (int roomY = 0; roomY < mapYLength; ++roomY)
                                 {
-                                    realMap[realTraceY, realTraceX++] = EndRoom[roomNumber, roomY, roomX];
+                                    for (int roomX = 0; roomX < mapXLength; ++roomX)
+                                    {
+                                        realMap[realTraceY, realTraceX++] = EndRoom[roomNumber, roomY, roomX];
+                                    }
+                                    realTraceX = realStartX;
+                                    ++realTraceY;
                                 }
-                                realTraceX = realStartX;
-                                ++realTraceY;
+                                realStartX += mapXLength;
                             }
-                            realStartX += mapXLength;
+                            else if (flipProb == 1)
+                            {
+                                roomNumber = Random.Range(0, EndRoom.GetLength(0));
+                                for (int roomY = 0; roomY < mapYLength; ++roomY)
+                                {
+                                    for (int roomX = 0; roomX < mapXLength; ++roomX)
+                                    {
+                                        realMap[realTraceY, realTraceX++] = EndRoom[roomNumber, roomY, mapXLength - roomX - 1];
+                                    }
+                                    realTraceX = realStartX;
+                                    ++realTraceY;
+                                }
+                                realStartX += mapXLength;
+                            }
                             break;
 
                         default:
