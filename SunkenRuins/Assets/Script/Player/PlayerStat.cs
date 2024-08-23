@@ -64,7 +64,7 @@ namespace SunkenRuins {
         private IEnumerator DecreaseHealthOverTime() {
             while (playerCurrentHealth > 0) {
                 if (!isInvincible) {
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(5f);
                     playerCurrentHealth -= healthDecreaseRate;
                     //Debug.LogWarning("무적이 아닐 때 체력 꾸준히 감소");
                 }
@@ -82,6 +82,7 @@ namespace SunkenRuins {
             playerCurrentHealth += healAmount;
             Debug.Log("체력 회복");
             playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
+            SFXManager.instance.PlaySFX(2);
             // TODO:
             // 1. 체력 회복 모션
             // 2. 체력 회복 UI
@@ -91,6 +92,7 @@ namespace SunkenRuins {
             playerCurrentEnergy += energyAmount;
             Debug.Log("에너지 회복");
             playerCurrentEnergy = Mathf.Clamp(playerCurrentEnergy, 0, playerMaxEnergy);
+            SFXManager.instance.PlaySFX(4);
             // TODO:
             // 1. 에너지 회복 모션
             // 2. 에너지 회복 UI
@@ -98,6 +100,7 @@ namespace SunkenRuins {
 
         public void BeInvincible(int invincibleTime){
             StartCoroutine(BeInvincibleOverInvincibleTime(invincibleTime));
+            SFXManager.instance.PlaySFX(5);
         }
 
         private IEnumerator BeInvincibleOverInvincibleTime(int invincibleTime) {
@@ -156,6 +159,7 @@ namespace SunkenRuins {
 
         private void Damage(Dictionary<string, object> message)
         {
+            SFXManager.instance.PlaySFX(6);
             Damage((int)message["amount"]);
         }
 
@@ -165,7 +169,7 @@ namespace SunkenRuins {
             playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
 
             // 무적이 된다
-            BeInvincible(invincibleTime); // 2초 동안 하드코딩
+            StartCoroutine(BeInvincibleOverInvincibleTime(invincibleTime)); // 2초 동안 하드코딩
         }
 
     }

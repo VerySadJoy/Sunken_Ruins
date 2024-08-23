@@ -12,7 +12,6 @@ namespace SunkenRuins {
             else {
                 instance = this;
             }
-            audioSource = GetComponent<AudioSource>();
         }
         public void PlaySFX(int index) {
             AudioSource audioSource = gameObject.AddComponent<AudioSource>();

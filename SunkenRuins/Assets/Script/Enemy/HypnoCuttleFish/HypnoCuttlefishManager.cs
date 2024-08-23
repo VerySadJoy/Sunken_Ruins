@@ -185,5 +185,8 @@ namespace SunkenRuins
             if (currentState == HypnoCuttlefishState.Retreating) return;
             UpdateFacingDirection(boostCount % (2 * maxBoostAmount) < maxBoostAmount ? Vector3.right : Vector3.left);
         }
+        private void PlayHypnoSFX() {
+            SFXManager.instance.PlaySFX(8);
+        }
     }
 }

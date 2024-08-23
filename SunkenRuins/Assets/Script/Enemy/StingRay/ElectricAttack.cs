@@ -38,13 +38,12 @@ namespace SunkenRuins
 
         public void Attack()
         {
-            Debug.Log("플레이어 공격 시도함");
             StartCoroutine(ShowSpriteCoroutine(attackSpriteObject));
-            
         }
 
         private IEnumerator ShowSpriteCoroutine(GameObject gameObject)
         {
+            SFXManager.instance.PlaySFX(7);
             gameObject.SetActive(isAttack = true); // spriteObject 스크립트를 만들어서 따로 알아서 처리하게 하기?
             yield return new WaitForSeconds(showSpriteTime);
             gameObject.SetActive(isAttack = false);            
