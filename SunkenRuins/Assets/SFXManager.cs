@@ -1,18 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+namespace SunkenRuins {
+    public class SFXManager : MonoBehaviour {
+        public static SFXManager instance { get; private set;}
+        public AudioClip[] audioClips;
+        private void Awake() {
+            if (instance != null) {
+                Destroy(gameObject);
+            }
+            else {
+                instance = this;
+            }
+            audioSource = GetComponent<AudioSource>();
+        }
+        public void PlaySFX(int index) {
+            AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.clip = audioClips[index];
+            audioSource.Play();
 
-public class SFXManager : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+            StartCoroutine(DestroyAfterPlaying(audioSource));
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private IEnumerator DestroyAfterPlaying(AudioSource audioSource)
+        {
+            yield return new WaitForSeconds(audioSource.clip.length);
+
+            Destroy(audioSource);
+        }
     }
 }
