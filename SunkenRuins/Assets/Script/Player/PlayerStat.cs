@@ -16,7 +16,7 @@ namespace SunkenRuins {
         public float energyDecreaseRate = 1f;
         public TeamType teamType { get; set; }
         [SerializeField] private int invincibleTime = 1; // Invincibility
-        [SerializeField] private float paralyzeTime = 2f;
+        [SerializeField] private float paralyzeTime = 2f; public float ParalyzeTime { get { return paralyzeTime; } }
         [SerializeField] private float hypnotizeTime = 2f; public float HypnotizeTime { get { return hypnotizeTime; } }
 
         [Header("Movement")]

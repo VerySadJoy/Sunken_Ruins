@@ -12,7 +12,7 @@ namespace SunkenRuins
         public TeamType teamType { get; set; }
         public int damageAmount { get; protected set;}
 
-        private void Start()
+        protected void Start()
         {
             // teamType을 Monster로 해서 Damage 받을 때 구분 가능하게 함
             // 근데 솔직히 layer 쓸 거면 이렇게 enum 안 써도 될 듯?

@@ -21,6 +21,16 @@ namespace SunkenRuins
             circleCollider2D = GetComponent<CircleCollider2D>();
         }
 
+        public void turnColliderOff()
+        {
+            circleCollider2D.enabled = false;
+        }
+
+        public void turnColliderOn()
+        {
+            circleCollider2D.enabled = true;
+        }
+
         // Player 감지
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -28,12 +38,8 @@ namespace SunkenRuins
             {
                 // Player을 향하는 벡터 구하기
                 Vector3 position = this.transform.position;
-                temp = position;
 
-                //RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, position, rayCastDistance, playerLayerMask);
-
-                EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "position", position } });
-                
+                EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "position", position + 1.5f * Vector3.up }, { "ObjectID", this.GetInstanceID() } });
             }
         }
 
@@ -42,15 +48,15 @@ namespace SunkenRuins
         {
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
-                EventManager.TriggerEvent(EventType.ShellRelease, null);
+                EventManager.TriggerEvent(EventType.ShellEscape, new Dictionary<string, object>() { { "ObjectID", this.GetInstanceID() } });
             }
         }
 
         // 플레이어를 향한 Vector를 선으로 표현
-        Vector2 temp;
-        void OnDrawGizmos()
-        {
-            Gizmos.DrawLine(transform.position, (Vector2)transform.position + temp * rayCastDistance);
-        }
+        // Vector2 temp;
+        // void OnDrawGizmos()
+        // {
+        //     Gizmos.DrawLine(transform.position, (Vector2)transform.position + temp * rayCastDistance);
+        // }
     }
 }

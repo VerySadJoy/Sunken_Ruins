@@ -177,8 +177,17 @@ namespace SunkenRuins
             if (collision != boxCollider2D) {
                 return;
             }
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall") {
 
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall") {
+                float offsetFromInitialPosition = transform.position.x - initialPosition.x;
+                if (offsetFromInitialPosition < -stingRayStat.patrolRange)
+                {
+                    UpdateFacingDirection(Vector2.right);
+                }
+                else if (offsetFromInitialPosition > stingRayStat.patrolRange)
+                {
+                    UpdateFacingDirection(Vector2.left);
+                }
             }
         }
     }
