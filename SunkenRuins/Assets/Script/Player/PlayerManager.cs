@@ -12,7 +12,7 @@ namespace SunkenRuins
     public class PlayerManager : MonoBehaviour
     {
         // Singleton 구조
-        public static PlayerManager Instance { get; private set; }
+        // public static PlayerManager Instance { get; private set; }
 
         // UnityEvent
         // public event EventHandler OnPlayerBoost;
@@ -68,8 +68,8 @@ namespace SunkenRuins
 
         private void Awake()
         {
-            if (Instance != null) Debug.LogError("There is more than one player instance");
-            else Instance = this;
+            // if (Instance != null) Debug.LogError("There is more than one player instance");
+            // else Instance = this;
 
             rb = GetComponent<Rigidbody2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -119,7 +119,6 @@ namespace SunkenRuins
             playerControl.Player.Enable();
 
             EventManager.StartListening(EventType.PlayerToStartPosition, MoveToStartPosition);
-            EventManager.StartListening(EventType.PlayerDamaged, Damage);
             EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
             EventManager.StartListening(EventType.ShellAbsorb, GetAbsorbed);
             EventManager.StartListening(EventType.ShellEscape, EscapeFromEnemy);
@@ -129,7 +128,6 @@ namespace SunkenRuins
         private void OnDisable()
         {
             EventManager.StopListening(EventType.PlayerToStartPosition, MoveToStartPosition);
-            EventManager.StopListening(EventType.PlayerDamaged, Damage);
             EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
             EventManager.StopListening(EventType.ShellAbsorb, GetAbsorbed);
             EventManager.StopListening(EventType.ShellEscape, EscapeFromEnemy);
@@ -161,8 +159,14 @@ namespace SunkenRuins
         private void FixedUpdate (){
             if (isAbsorbed)
             {
-                dirFromShellNormalized = (shellPosition - this.transform.position).normalized;
-                rb.velocity += 1.15f * new Vector2(dirFromShellNormalized.x, dirFromShellNormalized.y);
+                if ((shellPosition - this.transform.position).magnitude > 8f)
+                {
+                    dirFromShellNormalized = 0.5f * (shellPosition - this.transform.position).normalized;
+                }
+                else dirFromShellNormalized = (shellPosition - this.transform.position).normalized;
+
+                
+                rb.velocity += 1.25f * new Vector2(dirFromShellNormalized.x, dirFromShellNormalized.y);
             }
         }
 
@@ -176,28 +180,23 @@ namespace SunkenRuins
             // 조개 중간 ?�치�??�간?�동
             transform.position = (Vector3)message["shellPos"];
 
-            // 버튼 ?��? ?�인
-            isSwallowed = true;
+            isAbsorbed = false; // 흡수 --> 삼켜짐
+            SetInputEnabled(false);
+            rb.velocity = Vector2.zero;
         }
 
         public void GetAbsorbed(Dictionary<string, object> message)
         {
             SetBoostInputEnable(false);
             isAbsorbed = true;
+            rb.velocity = Vector2.zero;
             shellPosition = (Vector3)message["position"];
         }
         public void EscapeFromEnemy(Dictionary<string, object> message)
         {
             isAbsorbed = false;
-            SetBoostInputEnable(true);
-            rb.constraints = RigidbodyConstraints2D.None;
-        }
-
-        private void Damage(Dictionary<string ,object> message)
-        {
-            // TODO:
-            // 1. ?��?지 ?�는 ?�과
-            // 2. ?��?지 SFX
+            isSwallowed = false;
+            SetInputEnabled(true); SetBoostInputEnable(true);
         }
 
         private void BoostInput()
@@ -439,11 +438,11 @@ namespace SunkenRuins
             // 컷신?�나 뭐할??Input 죽이????
             if (enable)
             {
-                playerControl.Player.Mouse.Enable();
+                playerControl.Player.Enable();
             }
             else
             {
-                playerControl.Player.Mouse.Disable();
+                playerControl.Player.Disable();
             }
         }
         public void SetBoostInputEnable(bool enable) {

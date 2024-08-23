@@ -37,7 +37,6 @@ namespace SunkenRuins
         HypnoCuttleFishHypnotize,
         ThrowingCrabThrowRock,
         ShellAbsorb,
-        ShellRelease,
         ShellAttack,
         ShellEscape,
         ShellSwallow,

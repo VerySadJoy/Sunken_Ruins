@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
 
 namespace SunkenRuins
@@ -24,15 +25,31 @@ namespace SunkenRuins
             boxCollider2D = GetComponent<BoxCollider2D>();
         }
 
+        public void turnColliderOff()
+        {
+            boxCollider2D.enabled = false;
+        }
+
+        public void turnColliderOn()
+        {
+            boxCollider2D.enabled = true;
+        }
+
         // Player 감지
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
-                //Debug.Log("네모: 플레이어 감지!");
-                //EventManager.TriggerEvent(EventType.ShellSwallow, new Dictionary<string, object>() { {"shellPos", transform.position } });
-                // EventManager.TriggerEvent(EventType.ShellAttack, null);
+                EventManager.TriggerEvent(EventType.ShellSwallow, new Dictionary<string, object>() { {"shellPos", transform.position + Vector3.up }, { "ObjectID", this.GetInstanceID() } });
+                StartCoroutine(shellAttackCoroutine());
             }
+        }
+
+        private IEnumerator shellAttackCoroutine()
+        {
+            isShellAttack = true;
+            yield return new WaitForSeconds(7f);
+            isShellAttack = false;
         }
 
         // public void ShellAttackEnable()
