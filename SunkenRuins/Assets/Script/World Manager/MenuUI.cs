@@ -10,10 +10,10 @@ namespace SunkenRuins {
 
         static void FirstLoad()
         {
-            //게임 시작하면 무조건 이 씬에서부터 시작
-            if (SceneManager.GetActiveScene().name.CompareTo("Demo Scene (HW)") != 0)
+            //게임 시작하면 무조건 타이틀 씬에서부터 시작
+            if (SceneManager.GetActiveScene().name.CompareTo("Title Screen") != 0)
             {
-                SceneManager.LoadScene("Demo Scene (HW)");
+                SceneManager.LoadScene("Title Screen");
             }
         }
 

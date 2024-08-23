@@ -6,6 +6,8 @@ using Cinemachine;
 using System;
 using Unity.Mathematics;
 using SunkenRuin;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace SunkenRuins
 {
@@ -63,7 +65,9 @@ namespace SunkenRuins
 
         //bubble particle
         [SerializeField] ParticleSystem bubble;
-
+        [SerializeField] Image deathImage;
+        [SerializeField] AudioSource bgm;
+        public float fadeDuration = 2.5f;
 
         private void Awake()
         {
@@ -80,8 +84,10 @@ namespace SunkenRuins
         private void OnTriggerEnter2D(Collider2D other)
         { 
             if (other.gameObject.layer == LayerMask.NameToLayer(itemLayerString))
-            { //Item ?�득
+            { 
+                Debug.Log("Item detected: " + other.gameObject.name);
                 ItemSO itemSO = other.gameObject.GetComponent<Item>().GetItemSO();
+
                 if (itemSO != null)
                 {
                     switch (itemSO.itemType)
@@ -93,24 +99,20 @@ namespace SunkenRuins
                             playerStat.RestoreEnergy(3f);
                             break;
                         case ItemType.BubbleShield:
-                            playerStat.BeInvincible(2); // ?�단?� ?�드코딩?�로 invincibleTime ?�자�?받음
+                            playerStat.BeInvincible(2); 
                             break;
                         default:
-                            Debug.LogError("?�거 ?�오�??�됨");
                             break;
                     }
                 }
-                Destroy(other.gameObject); //?�이????��
+                Destroy(other.gameObject);
             }
-            else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString)) {
+            else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString)) 
+            {
                 playerStat.playerCurrentHealth -= 20;
             }
-            // else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString))
-            // {
-            //     EnemyStat monsterStat = other.gameObject.GetComponent<EnemyStat>();
-            //     playerStat.Damage(monsterStat.teamType);
-            // }
         }
+
 
         private void OnEnable()
         {
@@ -158,6 +160,23 @@ namespace SunkenRuins
             if (playerStat.playerCurrentHealth > playerStat.playerMaxHealth) { 
                 playerStat.playerCurrentHealth = playerStat.playerMaxHealth;
             }
+            if (playerStat.playerCurrentHealth <= 0) {
+                StartCoroutine(HandlePlayerDeath());
+            }
+        }
+        private IEnumerator HandlePlayerDeath()
+        {
+            float elapsedTime = 0f;
+            
+            while (elapsedTime < fadeDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
+                bgm.volume =  1 - alpha;
+                deathImage.color = new Color(0f, 0f, 0f, alpha);
+                yield return null;
+            }
+            SceneManager.LoadScene(1);
         }
         private void FixedUpdate (){
             if (isAbsorbed)

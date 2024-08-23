@@ -24,6 +24,16 @@ namespace SunkenRuins {
         }
         public void stageStart() {
             Debug.Log("game start: " + selectedStageNum + " stage");
+
+            switch (selectedStageNum)
+            {
+                case 0:
+                    SceneManager.LoadScene(2); //튜토리얼
+                    break;
+                case 1:
+                    SceneManager.LoadScene(3); //스테이지1
+                    break;
+            }
         }
 
         public void returnToTitle()
