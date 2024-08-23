@@ -8,10 +8,10 @@ namespace SunkenRuins {
     public class EnergyBarUI : MonoBehaviour
     {
         [SerializeField] private PlayerManager player;
-        private Transform[] energyBarImages;
+        private RectTransform[] energyBarImages;
 
         private void Awake () {
-            energyBarImages = GetComponentsInChildren<Transform>(); // 3(right), 4(left), 5(center)가 꽉 찬 친구들
+            energyBarImages = GetComponentsInChildren<RectTransform>(); // 3(right), 4(left), 5(center)가 꽉 찬 친구들
         }
 
         private void Start() {
