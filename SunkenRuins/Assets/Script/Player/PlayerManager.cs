@@ -6,6 +6,8 @@ using Cinemachine;
 using System;
 using Unity.Mathematics;
 using SunkenRuin;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace SunkenRuins
 {
@@ -64,7 +66,9 @@ namespace SunkenRuins
 
         //bubble particle
         [SerializeField] ParticleSystem bubble;
-
+        [SerializeField] Image deathImage;
+        [SerializeField] AudioSource bgm;
+        public float fadeDuration = 2.5f;
 
         private void Awake()
         {
@@ -155,14 +159,28 @@ namespace SunkenRuins
             if (playerStat.playerCurrentHealth > playerStat.playerMaxHealth) { 
                 playerStat.playerCurrentHealth = playerStat.playerMaxHealth;
             }
+            if (playerStat.playerCurrentHealth <= 0) {
+                StartCoroutine(HandlePlayerDeath());
+            }
+        }
+        private IEnumerator HandlePlayerDeath()
+        {
+            float elapsedTime = 0f;
+            
+            while (elapsedTime < fadeDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
+                bgm.volume =  1 - alpha;
+                deathImage.color = new Color(0f, 0f, 0f, alpha);
+                yield return null;
+            }
+            SceneManager.LoadScene(1);
         }
         private void FixedUpdate (){
             if (isAbsorbed)
             {
                 dirFromShellNormalized = (shellPosition - this.transform.position).normalized;
-                //Debug.Log($"Moving towards shell. Current Position: {transform.position}, Shell Position: {shellPosition}");
-                //rb.AddForce(dirFromShellNormalized * 10);
-                //rb.velocity = Vector2.ClampMagnitude(rb.velocity, 10);
                 rb.velocity += 1/10 * new Vector2(rb.velocity.x * dirFromShellNormalized.x, rb.velocity.y * dirFromShellNormalized.y);
             }
         }

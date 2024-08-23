@@ -65,7 +65,7 @@ namespace SunkenRuins {
         private IEnumerator DecreaseHealthOverTime() {
             while (playerCurrentHealth > 0) {
                 if (!isInvincible) {
-                    yield return new WaitForSeconds(5f);
+                    yield return new WaitForSeconds(1f);
                     playerCurrentHealth -= healthDecreaseRate;
                     //Debug.LogWarning("무적이 아닐 때 체력 꾸준히 감소");
                 }
@@ -73,7 +73,6 @@ namespace SunkenRuins {
                     yield return null;
                 }
             }
-            Debug.Log("끼엑 사망");
             // TODO:
             // 1. 사망 모션
             // 2. 사망 UI
