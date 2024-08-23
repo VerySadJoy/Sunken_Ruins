@@ -77,7 +77,16 @@ namespace SunkenRuins
                 case HypnoCuttlefishState.Idle:
                     if (Physics2D.Raycast(transform.position + (isFacingRight ? 2.5f : -2.5f) * Vector3.right, Vector3.down, 0.6f, wallLayer))
                     {
-                        UpdateFacingDirection(isFacingRight ? Vector3.left : Vector3.right);
+                        if (isFacingRight)
+                        {
+                            boostCount = 0;
+                            isFacingRight = false;
+                        }
+                        else
+                        {
+                            boostCount = maxBoostAmount;
+                            isFacingRight = true;
+                        }
                     }
                     break;
                 case HypnoCuttlefishState.Hypnotizing:
@@ -200,6 +209,7 @@ namespace SunkenRuins
 
             float elapsedTime = 0f;
             Vector3 impulseVelocity = (boostCount % (2 * maxBoostAmount) < maxBoostAmount ? 1 : -1) * Vector3.left * boostVelocity;
+            isFacingRight = impulseVelocity.x > 0f;
             boostCount++;
 
             while (elapsedTime < boostTime)

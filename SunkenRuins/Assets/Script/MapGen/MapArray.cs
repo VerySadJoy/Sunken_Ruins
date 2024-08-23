@@ -2290,7 +2290,7 @@ namespace SunkenRuins
                 for (int x = 1; x < realMap.GetLength(1) - 1; ++x)
                 {
                     // AngryShell
-                    if (y >= realMap.GetLength(0) / 2 && CheckArea(y + 1, x, 0, 5, TileType.Block) && CheckArea(y - 2, x, 6, 5, TileType.Blank) && !isObjectInArea(y, x, 0, 7, TileType.AngryShell))
+                    if (y >= realMap.GetLength(0) / 2 && CheckArea(y + 1, x, 0, 5, TileType.Block) && CheckArea(y - 2, x, 6, 5, TileType.Blank) && !isObjectInArea(y, x, 0, 10, TileType.AngryShell))
                     {
                         // Summon Probability = 33%
                         bool isInstantiate = Random.Range(0, 100) < 33;
@@ -2302,7 +2302,7 @@ namespace SunkenRuins
                     }
 
                     // Electric StingRay
-                    if (y >= 2 * realMap.GetLength(0) / 3 && CheckArea(y, x, 6, 6, TileType.Blank) && !isObjectInArea(y, x, 16, 16, TileType.ElectricStingRay))
+                    if (y >= realMap.GetLength(0) / 3 && CheckArea(y, x, 8, 8, TileType.Blank) && !isObjectInArea(y, x, 12, 12, TileType.ElectricStingRay))
                     {
                         // Summon Probability = 50%
                         bool isInstantiate = Random.Range(0, 100) < 18;
