@@ -81,8 +81,10 @@ namespace SunkenRuins
         private void OnTriggerEnter2D(Collider2D other)
         { 
             if (other.gameObject.layer == LayerMask.NameToLayer(itemLayerString))
-            { //Item ?�득
+            { 
+                Debug.Log("Item detected: " + other.gameObject.name);
                 ItemSO itemSO = other.gameObject.GetComponent<Item>().GetItemSO();
+
                 if (itemSO != null)
                 {
                     switch (itemSO.itemType)
@@ -94,24 +96,20 @@ namespace SunkenRuins
                             playerStat.RestoreEnergy(3f);
                             break;
                         case ItemType.BubbleShield:
-                            playerStat.BeInvincible(2); // ?�단?� ?�드코딩?�로 invincibleTime ?�자�?받음
+                            playerStat.BeInvincible(2); 
                             break;
                         default:
-                            Debug.LogError("?�거 ?�오�??�됨");
                             break;
                     }
                 }
-                Destroy(other.gameObject); //?�이????��
+                Destroy(other.gameObject);
             }
-            else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString)) {
+            else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString)) 
+            {
                 playerStat.playerCurrentHealth -= 20;
             }
-            // else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString))
-            // {
-            //     EnemyStat monsterStat = other.gameObject.GetComponent<EnemyStat>();
-            //     playerStat.Damage(monsterStat.teamType);
-            // }
         }
+
 
         private void OnEnable()
         {

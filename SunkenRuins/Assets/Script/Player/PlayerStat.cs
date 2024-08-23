@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace SunkenRuins {
     public class PlayerStat : MonoBehaviour, IDamageable, IParalyzeable {
+        [SerializeField] GameObject Bubble;
         [Header("Stat")]
         public int playerMaxHealth;
         public int playerCurrentHealth;
@@ -99,6 +100,7 @@ namespace SunkenRuins {
         }
 
         public void BeInvincible(int invincibleTime){
+            Bubble.SetActive(true);
             StartCoroutine(BeInvincibleOverInvincibleTime(invincibleTime));
             SFXManager.instance.PlaySFX(5);
         }
@@ -115,7 +117,7 @@ namespace SunkenRuins {
             isInvincible = false;
             //Debug.Log("무적 풀림");
             tempPlayerCollider.enabled = true;
-            
+            Bubble.SetActive(false);
             // TODO:
             // 1. 무적 모션, 효과
             // 2. 무적 UI
