@@ -1636,7 +1636,7 @@ namespace SunkenRuins
 
             CheckEnemyGenerationByTile(); // change int[] array instead of using collision detection
             CheckItemGenerationByTile(); // change int[] array as well
-            TestBaseMapGeneration();
+            // TestBaseMapGeneration();
             TilePlacement(realMap);
         }
 
@@ -2217,7 +2217,6 @@ namespace SunkenRuins
                         itemRanges.Add(new int[2] { x * mapXLength, x * mapXLength + mapXLength });
                     }
                 }
-                Debug.Log($"{y+1}th floor: {itemRanges.Count}");
 
                 if (y != noItemY) InstantiateItem(y, itemList[itemListIndex++]);
                 itemRanges.Clear();

@@ -13,7 +13,7 @@ namespace SunkenRuins {
 
         private void Awake () {
             player = GetComponentInParent<PlayerManager>();
-            energyLevel = GetComponentsInChildren<Image>();
+            // energyLevel = GetComponentsInChildren<Image>();
         }
         private void Update() {
             // if (player.playerStat.playerCurrentEnergy >= 3) {
