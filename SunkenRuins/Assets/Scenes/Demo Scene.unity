@@ -331,6 +331,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 599322512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 15}
+--- !u!82 &151429691 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 798537580548844260, guid: caac3a549947ddf4494165bc51a61381, type: 3}
+  m_PrefabInstance: {fileID: 1662533553}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &184956649
 GameObject:
   m_ObjectHideFlags: 0
@@ -136740,6 +136745,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 95463919043506468, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
+      propertyPath: bgm
+      value: 
+      objectReference: {fileID: 151429691}
     - target: {fileID: 95463919043506468, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
       propertyPath: deathImage
       value: 
