@@ -13,7 +13,7 @@ namespace SunkenRuins {
             //게임 시작하면 무조건 타이틀 씬에서부터 시작
             if (SceneManager.GetActiveScene().name.CompareTo("Title Screen") != 0)
             {
-                SceneManager.LoadScene("Demo Scene (HW)");
+                SceneManager.LoadScene("Title Screen");
             }
         }
 

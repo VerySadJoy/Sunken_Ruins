@@ -49,7 +49,7 @@ MonoBehaviour:
   dwellingTile: {fileID: 253773865271393366, guid: dd029d911005b38478dcfcf771b6dddb, type: 3}
   ElectricStingRay: {fileID: 2623653881379105391, guid: a5c7596f260456241aec66ce4c86463c, type: 3}
   HypnoCuttleFish: {fileID: 8164341707400573675, guid: 1444110cdbaf9f54c956065999e2da69, type: 3}
-  AngryShell: {fileID: 4784678540410205240, guid: d2479636ad35507499994cfcfafb9649, type: 3}
+  AngryShell: {fileID: 7167922188800761181, guid: 977a98619f030694e8efc8640264f9f0, type: 3}
   ThrowingCrab: {fileID: 1371259693188626941, guid: 1231d0bc922b1e54290efd01141ae5a3, type: 3}
   HealthPotion: {fileID: 7011223438221127244, guid: 8358104773ec2364db16f3ef012ec84d, type: 3}
   BubbleShield: {fileID: 969599016839738218, guid: 4d0278170f447b84cb350254329e5854, type: 3}
