@@ -136852,7 +136852,19 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1286392147}
     - target: {fileID: 3801950049331222400, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
+      propertyPath: playerMaxEnergy
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3801950049331222400, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
       propertyPath: playerMaxHealth
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 3801950049331222400, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
+      propertyPath: playerCurrentEnergy
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3801950049331222400, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
+      propertyPath: playerCurrentHealth
       value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 4032099713048291100, guid: 30fa1c54583ddc64d8a89cb51ceba9a7, type: 3}
@@ -136880,6 +136892,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 322340490476145883, guid: 7c7f5aa2673f84e4b85748d0bb35351d, type: 3}
+      propertyPath: m_ScaleFactor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3548646800331187640, guid: 7c7f5aa2673f84e4b85748d0bb35351d, type: 3}
       propertyPath: m_Name
       value: PauseUI

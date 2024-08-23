@@ -7,7 +7,7 @@ namespace SunkenRuins {
     public class HealthBarUI : MonoBehaviour
     {
         [SerializeField] private PlayerManager player;
-        private Slider healthBar;
+        [SerializeField] private Slider healthBar;
         private void Awake () {
             healthBar = GetComponentInChildren<Slider>();
         }
