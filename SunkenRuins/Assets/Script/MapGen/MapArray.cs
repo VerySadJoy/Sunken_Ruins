@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using SunkenRuins;
 using Unity.Properties;
 using UnityEngine;
@@ -72,9 +73,30 @@ namespace SunkenRuins
             HealthPotion = 14,
             BubbleShield = 15,
             PowerBattery = 16,
+            None = 17,
 
             StartPosition = 100,
         }
+
+        TileType[][] itemListWithBubble = new TileType[6][]
+        {
+            new TileType[3] {TileType.BubbleShield, TileType.PowerBattery, TileType.HealthPotion},
+            new TileType[3] {TileType.BubbleShield, TileType.HealthPotion, TileType.PowerBattery},
+            new TileType[3] {TileType.PowerBattery, TileType.BubbleShield, TileType.HealthPotion},
+            new TileType[3] {TileType.PowerBattery, TileType.HealthPotion, TileType.BubbleShield},
+            new TileType[3] {TileType.HealthPotion, TileType.PowerBattery, TileType.BubbleShield},
+            new TileType[3] {TileType.HealthPotion, TileType.BubbleShield, TileType.PowerBattery},
+        };
+        
+        TileType[][] itemListWithoutBubble = new TileType[6][]
+        {
+            new TileType[3] {TileType.None, TileType.PowerBattery, TileType.HealthPotion},
+            new TileType[3] {TileType.None, TileType.HealthPotion, TileType.PowerBattery},
+            new TileType[3] {TileType.PowerBattery, TileType.HealthPotion, TileType.None},
+            new TileType[3] {TileType.PowerBattery, TileType.None, TileType.HealthPotion},
+            new TileType[3] {TileType.HealthPotion, TileType.PowerBattery, TileType.None},
+            new TileType[3] {TileType.HealthPotion, TileType.None, TileType.PowerBattery},
+        };
 
         // Size of One Map: 10 * 12
         int[,,] StartRoom = new int[1, 12, 10]
@@ -1964,6 +1986,7 @@ namespace SunkenRuins
                             if (rightBlankNum >= minBlankNum && leftBlankNum >= minBlankNum)
                             {
                                 baseMap[y, x] = (int)RoomType.ItemRoom;
+                                break;
                             }
                         }
                     }
@@ -1987,33 +2010,10 @@ namespace SunkenRuins
                             if (rightBlankNum >= minBlankNum && leftBlankNum >= minBlankNum)
                             {
                                 baseMap[y, x + 1] = (int)RoomType.ItemRoom;
+                                break;
                             }
                         }
                     }
-                    // else if (baseMap[y, x] == (int)RoomType.RandomRoom && baseMap[y, x+1] == (int)RoomType.RandomRoom)
-                    // {
-                    //     for (int i = y * mapYLength; i < y * mapYLength + mapYLength; i+=2)
-                    //     {
-                    //         // 3칸 이상 오른쪽이 비어있으면
-                    //         if (realMap[i, realMapX] == (int)TileType.Blank)
-                    //         {
-                    //             rightBlankNum += 1;
-                    //         }
-
-                    //         // 3칸 이상 왼쪽이 비어있으면
-                    //         if (realMap[i, realMapX + 1] == (int)TileType.Blank)
-                    //         {
-                    //             leftBlankNum += 1;
-                    //         }
-
-                    //         // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
-                    //         if (rightBlankNum >= minBlankNum && leftBlankNum >= minBlankNum)
-                    //         {
-                    //             baseMap[y, x] = (int)RoomType.ItemRoom;
-                    //             baseMap[y, x+1] = (int)RoomType.ItemRoom;
-                    //         }
-                    //     }
-                    // }
                 }
 
                 // 세로 체크
@@ -2043,6 +2043,7 @@ namespace SunkenRuins
                             if (upBlankNum >= minBlankNum && downBlankNum >= minBlankNum)
                             {
                                 baseMap[y, x] = (int)RoomType.ItemRoom;
+                                break;
                             }
                         }
                     }
@@ -2066,90 +2067,203 @@ namespace SunkenRuins
                             if (upBlankNum >= minBlankNum && downBlankNum >= minBlankNum)
                             {
                                 baseMap[y - 1, x] = (int)RoomType.ItemRoom;
+                                break;
                             }
                         }
                     }
-                    // else if (baseMap[y, x] == (int)RoomType.RandomRoom && baseMap[y-1, x] == (int)RoomType.RandomRoom)
-                    // {
-                    //     for (int i = x * mapXLength; i < x * mapXLength + mapXLength; i+=2)
-                    //     {
-                    //         // 3칸 이상 위가 비어있으면
-                    //         if (realMap[realMapY, i] == (int)TileType.Blank)
-                    //         {
-                    //             upBlankNum += 1;
-                    //         }
+                    else if (baseMap[y, x] == (int)RoomType.ItemRoom && baseMap[y-1, x] == (int)RoomType.RandomRoom)
+                    {
+                        for (int i = x * mapXLength; i < x * mapXLength + mapXLength; i+=2)
+                        {
+                            // 3칸 이상 위가 비어있으면
+                            if (realMap[realMapY, i] == (int)TileType.Blank)
+                            {
+                                upBlankNum += 1;
+                            }
 
-                    //         // 3칸 이상 아래가 비어있으면
-                    //         if (realMap[realMapY + 1, i] == (int)TileType.Blank)
-                    //         {
-                    //             downBlankNum += 1;
-                    //         }
+                            // 3칸 이상 아래가 비어있으면
+                            if (realMap[realMapY + 1, i] == (int)TileType.Blank)
+                            {
+                                downBlankNum += 1;
+                            }
 
-                    //         // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
-                    //         if (upBlankNum >= minBlankNum && downBlankNum >= minBlankNum)
-                    //         {
-                    //             baseMap[y, x] = (int)RoomType.ItemRoom;
-                    //             baseMap[y-1, x] = (int)RoomType.ItemRoom;
-                    //         }
-                    //     }
-                    // }
+                            // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                            if (upBlankNum >= minBlankNum && downBlankNum >= minBlankNum)
+                            {
+                                baseMap[y-1, x] = (int)RoomType.ItemRoom;
+                                break;
+                            }
+                        }
+                    }
+                    else if (baseMap[y, x] == (int)RoomType.RandomRoom && baseMap[y-1, x] == (int)RoomType.ItemRoom)
+                    {
+                        for (int i = x * mapXLength; i < x * mapXLength + mapXLength; i+=2)
+                        {
+                            // 3칸 이상 위가 비어있으면
+                            if (realMap[realMapY, i] == (int)TileType.Blank)
+                            {
+                                upBlankNum += 1;
+                            }
 
+                            // 3칸 이상 아래가 비어있으면
+                            if (realMap[realMapY + 1, i] == (int)TileType.Blank)
+                            {
+                                downBlankNum += 1;
+                            }
+
+                            // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                            if (upBlankNum >= minBlankNum && downBlankNum >= minBlankNum)
+                            {
+                                baseMap[y, x] = (int)RoomType.ItemRoom;
+                                break;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            // 가로 다시 한 번 체크
+            for (int y = 0; y < baseMap.GetLength(0); ++y)
+            {
+                // 가로 체크 한 번 더
+                for (int x = 0; x < baseMap.GetLength(1) - 1; ++x)
+                {
+                    int rightBlankNum = 0; int leftBlankNum = 0; int minBlankNum = 2;
+                    int realMapX = x * mapXLength + mapXLength - 1;
+
+                    if (baseMap[y, x] == (int)RoomType.ItemRoom && baseMap[y, x+1] == (int)RoomType.RandomRoom)
+                    {
+                        for (int i = y * mapYLength; i < y * mapYLength + mapYLength; i+=2)
+                        {
+                            // 3칸 이상 오른쪽이 비어있으면
+                            if (realMap[i, realMapX] == (int)TileType.Blank)
+                            {
+                                rightBlankNum += 1;
+                            }
+
+                            // 3칸 이상 왼쪽이 비어있으면
+                            if (realMap[i, realMapX + 1] == (int)TileType.Blank)
+                            {
+                                leftBlankNum += 1;
+                            }
+
+                            // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                            if (rightBlankNum >= minBlankNum && leftBlankNum >= minBlankNum)
+                            {
+                                baseMap[y, x+1] = (int)RoomType.ItemRoom;
+                                break;
+                            }
+                        }
+                    }
+                    else if (baseMap[y, x] == (int)RoomType.RandomRoom && baseMap[y, x+1] == (int)RoomType.ItemRoom)
+                    {
+                        for (int i = y * mapYLength; i < y * mapYLength + mapYLength; i+=2)
+                        {
+                            // 3칸 이상 오른쪽이 비어있으면
+                            if (realMap[i, realMapX] == (int)TileType.Blank)
+                            {
+                                rightBlankNum += 1;
+                            }
+
+                            // 3칸 이상 왼쪽이 비어있으면
+                            if (realMap[i, realMapX + 1] == (int)TileType.Blank)
+                            {
+                                leftBlankNum += 1;
+                            }
+
+                            // 최소 빈칸 개수를 돌파할 때 --> 비적정 루트로 정해짐
+                            if (rightBlankNum >= minBlankNum && leftBlankNum >= minBlankNum)
+                            {
+                                baseMap[y, x] = (int)RoomType.ItemRoom;
+                                break;
+                            }
+                        }
+                    }
+                    else continue;
                 }
             }
 
             // Instantiate Items
-            for (int y = 0; y < baseMap.GetLength(0); ++y)
+            TileType[] itemList = itemListWithBubble[Random.Range(0, itemListWithBubble.Length)]; 
+            int bubbleShieldCount = 0; int itemListIndex = 0; int noItemY = 0;
+            for (int y = 1; y < baseMap.GetLength(0); ++y)
             {
+                if (y % areaNum == 0) // need to reset item instantiate list
+                {
+                    itemListIndex = 0;
+                    noItemY = Random.Range(y, y + 4); // 하드 코딩으로 4 설정
+
+                    if (bubbleShieldCount >= 1)
+                    {
+                        bubbleShieldCount = 0; // reset bubbleshield count
+
+                        int ranItemListIndex = Random.Range(0, itemListWithBubble.Length);
+                        itemList = itemListWithBubble[ranItemListIndex];
+                    }
+                    else
+                    {
+                        bubbleShieldCount += 1;
+
+                        int ranItemListIndex = Random.Range(0, itemListWithoutBubble.Length);
+                        itemList = itemListWithoutBubble[ranItemListIndex];
+                    }
+                }
+
                 for (int x = 0; x < baseMap.GetLength(1); ++x)
                 {
                     if (baseMap[y, x] == (int)RoomType.ItemRoom)
                     {
-                        itemRanges.Add(new int[4] { y * mapYLength, y * mapYLength + mapYLength, x * mapXLength, x * mapXLength + mapXLength });
+                        itemRanges.Add(new int[2] { x * mapXLength, x * mapXLength + mapXLength });
                     }
                 }
+                Debug.Log($"{y+1}th floor: {itemRanges.Count}");
 
-                if (y != 0 && y % areaNum == 0)
-                {
-                    // Instantiate Items - Health Potion
-                    InstantiateItem(TileType.HealthPotion);
-
-                    // Power Battery
-                    InstantiateItem(TileType.PowerBattery);
-
-                    // Bubble Shield
-                    InstantiateItem(TileType.BubbleShield);
-
-                    itemRanges.Clear(); // Remove all data from one area
-                }
-
+                if (y != noItemY) InstantiateItem(y, itemList[itemListIndex++]);
+                itemRanges.Clear();
             }
-
-
         }
 
-        private void InstantiateItem(TileType itemType)
+        private void InstantiateItem(int roomHeight, TileType itemType)
         {
+            // 생성할 아이템이 없을 때
+            if (itemType == TileType.None) return;
+
+            // 적정 경로에 생성
             if (itemRanges.Count == 0)
             {
-                Debug.LogWarning("No ItemRooms");
-                return;
-            }
-
-            int randomRange = Random.Range(0, itemRanges.Count);
-            while (true)
-            {
-                int randomY = Random.Range(itemRanges[randomRange][0], itemRanges[randomRange][1]);
-                int randomX = Random.Range(itemRanges[randomRange][2], itemRanges[randomRange][3]);
-                
-                if (realMap[randomY, randomX] == (int)TileType.Blank)
+                while (true)
                 {
-                    realMap[randomY, randomX] = (int)itemType;
-                    break;
-                }
-                else continue;                
-            }
-        }
+                    int randomWidth = Random.Range(0, mapWidth);
+                    int randomY = Random.Range(roomHeight * mapYLength, roomHeight * mapYLength + mapYLength);
 
+                    if (baseMap[roomHeight, randomWidth] != (int)RoomType.RandomRoom && 
+                        realMap[randomY, randomWidth * mapXLength] == (int)TileType.Blank)
+                    {
+                        realMap[randomY, randomWidth * mapXLength] = (int)itemType;
+                        break;
+                    }
+                    else continue;
+                }
+            }
+            else
+            {
+                // 다른 경로에 생성
+                int randomRange = Random.Range(0, itemRanges.Count);
+                while (true)
+                {
+                    int randomX = Random.Range(itemRanges[randomRange][0], itemRanges[randomRange][1]);
+                    int randomY = Random.Range(roomHeight * mapYLength, roomHeight * mapYLength + mapYLength);
+
+                    if (realMap[randomY, randomX] == (int)TileType.Blank)
+                    {
+                        realMap[randomY, randomX] = (int)itemType;
+                        break;
+                    }
+                    else continue; // Remove all data from one floor            
+                }
+            }            
+        }
 
         private void CheckEnemyGenerationByTile()
         {
