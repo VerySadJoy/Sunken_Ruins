@@ -16,8 +16,15 @@ namespace SunkenRuins
         private const string playerLayerString = "Player";
         [SerializeField] private GameObject attackSpriteObject;
         [SerializeField] private GameObject attackRangeObject;
+        private CircleCollider2D circleCollider2D;
         public float showSpriteTime = 1f;
         private bool isAttack = false;
+
+        private void Awake()
+        {
+            circleCollider2D = GetComponent<CircleCollider2D>();
+            circleCollider2D.enabled = false;
+        }
 
         private void Start()
         {
@@ -45,11 +52,13 @@ namespace SunkenRuins
         {
             SFXManager.instance.PlaySFX(7);
             gameObject.SetActive(isAttack = true); // spriteObject 스크립트를 만들어서 따로 알아서 처리하게 하기?
+            circleCollider2D.enabled = true;
             yield return new WaitForSeconds(showSpriteTime);
             gameObject.SetActive(isAttack = false);            
+            circleCollider2D.enabled = false;
         }
 
-        private void OnTriggerStay2D(Collider2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
             if (isAttack && other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {

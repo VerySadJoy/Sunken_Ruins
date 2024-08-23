@@ -10,6 +10,7 @@ namespace SunkenRuins
         private PlayerManager player;
         private Rigidbody2D rb;
         private new CircleCollider2D collider2D;
+        private int rockDamage = 3; public int RockDamage { get { return rockDamage; } }
         [SerializeField] private float speed = 5f;
         private float lifetime = 5f;
 
@@ -38,6 +39,7 @@ namespace SunkenRuins
 
             if (LayerMask.LayerToName(collision.gameObject.layer) == "Player" || LayerMask.LayerToName(collision.gameObject.layer) == "Wall")
             {
+                EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object>() {{"amount", rockDamage}});
                 Destroy(gameObject);
             }
         }

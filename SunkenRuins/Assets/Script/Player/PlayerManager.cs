@@ -31,7 +31,7 @@ namespace SunkenRuins
         [SerializeField] private float defaultOrthographicSize = 8f;
         [SerializeField] private float zoomOrthographicSize = 5f;
         private PlayerControl playerControl { get; set; } // Input System
-        private bool isFacingRight = true;
+        private bool isFacingRight = true; public bool IsFacingRight { get { return isFacingRight; } }
 
         // Layermask String
         private const string itemLayerString = "Item";
@@ -40,7 +40,6 @@ namespace SunkenRuins
         //Boost
         [SerializeField] private DottedLineUI boostTrajectoryLineUI;
         [SerializeField] private BoostBarUI boostBarUI;
-        [SerializeField] private EnergyBarUI energyBarUI;
         [SerializeField] private PlayerEye playerEye;
 
         private bool isBoosting = false;
@@ -119,7 +118,9 @@ namespace SunkenRuins
             playerControl.Player.Enable();
 
             EventManager.StartListening(EventType.PlayerToStartPosition, MoveToStartPosition);
+            EventManager.StartListening(EventType.StingRayParalyze, Paralyze);
             EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StartListening(EventType.HypnoCuttleFishEscape, EscapeFromEnemy);
             EventManager.StartListening(EventType.ShellAbsorb, GetAbsorbed);
             EventManager.StartListening(EventType.ShellEscape, EscapeFromEnemy);
             EventManager.StartListening(EventType.ShellSwallow, ShellSwallow);
@@ -128,7 +129,9 @@ namespace SunkenRuins
         private void OnDisable()
         {
             EventManager.StopListening(EventType.PlayerToStartPosition, MoveToStartPosition);
+            EventManager.StopListening(EventType.StingRayParalyze, Paralyze);
             EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, Hypnotize);
+            EventManager.StopListening(EventType.HypnoCuttleFishEscape, EscapeFromEnemy);
             EventManager.StopListening(EventType.ShellAbsorb, GetAbsorbed);
             EventManager.StopListening(EventType.ShellEscape, EscapeFromEnemy);
             EventManager.StopListening(EventType.ShellSwallow, ShellSwallow);
@@ -431,8 +434,22 @@ namespace SunkenRuins
         private IEnumerator HypnotizeInputCoroutine()
         {
             SetInputEnabled(false);
+            playerStat.moveSpeed = playerStat.hypnotizeMoveSpeed;
             yield return new WaitForSeconds(playerStat.HypnotizeTime);
+            playerStat.moveSpeed = playerStat.defaultMoveSpeed;
             SetInputEnabled(true);
+        }
+
+        private void Paralyze(Dictionary<string, object> message)
+        {
+            StartCoroutine(ParalyzeSpeedCoroutine());
+        }
+
+        private IEnumerator ParalyzeSpeedCoroutine()
+        {
+            playerStat.moveSpeed = playerStat.paralyzeMoveSpeed;
+            yield return new WaitForSeconds(playerStat.ParalyzeTime);
+            playerStat.moveSpeed = playerStat.defaultMoveSpeed;
         }
 
         public void SetInputEnabled(bool enable)

@@ -25,11 +25,13 @@ namespace SunkenRuins
         private Vector3 initialPosition;
         private float lerpAmount;
         [SerializeField] private float distanceFromPlayer = 3.0f;
+        private HypnoCuttleFishCircleDetection circleDetection;
+        private HypnoCuttleFishStat hypnoCuttleFishStat;
 
         [Header("Boost")]
         private int boostCount = 0;
         public float boostTime = 1f;
-        public float boostVelocity = 5f;
+        public float boostVelocity = 3f;
         public int maxBoostAmount = 3;
         private Vector2 detectionVelocity;
         public float decelerationDuration = 1f;
@@ -42,6 +44,7 @@ namespace SunkenRuins
         private void Awake()
         {
             animator = GetComponent<Animator>();
+            hypnoCuttleFishStat = GetComponent<HypnoCuttleFishStat>();
             currentState = HypnoCuttlefishState.Idle;
         }
 
@@ -49,26 +52,29 @@ namespace SunkenRuins
         {
             base.Start();
             initialPosition = transform.position;
+            circleDetection = GetComponentInChildren<HypnoCuttleFishCircleDetection>();
         }
 
         private void OnEnable()
         {
             EventManager.StartListening(EventType.HypnoCuttleFishHypnotize, OnPlayerDetection_Hypnotize);
+            EventManager.StartListening(EventType.HypnoCuttleFishEscape, null);
         }
 
         private void OnDisable()
         {
             EventManager.StopListening(EventType.HypnoCuttleFishHypnotize, OnPlayerDetection_Hypnotize);
+            EventManager.StopListening(EventType.HypnoCuttleFishEscape, null);
         }
 
         private void FixedUpdate()
         {
-            //Debug.Log(currentState);
+            Debug.Log(currentState);
+
             switch (currentState)
             {
                 case HypnoCuttlefishState.Idle:
-                    // Idle behavior (e.g., patrolling or waiting)
-                    //SquidAnimation();
+                    // SquidAnimation();
                     break;
                 case HypnoCuttlefishState.Hypnotizing:
                     HandleHypnotizing();
@@ -84,20 +90,36 @@ namespace SunkenRuins
 
         private void HandleHypnotizing()
         {
-            this.GetComponentInChildren<CircleCollider2D>().enabled = false;
             MoveToPlayer();
 
-            if ((player.position - transform.position).magnitude < 0.1f)
-            {
-                currentState = HypnoCuttlefishState.Attacking;
-            }
-            else if (Input.anyKeyDown)
+            if (Input.anyKeyDown)
             {
                 if (++keyPressCount >= hypnotizeEscapeKeyNum)
                 {
+                    keyPressCount = 0;
                     currentState = HypnoCuttlefishState.Retreating;
-                    StartCoroutine(StopHypnotizeCoroutine());
+                    EventManager.TriggerEvent(EventType.HypnoCuttleFishEscape, null);
                 }
+            }
+        }
+
+        private void MoveToPlayer()
+        {
+            Vector2 directionToPlayer;
+            if (player.GetComponent<PlayerManager>().IsFacingRight)
+            {
+                directionToPlayer = (player.position - transform.position + Vector3.right).normalized;
+            }
+            else directionToPlayer = (player.position - transform.position + Vector3.left).normalized;
+
+            detectionVelocity = directionToPlayer * boostVelocity; // * directionToPlayer.magnitude;
+            rb.velocity = detectionVelocity;
+            // UpdateFacingDirection(-directionToPlayer);
+
+            if ((player.position - transform.position).magnitude < 4.5f)
+            {
+                rb.velocity = Vector3.zero;
+                currentState = HypnoCuttlefishState.Attacking;
             }
         }
 
@@ -113,16 +135,14 @@ namespace SunkenRuins
 
             rb.velocity = Vector3.zero;
             currentState = HypnoCuttlefishState.Idle;
-            this.GetComponentInChildren<CircleCollider2D>().enabled = true;
+
+            StartCoroutine(colliderDelayCoroutine());
         }
 
-        private IEnumerator StopHypnotizeCoroutine()
+        private IEnumerator colliderDelayCoroutine()
         {
-            //yield return new WaitForSeconds(1.25f);
-            newTimer = 0f;
-            keyPressCount = 0;
-            currentState = HypnoCuttlefishState.Retreating;
-            yield return null;
+            yield return new WaitForSeconds(hypnotizeDelayTime);
+            circleDetection.turnColliderOn();
         }
 
         private void AttackPlayer()
@@ -130,32 +150,38 @@ namespace SunkenRuins
             if (currentState != HypnoCuttlefishState.Attacking) return;
             animator.SetTrigger("Attack");
             rb.velocity = Vector3.zero;
-            //StartCoroutine(StopHypnotizeCoroutine());
-        }
-        private void StopAttack() {
-            animator.ResetTrigger("Attack");
-            StartCoroutine(StopHypnotizeCoroutine());
+
+            StartCoroutine(AttackCoroutine());
+
         }
 
-        private void MoveToPlayer()
+        private IEnumerator AttackCoroutine()
         {
-            Vector2 directionToPlayer = (player.position - transform.position).normalized;
-            detectionVelocity = directionToPlayer * boostVelocity * directionToPlayer.magnitude;
-            rb.velocity = detectionVelocity;
-            UpdateFacingDirection(-directionToPlayer);
-            if ((player.position - transform.position).magnitude < 0.1f)
-            {
-                rb.velocity = Vector3.zero;
-            }
+            yield return new WaitForSeconds(attackTime);
+
+            EventManager.TriggerEvent(EventType.HypnoCuttleFishEscape, null);
+            EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object>() {{"amount", hypnoCuttleFishStat.damageAmount }});
+            StopAttack();
         }
+
+        private void StopAttack() {
+            animator.ResetTrigger("Attack");
+            currentState = HypnoCuttlefishState.Retreating;
+        }
+
 
         private void OnPlayerDetection_Hypnotize(Dictionary<string, object> message)
         {
-            if (currentState != HypnoCuttlefishState.Idle) return;
-
-            //isHypnotize = true;
-            currentState = HypnoCuttlefishState.Hypnotizing;
-            player = (Transform)message["Player"];
+            if (circleDetection.CircleDetectionID != (int)message["ObjectID"]) 
+            {
+                return;
+            }
+            else
+            {
+                player = (Transform)message["Player"];
+                currentState = HypnoCuttlefishState.Hypnotizing;
+                circleDetection.turnColliderOff();
+            }
         }
 
         private void SquidAnimation()
@@ -166,6 +192,8 @@ namespace SunkenRuins
 
         private IEnumerator ApplyImpulse()
         {
+            if (currentState != HypnoCuttlefishState.Idle) yield return null;
+
             float elapsedTime = 0f;
             Vector3 impulseVelocity = (boostCount % (2 * maxBoostAmount) < maxBoostAmount ? 1 : -1) * Vector3.left * boostVelocity;
             boostCount++;
@@ -182,7 +210,7 @@ namespace SunkenRuins
 
         private void ChangeDirection()
         {
-            if (currentState == HypnoCuttlefishState.Retreating) return;
+            if (currentState != HypnoCuttlefishState.Idle) return;
             UpdateFacingDirection(boostCount % (2 * maxBoostAmount) < maxBoostAmount ? Vector3.right : Vector3.left);
         }
         private void PlayHypnoSFX() {

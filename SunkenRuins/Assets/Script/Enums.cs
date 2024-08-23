@@ -35,6 +35,7 @@ namespace SunkenRuins
         StingRayMoveTowardsPlayer,
         StingRayPrepareAttack,
         HypnoCuttleFishHypnotize,
+        HypnoCuttleFishEscape,
         ThrowingCrabThrowRock,
         ShellAbsorb,
         ShellAttack,
