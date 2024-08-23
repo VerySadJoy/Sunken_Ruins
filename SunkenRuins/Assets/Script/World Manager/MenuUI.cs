@@ -6,6 +6,17 @@ using UnityEngine.SceneManagement;
 namespace SunkenRuins {
     public class MenuUI : MonoBehaviour {
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+
+        static void FirstLoad()
+        {
+            //게임 시작하면 무조건 이 씬에서부터 시작
+            if (SceneManager.GetActiveScene().name.CompareTo("Title Screen") != 0)
+            {
+                SceneManager.LoadScene("Title Screen");
+            }
+        }
+
         //추후 변수 타입 변경
         [SerializeField] CanvasGroup SettingUI;
 
@@ -17,6 +28,14 @@ namespace SunkenRuins {
             SettingUI.blocksRaycasts = true;
             SettingUI.GetComponentInChildren<Canvas>().enabled = true;
 
+        }
+        public void gameQuit() //게임 종료
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit(); // 어플리케이션 종료
+#endif
         }
     }
 }
