@@ -162,10 +162,7 @@ namespace SunkenRuins
             if (isAbsorbed)
             {
                 dirFromShellNormalized = (shellPosition - this.transform.position).normalized;
-                //Debug.Log($"Moving towards shell. Current Position: {transform.position}, Shell Position: {shellPosition}");
-                //rb.AddForce(dirFromShellNormalized * 10);
-                //rb.velocity = Vector2.ClampMagnitude(rb.velocity, 10);
-                rb.velocity += 1/10 * new Vector2(rb.velocity.x * dirFromShellNormalized.x, rb.velocity.y * dirFromShellNormalized.y);
+                rb.velocity += 1.15f * new Vector2(dirFromShellNormalized.x, dirFromShellNormalized.y);
             }
         }
 
@@ -185,7 +182,6 @@ namespace SunkenRuins
 
         public void GetAbsorbed(Dictionary<string, object> message)
         {
-            // rb.constraints = RigidbodyConstraints2D.FreezeAll;
             SetBoostInputEnable(false);
             isAbsorbed = true;
             shellPosition = (Vector3)message["position"];
@@ -301,7 +297,7 @@ namespace SunkenRuins
 
             var ps = bubble.emission;
             ps.enabled = true;
-            ps.rateOverTime = 15f; //버블 발생량 늘림 
+            ps.rateOverTime = 15f; // 버블 발생량 늘림 
 
             boostEffectOffset = 0f;
             StartCoroutine(boostEffectCor);

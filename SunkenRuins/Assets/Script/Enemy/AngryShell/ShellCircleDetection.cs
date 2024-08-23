@@ -30,10 +30,7 @@ namespace SunkenRuins
                 Vector3 position = this.transform.position;
                 temp = position;
 
-                //RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, position, rayCastDistance, playerLayerMask);
-
-                EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "position", position } });
-                
+                EventManager.TriggerEvent(EventType.ShellAbsorb, new Dictionary<string, object>() { { "position", position + 1.5f * Vector3.up } });
             }
         }
 

@@ -13,8 +13,10 @@ namespace SunkenRuins
         private Animator animator;
         
         private int keyPressCount = 0;
-        private void Awake() {
-            animator = GetComponent<Animator>();
+
+        private void Awake()
+        {
+            animator = GetComponentInChildren<Animator>();
         }
 
         protected override void Start()

@@ -8,7 +8,7 @@ namespace SunkenRuins {
     
     public class MapClickUI : MonoBehaviour {
 
-        [SerializeField] int selectedStageNum = 0; //½ÃÀÛÇÒ ½ºÅ×ÀÌÁö ¹øÈ£
+        [SerializeField] int selectedStageNum = 0; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£
         [SerializeField] int maxStageNum;
         [SerializeField] Sprite[] selectedStageImage;
         [SerializeField] Sprite[] selectedStageImage_blur;
@@ -28,7 +28,7 @@ namespace SunkenRuins {
 
         public void returnToTitle()
         {
-            //¿ø·¡ È­¸éÀ¸·Î µ¹¾Æ°¡±â
+            //ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½
             SceneManager.LoadScene("Title Screen");
         }
 
