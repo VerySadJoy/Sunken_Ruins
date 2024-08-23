@@ -36,7 +36,6 @@ namespace SunkenRuins
             base.Start();
             initialPosition = transform.position;
 
-            // Debug.Log(triangleDetection.ThisObjectNumber);
         }
 
         private void OnEnable()
@@ -55,8 +54,6 @@ namespace SunkenRuins
 
         private void Update()
         {
-            Debug.LogWarning($"{triangleDetection.ThisObjectNumber}. {isChasingPlayer}");
-
             if (isChasingPlayer)
             {
                 Vector2 dirToPlayerNormalized = (player.position - transform.position).normalized; // 플레이어를 향한 단위 벡터

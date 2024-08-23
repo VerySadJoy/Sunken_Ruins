@@ -34,13 +34,11 @@ namespace SunkenRuins
         // 근데 방법은 잘 모르겠음...
         private void OnBecameInvisible()
         {
-            Debug.Log("카메라에서 안 보임");
             circleCollider2D.enabled = false;
         }
 
         private void OnBecameVisible()
         {
-            Debug.Log("카메라에서 보임");
             circleCollider2D.enabled = true;
         }
 
