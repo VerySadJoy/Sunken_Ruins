@@ -11,8 +11,17 @@ namespace SunkenRuins {
         [SerializeField] int selectedStageNum = 0; //시작할 스테이지 번호
         [SerializeField] int maxStageNum;
         [SerializeField] Sprite[] selectedStageImage;
-        [SerializeField] Image targetImage;
+        [SerializeField] Sprite[] selectedStageImage_blur;
 
+        [SerializeField] Image targetImage;
+        [SerializeField] Image blurImage;
+
+
+        private void Update()
+        {
+            targetImage.sprite = selectedStageImage[selectedStageNum];
+            blurImage.sprite = selectedStageImage_blur[selectedStageNum];
+        }
         public void stageStart() {
             Debug.Log("game start: " + selectedStageNum + " stage");
         }
@@ -33,7 +42,7 @@ namespace SunkenRuins {
 
         public void moveRight()
         {
-            if(selectedStageNum < maxStageNum - 1)
+            if(selectedStageNum < maxStageNum)
             {
                 selectedStageNum++;
             }
