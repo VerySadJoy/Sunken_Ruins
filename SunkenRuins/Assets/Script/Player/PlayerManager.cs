@@ -109,7 +109,7 @@ namespace SunkenRuins
             }
             else if (other.gameObject.layer == LayerMask.NameToLayer(enemyLayerString)) 
             {
-                playerStat.playerCurrentHealth -= 20;
+                //playerStat.playerCurrentHealth -= 20;
             }
         }
 
