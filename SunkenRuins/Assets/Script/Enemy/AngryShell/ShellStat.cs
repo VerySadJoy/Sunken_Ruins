@@ -8,10 +8,10 @@ namespace SunkenRuins
     public class ShellStat : EnemyStat
     {
         public float EngulfTime { get { return 3f; } }
-        public float EngulfDelayTime { get { return 5f; } }
+        [SerializeField] private float engulfDelayTime = 5f; public float EngulfDelayTime { get { return engulfDelayTime; } }
 
-        public float AttackCoolTime { get { return 3f; } }
-        public int DamagePerAttack { get { return 10; } }
+        [SerializeField] private float attackCoolTime = 3f; public float AttackCoolTime { get { return attackCoolTime; } }
+        [SerializeField] private int damagePerAttack = 10; public int DamagePerAttack { get { return damagePerAttack; } }
 
         public int TotalKeyAmount { get { return 10; } }
     }

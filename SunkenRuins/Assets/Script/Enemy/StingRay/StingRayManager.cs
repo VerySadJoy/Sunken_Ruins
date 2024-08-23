@@ -68,7 +68,7 @@ namespace SunkenRuins
                     electricAttack.ShowAttackRange();
 
                     // 속도를 다 줄이고 공격이 준비되었을 때
-                    if (timer > stingRayStat.fullChargeTime)
+                    if (timer > stingRayStat.FullChargeTime)
                     {
                         isPrepareAttack = false;
                         electricAttack.HideAttackRange();
@@ -81,10 +81,10 @@ namespace SunkenRuins
                 else // 그저 쫓아가는 것이면
                 {
                     //animator.SetBool("Warning", false);
-                    rb.velocity = dirToPlayerNormalized * stingRayStat.dashMoveSpeed; // 대시 속도로 변경
+                    rb.velocity = dirToPlayerNormalized * stingRayStat.DashMoveSpeed; // 대시 속도로 변경
 
                     // 추격에 주어진 시간이 다하면
-                    if (timer > stingRayStat.dashContinueTime)
+                    if (timer > stingRayStat.DashContinueTime)
                     {
                         // 플레이어와 반대방향으로 이동함
                         StartCoroutine(returnDuringDashDelayTime(dirToPlayerNormalized));
@@ -112,7 +112,7 @@ namespace SunkenRuins
             player = null; // 플레이어 초기화해서 플레이어 추적 불가
 
             yield return new WaitForSeconds(electricAttack.showSpriteTime); // 잠깐 멈춘다 (공격 모션 등의 이유)
-            rb.velocity = (initialPosition - transform.position).normalized * stingRayStat.initialMoveSpeed;
+            rb.velocity = (initialPosition - transform.position).normalized * stingRayStat.InitialMoveSpeed;
             UpdateFacingDirection(initialPosition.x > transform.position.x ? Vector2.right : Vector2.left);
             while (Vector3.Distance(transform.position, initialPosition) > 0.1f)
             {
@@ -128,17 +128,17 @@ namespace SunkenRuins
         private void PerformPatrolMovement()
         {
             float offsetFromInitialPosition = transform.position.x - initialPosition.x;
-            if (offsetFromInitialPosition < -stingRayStat.patrolRange)
+            if (offsetFromInitialPosition < -stingRayStat.PatrolRange)
             {
                 UpdateFacingDirection(Vector2.right);
             }
-            else if (offsetFromInitialPosition > stingRayStat.patrolRange)
+            else if (offsetFromInitialPosition > stingRayStat.PatrolRange)
             {
                 UpdateFacingDirection(Vector2.left);
             }
             // UpdateFacingDirection(offsetFromInitialPosition < -stingRayStat.patrolRange ? Vector2.right : Vector2.left);
             // 속도 설정
-            rb.velocity = new Vector2(stingRayStat.initialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
+            rb.velocity = new Vector2(stingRayStat.InitialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
         }
 
         private void OnPlayerDetection_MoveTowardsPlayer(Dictionary<string, object> message)

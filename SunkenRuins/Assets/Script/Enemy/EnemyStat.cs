@@ -7,8 +7,8 @@ namespace SunkenRuins
     public class EnemyStat : MonoBehaviour, IDamageable
     {
         [Header("Stat")]
-        public int monsterMaxHealth;
-        public int monsterCurrentHealth;
+        private int monsterMaxHealth;
+        private int monsterCurrentHealth;
         public TeamType teamType { get; set; }
         public int damageAmount { get; protected set;}
 

@@ -5,6 +5,6 @@ using UnityEngine;
 
 public class ThrowingCrabStat : EnemyStat
 {
-    public float patrolRange { get { return 6f; } }
-    public float initialMoveSpeed { get { return 4f; } }
+    private float patrolRange = 6f; public float PatrolRange { get { return patrolRange; } }
+    private float initialMoveSpeed = 4f; public float InitialMoveSpeed { get { return initialMoveSpeed; } }
 }

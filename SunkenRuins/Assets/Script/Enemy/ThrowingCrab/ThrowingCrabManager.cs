@@ -139,16 +139,16 @@ namespace SunkenRuins
         private void PerformPatrolMovement()
         {
             float offsetFromInitialPosition = transform.position.x - startPosition.x;
-            if (offsetFromInitialPosition < -throwingCrabStat.patrolRange)
+            if (offsetFromInitialPosition < -throwingCrabStat.PatrolRange)
             {
                 UpdateFacingDirection(Vector2.right);
             }
-            else if (offsetFromInitialPosition > throwingCrabStat.patrolRange)
+            else if (offsetFromInitialPosition > throwingCrabStat.PatrolRange)
             {
                 UpdateFacingDirection(Vector2.left);
             }
 
-            rb.velocity = new Vector2(throwingCrabStat.initialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
+            rb.velocity = new Vector2(throwingCrabStat.InitialMoveSpeed * (isFacingRight ? 1f : -1f), 0);
         }
     }
 }
