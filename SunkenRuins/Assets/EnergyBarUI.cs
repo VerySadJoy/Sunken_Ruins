@@ -1,45 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Recorder;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace SunkenRuins {
     public class EnergyBarUI : MonoBehaviour
     {
-        private PlayerManager player;
-        private Image[] energyLevel;
-        [SerializeField] private Sprite energyFullSprite;
-        [SerializeField] private Sprite energyBlankSprite;
+        [SerializeField] private PlayerManager player;
+        private Transform[] energyBarImages;
 
         private void Awake () {
-            player = GetComponentInParent<PlayerManager>();
-            // energyLevel = GetComponentsInChildren<Image>();
+            energyBarImages = GetComponentsInChildren<Transform>(); // 3(right), 4(left), 5(center)가 꽉 찬 친구들
         }
+
+        private void Start() {
+            for (int i = 0; i < energyBarImages.Length; ++i)
+            {
+                energyBarImages[i].gameObject.SetActive(true);
+            }
+        }
+
         private void Update() {
-            // if (player.playerStat.playerCurrentEnergy >= 3) {
-            //     energyLevel[0].image = energyFullSprite;
-            //     energyLevel[1].sprite = energyFullSprite;
-            //     energyLevel[2].sprite = energyFullSprite;
-            // }
-            // else if (player.playerStat.playerCurrentEnergy == 2) {
-            //     energyLevel[0].sprite = energyFullSprite;
-            //     energyLevel[1].sprite = energyFullSprite;
-            //     energyLevel[2].sprite = energyBlankSprite;
-            // }
-            // else if (player.playerStat.playerCurrentEnergy == 1) {
-            //     energyLevel[0].sprite = energyFullSprite;
-            //     energyLevel[1].sprite = energyBlankSprite;
-            //     energyLevel[2].sprite = energyBlankSprite;
-            // }
-            // else if (player.playerStat.playerCurrentEnergy == 0) {
-            //     energyLevel[0].sprite = energyBlankSprite;
-            //     energyLevel[1].sprite = energyBlankSprite;
-            //     energyLevel[2].sprite = energyBlankSprite;
-            // }
-        }
-        public void SetUIActive(bool isActive)
-        {
-            gameObject.SetActive(isActive);
+            if (player.playerStat.playerCurrentEnergy >= 3)
+            {
+                energyBarImages[4].gameObject.SetActive(true);
+                energyBarImages[5].gameObject.SetActive(true);
+                energyBarImages[6].gameObject.SetActive(true);
+            }
+            else if (player.playerStat.playerCurrentEnergy == 2)
+            {
+                energyBarImages[4].gameObject.SetActive(false);
+                energyBarImages[5].gameObject.SetActive(true);
+                energyBarImages[6].gameObject.SetActive(true);
+            }
+            else if (player.playerStat.playerCurrentEnergy == 1)
+            {
+                energyBarImages[4].gameObject.SetActive(false);
+                energyBarImages[5].gameObject.SetActive(false);
+                energyBarImages[6].gameObject.SetActive(true);
+            }
+            else if (player.playerStat.playerCurrentEnergy <= 0)
+            {
+                energyBarImages[4].gameObject.SetActive(false);
+                energyBarImages[5].gameObject.SetActive(false);
+                energyBarImages[6].gameObject.SetActive(false);
+            }
         }
     }
 }

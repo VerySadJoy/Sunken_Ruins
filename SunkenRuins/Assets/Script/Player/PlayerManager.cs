@@ -254,7 +254,6 @@ namespace SunkenRuins
             virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, zoomOrthographicSize, zoomSpeed * Time.deltaTime); ; //Zoom In
 
             boostBarUI.SetUIActive(true);
-            energyBarUI.SetUIActive(true);
 
             // 부?�트 준�?중에??Sprite 방향 ?�경?�기
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System?�로 변경해?�한?�면 변�?
@@ -274,7 +273,6 @@ namespace SunkenRuins
             playerStat.playerCurrentEnergy -= 1;
             hasBoostEventBeenInvoked = false;
             boostBarUI.SetUIActive(false);
-            energyBarUI.SetUIActive(false);
             boostTrajectoryLineUI.LineDisable();
 
             Vector2 finalMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Input System?�로 변경해?�한?�면 변�?
