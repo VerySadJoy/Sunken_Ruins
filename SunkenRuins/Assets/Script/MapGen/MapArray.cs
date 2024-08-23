@@ -2302,7 +2302,7 @@ namespace SunkenRuins
                     }
 
                     // Electric StingRay
-                    if (y >= 2 * realMap.GetLength(0) / 3 && CheckArea(y, x, 6, 6, TileType.Blank) && !isObjectInArea(y, x, 14, 14, TileType.ElectricStingRay))
+                    if (y >= 2 * realMap.GetLength(0) / 3 && CheckArea(y, x, 6, 6, TileType.Blank) && !isObjectInArea(y, x, 16, 16, TileType.ElectricStingRay))
                     {
                         // Summon Probability = 50%
                         bool isInstantiate = Random.Range(0, 100) < 18;

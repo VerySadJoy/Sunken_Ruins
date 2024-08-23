@@ -14,13 +14,18 @@ namespace SunkenRuins {
         }
         public void OnQuit(){
             Debug.Log("quit");
-            //quit
+            Application.Quit();
         }
         private void Pause() {
             Time.timeScale = 0f;
         }
         private void Unpause(){
             Time.timeScale = 1f;
+        }
+        public void OnReturn()
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(1); // go back to base
+            Unpause();
         }
     }
 }
