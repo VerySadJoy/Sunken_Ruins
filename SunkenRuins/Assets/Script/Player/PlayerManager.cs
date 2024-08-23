@@ -176,7 +176,7 @@ namespace SunkenRuins
                 deathImage.color = new Color(0f, 0f, 0f, alpha);
                 yield return null;
             }
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(2); // load to DiveScene
         }
         private void FixedUpdate (){
             if (isAbsorbed)

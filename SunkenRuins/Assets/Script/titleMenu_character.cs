@@ -8,7 +8,7 @@ public class titleMenu_character : MonoBehaviour
     float initPos;
     RectTransform rect;
     [SerializeField] float waveSize;
-    [SerializeField] float period; //ÇÑ ¹ø À§¾Æ·¡·Î ¿òÁ÷ÀÌ´Â µ¥ °É¸®´Â ½Ã°£
+    [SerializeField] float period; //ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ ï¿½É¸ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
 
     float timer = 0f;
     void Start()

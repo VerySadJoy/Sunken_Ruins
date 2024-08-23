@@ -28,10 +28,10 @@ namespace SunkenRuins {
             switch (selectedStageNum)
             {
                 case 0:
-                    SceneManager.LoadScene(2); //튜토리얼
+                    SceneManager.LoadScene(3); // DiveScene --> Demo Scene (4) 
                     break;
                 case 1:
-                    SceneManager.LoadScene(3); //스테이지1
+                    SceneManager.LoadScene(2); // DiveScene --> Demo Scene (4)
                     break;
             }
         }
