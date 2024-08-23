@@ -25,6 +25,7 @@ namespace SunkenRuins
         private Vector3 initialPosition;
         private float lerpAmount;
         [SerializeField] private float distanceFromPlayer = 3.0f;
+        [SerializeField] private LayerMask wallLayer;
         private HypnoCuttleFishCircleDetection circleDetection;
         private HypnoCuttleFishStat hypnoCuttleFishStat;
 
@@ -74,7 +75,10 @@ namespace SunkenRuins
             switch (currentState)
             {
                 case HypnoCuttlefishState.Idle:
-                    // SquidAnimation();
+                    if (Physics2D.Raycast(transform.position + (isFacingRight ? 2.5f : -2.5f) * Vector3.right, Vector3.down, 0.6f, wallLayer))
+                    {
+                        UpdateFacingDirection(isFacingRight ? Vector3.left : Vector3.right);
+                    }
                     break;
                 case HypnoCuttlefishState.Hypnotizing:
                     HandleHypnotizing();

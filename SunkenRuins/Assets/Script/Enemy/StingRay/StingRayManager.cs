@@ -13,6 +13,7 @@ namespace SunkenRuins
         [SerializeField] private TriangleDetection triangleDetection;
         [SerializeField] private CircleDetection circleDetection;
         [SerializeField] private ElectricAttack electricAttack;
+        [SerializeField] private LayerMask wallLayer;
 
         // Component
         private bool isChasingPlayer { get { return player != null; } }
@@ -21,13 +22,11 @@ namespace SunkenRuins
         [SerializeField] private float lerpAmount = 0.05f;
         private Vector3 initialPosition;
         [SerializeField] private StingRayStat stingRayStat;
-        private BoxCollider2D boxCollider2D;
         private Animator animator;
 
         // Used for StingRay Attack CoolTime
         private Time attackTime;
         private void Awake() {
-            boxCollider2D = GetComponent<BoxCollider2D>();
             animator = GetComponent<Animator>();
         }
 
@@ -96,7 +95,14 @@ namespace SunkenRuins
             }
             else if (!isDashDelayTime)
             {
-                PerformPatrolMovement();
+                if (Physics2D.Raycast(transform.position + (isFacingRight ? 2.5f : -2.5f) * Vector3.right, Vector3.down, 0.6f, wallLayer))
+                {
+                    UpdateFacingDirection(isFacingRight ? Vector3.left : Vector3.right);
+                }
+                else
+                {
+                    PerformPatrolMovement();
+                }
             }
         }
 
@@ -168,27 +174,9 @@ namespace SunkenRuins
 
         private void OnPlayerDetection_AttackPlayer(Dictionary<string, object> message)
         {
-            if ((int)message["Enemy"] != electricAttack.ThisObjectNumber) return;
+            // if ((int)message["Enemy"] != electricAttack.ThisObjectNumber) return;
 
             EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object> { { "amount", stingRayStat.damageAmount } });
-        }
-
-        private void OnTriggerEnter2D (Collider2D collision) {
-            if (collision != boxCollider2D) {
-                return;
-            }
-
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall") {
-                float offsetFromInitialPosition = transform.position.x - initialPosition.x;
-                if (offsetFromInitialPosition < -stingRayStat.patrolRange)
-                {
-                    UpdateFacingDirection(Vector2.right);
-                }
-                else if (offsetFromInitialPosition > stingRayStat.patrolRange)
-                {
-                    UpdateFacingDirection(Vector2.left);
-                }
-            }
         }
     }
 }
