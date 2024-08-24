@@ -163,7 +163,7 @@ MonoBehaviour:
   hypnotizeTime: 1
   hypnotizeDelayTime: 5
   attackTime: 1
-  damagePerAttack: 10
+  damagePerAttack: 1
   hypnotizeEscapeKeyNum: 10
   retreatSpeed: 4
   distanceFromPlayer: 3
@@ -186,8 +186,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 095a5cdd03803d04e9b794cc7dd21dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterMaxHealth: 0
-  monsterCurrentHealth: 0
 --- !u!212 &4919370387650514550
 SpriteRenderer:
   m_ObjectHideFlags: 0

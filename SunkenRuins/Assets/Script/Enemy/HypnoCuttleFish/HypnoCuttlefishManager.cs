@@ -24,6 +24,7 @@ namespace SunkenRuins
         private float retreatTime = 3f;
         private Vector3 initialPosition;
         private float lerpAmount;
+        private bool isAttack = true;
         [SerializeField] private float distanceFromPlayer = 3.0f;
         [SerializeField] private LayerMask wallLayer;
         private HypnoCuttleFishCircleDetection circleDetection;
@@ -119,7 +120,7 @@ namespace SunkenRuins
         private void MoveToPlayer()
         {
             Vector2 directionToPlayer;
-            if (player.GetComponent<PlayerManager>().IsFacingRight)
+            if (player != null && player.GetComponent<PlayerManager>().IsFacingRight)
             {
                 directionToPlayer = (player.position - transform.position + Vector3.right).normalized;
             }
@@ -160,7 +161,7 @@ namespace SunkenRuins
 
         private void AttackPlayer()
         {
-            if (currentState != HypnoCuttlefishState.Attacking) return;
+            if (currentState != HypnoCuttlefishState.Attacking || isAttack == false) return;
             animator.SetTrigger("Attack");
             rb.velocity = Vector3.zero;
 
@@ -170,16 +171,19 @@ namespace SunkenRuins
 
         private IEnumerator AttackCoroutine()
         {
+            isAttack = false;
             yield return new WaitForSeconds(attackTime);
 
             EventManager.TriggerEvent(EventType.HypnoCuttleFishEscape, null);
             EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object>() {{"amount", hypnoCuttleFishStat.damageAmount }});
+            Debug.Log("Attack");
             StopAttack();
         }
 
         private void StopAttack() {
             animator.ResetTrigger("Attack");
             currentState = HypnoCuttlefishState.Retreating;
+            isAttack = true;
         }
 
 

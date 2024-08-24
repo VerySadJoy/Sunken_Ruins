@@ -133,11 +133,9 @@ namespace SunkenRuins {
 
         private IEnumerator ParalyzeSpeedCoroutine()
         {
-            moveSpeed = paralyzeMoveSpeed; // 마비되어 느린 속도로 이동
             canUseEnergy = false; // 부스트 사용 불가
             yield return new WaitForSeconds(paralyzeTime);
 
-            moveSpeed = defaultMoveSpeed; // 본래 속도로 복귀
             canUseEnergy = true; // paralyzeTime 이후 부스트 사용 가능
         }
 
