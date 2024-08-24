@@ -6233,14 +6233,14 @@ MonoBehaviour:
   paralyzeTime: 2
   hypnotizeTime: 2
   moveSpeed: 9
-  defaultMoveSpeed: 5
-  paralyzeMoveSpeed: 3
-  hypnotizeMoveSpeed: 2
+  defaultMoveSpeed: 15
+  paralyzeMoveSpeed: 5
+  hypnotizeMoveSpeed: 5
   turnAcceleration: 60
   moveAcceleration: 30
   moveDecceleration: 50
-  normalBoostSpeed: 10
-  perfectBoostSpeed: 15
+  normalBoostSpeed: 12
+  perfectBoostSpeed: 18
   absorbSpeed: 3.5
 --- !u!95 &526812369506415468
 Animator:

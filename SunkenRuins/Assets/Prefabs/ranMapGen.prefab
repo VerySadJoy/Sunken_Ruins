@@ -54,3 +54,4 @@ MonoBehaviour:
   HealthPotion: {fileID: 7011223438221127244, guid: 8358104773ec2364db16f3ef012ec84d, type: 3}
   BubbleShield: {fileID: 969599016839738218, guid: 4d0278170f447b84cb350254329e5854, type: 3}
   PowerBattery: {fileID: 1368620166249159327, guid: 65b36e02f259b704eb89c85ed588a6b8, type: 3}
+  GanJang: {fileID: 6472396162998682109, guid: 842a1bd9b39fd594d98908bfda4205be, type: 3}

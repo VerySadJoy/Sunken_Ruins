@@ -120,7 +120,7 @@ namespace SunkenRuins
         private void MoveToPlayer()
         {
             Vector2 directionToPlayer;
-            if (player != null && player.GetComponent<PlayerManager>().IsFacingRight)
+            if (player.TryGetComponent(out PlayerManager playerManager) && playerManager.IsFacingRight)
             {
                 directionToPlayer = (player.position - transform.position + Vector3.right).normalized;
             }

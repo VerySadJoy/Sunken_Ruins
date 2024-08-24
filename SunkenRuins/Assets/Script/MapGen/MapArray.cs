@@ -36,6 +36,9 @@ namespace SunkenRuins
         [SerializeField] GameObject BubbleShield;
         [SerializeField] GameObject PowerBattery;
 
+        // End Item
+        [SerializeField] GameObject GanJang;
+
         // Item Instantiate Range (RealMap)
         List<int[]> itemRanges;
 
@@ -75,6 +78,7 @@ namespace SunkenRuins
             PowerBattery = 16,
             None = 17,
 
+            GanJang = 99,
             StartPosition = 100,
         }
 
@@ -121,7 +125,7 @@ namespace SunkenRuins
         {
             {
                 { 1, 1, 1, 1, 0, 0, 1, 1, 1, 1 },
-                { 1, 1, 0, 0, 0, 0, 0, 0, 1, 1 },
+                { 1, 1, 99, 0, 0, 0, 0, 0, 1, 1 },
                 { 0, 1, 0, 0, 0, 0, 0, 1, 1, 1 },
                 { 0, 1, 0, 0, 0, 0, 0, 1, 1, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
@@ -1956,6 +1960,11 @@ namespace SunkenRuins
 
                         case TileType.StartPosition:
                             EventManager.TriggerEvent(EventType.PlayerToStartPosition, new Dictionary<string, object> { { "StartPosition", new Vector3(tileTraceX, tileTraceY) } });
+                            tileTraceX += 2;
+                            break;
+
+                        case TileType.GanJang:
+                            GanJang.transform.position = new Vector3(tileTraceX, tileTraceY);
                             tileTraceX += 2;
                             break;
 

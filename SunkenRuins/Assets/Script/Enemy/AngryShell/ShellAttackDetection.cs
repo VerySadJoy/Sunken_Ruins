@@ -9,6 +9,7 @@ namespace SunkenRuins
     {
         // Components
         private BoxCollider2D boxCollider2D;
+        private ShellStat shellStat;
         [SerializeField] private float rayCastDistance = 7.0f;
 
         // LayerMasks
@@ -22,6 +23,7 @@ namespace SunkenRuins
         private void Awake()
         {
             boxCollider2D = GetComponent<BoxCollider2D>();
+            shellStat = GetComponentInParent<ShellStat>();
         }
 
         public void turnColliderOff()
@@ -39,7 +41,7 @@ namespace SunkenRuins
         {
             if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerString))
             {
-                EventManager.TriggerEvent(EventType.ShellSwallow, new Dictionary<string, object>() { {"shellPos", transform.position + Vector3.up }, { "ObjectID", this.GetInstanceID() } });
+                EventManager.TriggerEvent(EventType.ShellSwallow, new Dictionary<string, object>() { {"shellPos", transform.position + Vector3.up }, { "ObjectID", this.GetInstanceID() }, {"shellStat", shellStat} });
                 StartCoroutine(shellAttackCoroutine());
             }
         }

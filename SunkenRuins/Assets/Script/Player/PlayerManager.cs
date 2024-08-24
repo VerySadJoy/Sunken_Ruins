@@ -51,6 +51,7 @@ namespace SunkenRuins
         private float boostDuration = 0.5f;
         private bool temp = false;
         private bool hasBoostEventBeenInvoked = false;
+        private bool canHypnotize = true; private bool canParalyze = true; private bool canSwallow = true;
 
         //BoostAnimation
         [SerializeField] GameObject boostEffectRing;
@@ -205,6 +206,19 @@ namespace SunkenRuins
             isAbsorbed = false; // 흡수 --> 삼켜짐
             SetInputEnabled(false);
             rb.velocity = Vector2.zero;
+
+            // 그림자 효과
+            ShellStat shellStat = (ShellStat)message["shellStat"];
+            if (canSwallow) StartCoroutine(SwallowCoroutine(shellStat.AttackCoolTime));
+        }
+
+        private IEnumerator SwallowCoroutine(float waitTime)
+        {
+            canSwallow = false;
+            spriteRenderer.color = new Color(0, 0, 0, 195f);
+            yield return new WaitForSeconds(waitTime - 1.0f);
+            spriteRenderer.color = new Color(170, 170, 170, 250);
+            canSwallow = true;
         }
 
         public void GetAbsorbed(Dictionary<string, object> message)
@@ -218,6 +232,7 @@ namespace SunkenRuins
         {
             isAbsorbed = false;
             isSwallowed = false;
+            spriteRenderer.color = new Color(170, 170, 170, 250);
             SetInputEnabled(true); SetBoostInputEnable(true);
         }
 
@@ -447,28 +462,32 @@ namespace SunkenRuins
 
         private void Hypnotize(Dictionary<string, object> message)
         {
-            StartCoroutine(HypnotizeInputCoroutine());
+            if (canHypnotize) StartCoroutine(HypnotizeInputCoroutine());
         }
 
         private IEnumerator HypnotizeInputCoroutine()
         {
+            canHypnotize = false;
             SetInputEnabled(false);
             playerStat.moveSpeed = playerStat.hypnotizeMoveSpeed;
             yield return new WaitForSeconds(playerStat.HypnotizeTime);
             playerStat.moveSpeed = playerStat.defaultMoveSpeed;
             SetInputEnabled(true);
+            canHypnotize = true;
         }
 
         private void Paralyze(Dictionary<string, object> message)
         {
-            StartCoroutine(ParalyzeSpeedCoroutine());
+            if (canParalyze) StartCoroutine(ParalyzeSpeedCoroutine());
         }
 
         private IEnumerator ParalyzeSpeedCoroutine()
         {
+            canParalyze = false;
             playerStat.moveSpeed = playerStat.paralyzeMoveSpeed;
             yield return new WaitForSeconds(playerStat.ParalyzeTime);
             playerStat.moveSpeed = playerStat.defaultMoveSpeed;
+            canParalyze = true;
         }
 
         public void SetInputEnabled(bool enable)
