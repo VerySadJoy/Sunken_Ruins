@@ -37,9 +37,12 @@ namespace SunkenRuins
         {
             // Debug.Log(LayerMask.LayerToName(collision.gameObject.layer));
 
-            if (LayerMask.LayerToName(collision.gameObject.layer) == "Player" || LayerMask.LayerToName(collision.gameObject.layer) == "Wall")
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Player")
             {
                 EventManager.TriggerEvent(EventType.PlayerDamaged, new Dictionary<string, object>() {{"amount", rockDamage}});
+                Destroy(gameObject);
+            }
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall"){
                 Destroy(gameObject);
             }
         }

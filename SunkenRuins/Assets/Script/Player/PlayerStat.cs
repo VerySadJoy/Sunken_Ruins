@@ -164,6 +164,7 @@ namespace SunkenRuins {
         public void Damage(int damageAmount)
         {
             playerCurrentHealth -= damageAmount;
+            Debug.Log("hihi"+ damageAmount);
             playerCurrentHealth = Mathf.Clamp(playerCurrentHealth, 0, playerMaxHealth);
 
             // 무적이 된다
